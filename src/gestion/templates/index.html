@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Bienvenido al Sistema de Gestión Contable</h1>
+    {% if user.is_authenticated %}
+        {% if horario_am %}
+        <p>Buen día, {{ user.first_name }}</p>        
+        {% else %}
+        <p>Buenas tardes, {{ user.first_name }}</p>
+        {% endif %}
+    {% else %}
+    <p>Por favor, regístrate o inicia sesión para acceder a todas las funcionalidades.</p>
+    <div class="buttons">
+        <a href="{% url "registration" %}">
+            <button class="btn-register">Registrarse</button>
+        </a>
+        <a href="{% url "login" %}">
+            <button class="btn-login">Iniciar Sesión</button>
+        </a>
+    </div>
+    {% endif %}
+{% endblock %}

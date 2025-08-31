@@ -1,0 +1,249 @@
+/* reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Roboto", sans-serif;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    background: #f8fafc;
+    color: #0a0f35;
+}
+
+/* sidebar */
+.sidebar {
+    width: 250px;
+    background: #0b3378;
+    color: rgb(225, 226, 228);
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 0;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+}
+
+.profile {
+    text-align: center;
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.profile img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 2px solid #f8fafc;
+    margin-bottom: 0.5rem;
+}
+
+.profile h3 {
+    font-size: 1.1rem;
+}
+
+.profile p {
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+
+/* sidebar - menu */
+.menu {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 4;
+}
+
+.menu-bottom {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.menu a {
+    padding: 0.9rem 1.5rem;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.menu-off a {
+    color: rgba(255,255,255,0.6); 
+    pointer-events: none; /* desactiva clic */
+}
+
+.menu-off a:hover {
+    background: none;
+    padding-left: 1.5rem;
+    cursor: not-allowed;
+}
+
+.menu-on a {
+    color: #f8fafc;
+    transition: 0.3s ease;
+}
+
+.menu-on a:hover {
+    background: rgba(255,255,255,0.2);
+    padding-left: 2rem;
+}
+
+.btn-logout {
+    text-decoration: none;
+    font-weight: 500;
+    font-size: medium;
+    color: #f8fafc;
+    background: none;
+    border: none;
+    display: flex;;
+    align-items: center;
+}
+
+
+/* main */
+.main {
+    flex: 1;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.main h1 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: #0a0f35;
+}
+
+.container {
+    max-width: 50rem;
+    display: flex;
+    align-items: center;
+}
+
+.container div {
+    margin: 1rem;
+}
+
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    background: #cdcdce;
+    padding: 2rem;
+    margin-top: 3rem;
+    border-radius: .6rem;
+}
+
+.buttons {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.buttons button {
+    padding: 0.7rem 1.6rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: 0.3s ease;
+}
+
+.btn-register {
+    background: #0b3378; 
+    color: #f8fafc;
+}
+
+.btn-register:hover {
+    background: #5370a1;
+}
+
+.btn-login {
+    background: #cdcdce;
+    color: #0b3378;
+    border: 2px solid #0b3378;
+}
+
+.btn-login:hover {
+    background: #f4f4f4;
+}
+
+.anchor {
+    color: #0b3378;
+    text-decoration: underline;
+}
+
+/* form */
+.form {
+    display: flex;
+    flex-direction: column;
+    background: #cdcdce;
+    padding: 2rem;
+    margin-top: 3rem;
+    border-radius: .6rem;
+}
+
+.form p label {
+    display: block;
+    text-align: left;
+    font-weight: 500;
+    margin-top: 2rem;
+}
+
+.form p span {
+    display: block;
+    text-align: left;
+    font-weight: 400;
+}
+
+.form ul {
+    display: block;
+    text-align: left;
+    font-weight: 400;
+    text-decoration: none;
+    list-style: none;
+}
+
+.input, .form p input, form select {
+    display: block;
+    text-align: left;
+    width: 100%;
+    padding: 0.6rem;
+    margin: .5rem 0;
+    background-color: #f8fafc;
+    border-radius: .6rem;
+    border: #f8fafc 3px solid;
+}
+
+.btn-side-to-side {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn-side-to-side button, .btn-side-to-side a {
+    width: 48% !important;
+    margin: 2rem !important;
+}
+
+.form button, .form a {
+    width: 60%;
+    margin: 2rem 0;
+    padding: 0.7rem 1.6rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    background: #0b3378;
+    color: #f8fafc;
+    text-decoration: none;
+}
+
+.form button:hover, .form a:hover {
+    transition: 0.3s ease;
+    background: #5370a1;
+    cursor: pointer;
+}

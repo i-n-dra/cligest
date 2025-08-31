@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio</title>
+    {% load static %}
+    <link href="{% static 'css/base_styles.css' %}" rel="stylesheet">
+    <link rel="icon" href="/media/favicon/favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!--google font-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <aside class="sidebar">
+    {% if user.is_authenticated %}
+      <div class="profile">
+        {% if request.user.profile.profile_picture.url %}        
+          <img src="{{ request.user.profile.profile_picture.url }}"
+          alt="{{ user.first_name }} {{ user.last_name }}">
+        {% else %}
+          <img src="{% static 'profile_pictures/default.png' %}" alt='Foto de perfil predeterminada'>
+        {% endif %}
+        <h3>{{ user.first_name }} {{ user.last_name }}</h3>
+        <p>{{ request_user_role }}</p>
+      </div>
+      <nav class="menu menu-on">
+        <div class='menu'>
+          <a href="{% url "profile" %}">Ver Perfil</a>
+          <a href="#">Dashboard</a>
+          <a href="#">Clientes</a>
+          <a href="#">Empresas</a>
+          <a href="#">Estadísticas de Impuestos</a>
+          <a href="#">Reportes</a>
+          <a href="{% url "admin:index" %}">Configuración</a>
+        </div>
+        <div class='menu-bottom'>
+          <a>
+            <form action="{% url 'logout' %}" method="post">
+              {% csrf_token %}
+              <button class="btn-logout" type="submit">
+                Cerrar sesión
+                <i class="fa fa-sign-out" style="font-size:24px; margin-left:1rem"></i>
+              </button>
+            </form>
+          </a>
+        </div>
+      </nav>
+      </aside>
+    {% else %}
+      <div class="profile">
+        <h3>Invitado</h3>
+        <p>No autenticado</p>
+      </div>
+      <nav class="menu menu-off">
+        <a href="#">Dashboard</a>
+        <a href="#">Clientes</a>
+        <a href="#">Empresas</a>
+        <a href="#">Estadísticas de Impuestos</a>
+        <a href="#">Reportes</a>
+        <a href="#">Configuración</a>
+      </nav>
+      </aside>
+    {% endif %}
+
+    <main class="main">
+        {% block content %}
+        {% endblock content %}
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Iniciar sesión</h1>
+<form method="post">
+    <div class='form'>
+        {% csrf_token %}
+        {{ form.as_p }}
+        {% if form.non_field_errors %}
+            <p class="">Usuario y/o contraseña incorrectos, intente nuevamente.</p>
+        {% endif %}
+        <button type="submit">Ingresar</button>
+    </div>
+</form>
+{% endblock content %}
