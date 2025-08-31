@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block title %}
+    <title>index</title>
+{% endblock title %}
+
 {% block content %}
     <h1>Bienvenido al Sistema de Gestión Contable</h1>
     {% if user.is_authenticated %}

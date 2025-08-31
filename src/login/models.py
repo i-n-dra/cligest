@@ -30,6 +30,7 @@ class Profile(models.Model):
     )
     date_of_birth = models.DateField(
         verbose_name='Fecha de nacimiento',
+        help_text='No se podrá cambiar',
         null=True # temporal
     )
     phone_number = models.CharField(

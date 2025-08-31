@@ -1,7 +1,10 @@
 from django.views.generic.edit import CreateView, UpdateView
 from django.urls import reverse_lazy
 from .models import Profile
-from .forms import ProfileForm
+from .forms import (
+    ProfileForm,
+    ProfileCreateForm
+    )
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import UserChangeForm
 from django import forms
@@ -36,7 +39,12 @@ class SignUpView(CreateView):
 class UserUpdateView(UpdateView):
     form_class = UserChangeForm
     success_url = reverse_lazy('profile')
-    
+
+@method_decorator(login_required, name='dispatch')
+class ProfileCreateView(CreateView):
+    form_class = ProfileCreateForm
+    success_url = reverse_lazy('profile')
+    template_name = 'profile_create.html'
 
 @method_decorator(login_required, name='dispatch')
 class ProfileUpdate(UpdateView):

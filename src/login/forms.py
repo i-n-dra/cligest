@@ -5,15 +5,31 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = [
-            'role',
+            'profile_picture',
             'phone_number',
-            'profile_picture'
         ]
         labels = {
-            'role': 'Rol/Cargo',
+            'profile_picture': 'Foto de perfil',
             'phone_number': 'Teléfono/Celular',
-            'profile_picture': 'Foto de perfil'
         }
         widgets = {
-            'role': forms.Select(attrs={'class': 'input'}),
+            'profile_picture': forms.FileInput(),
+        }
+
+class ProfileCreateForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = [
+            'run',
+            'date_of_birth',
+            'phone_number',
+            'profile_picture',
+        ]
+        labels = {
+            'profile_picture': 'Foto de perfil',
+            'phone_number': 'Teléfono/Celular',
+        }
+        widgets = {
+            'date_of_birth': forms.DateInput(attrs={'type': 'date'}),
+            'profile_picture': forms.FileInput(),
         }

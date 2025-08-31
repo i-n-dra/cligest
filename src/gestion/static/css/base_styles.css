@@ -118,7 +118,7 @@ body {
 }
 
 .container {
-    max-width: 50rem;
+    min-width: 50rem;
     display: flex;
     align-items: center;
 }
@@ -176,6 +176,11 @@ body {
     text-decoration: underline;
 }
 
+.profile-info {
+    display: flex;
+    justify-content: space-between;
+}
+
 /* form */
 .form {
     display: flex;
@@ -186,17 +191,38 @@ body {
     border-radius: .6rem;
 }
 
-.form p label {
+.form p {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    margin-top: .5rem;
+    justify-content: space-between;
+}
+
+.errorlist {
+    margin-top: 1rem;
+    color: rgba(255, 0, 0, 0.575);
+}
+
+.errorlist li {
+    font-weight: 600;
+}
+
+.form p label, .form-p-label {
     display: block;
     text-align: left;
+    width: 14rem;
     font-weight: 500;
-    margin-top: 2rem;
+    padding: 0 1rem;
 }
 
 .form p span {
     display: block;
     text-align: left;
+    font-size: small;
     font-weight: 400;
+    padding: 0 1rem;
+    width: 10rem;
 }
 
 .form ul {
@@ -210,8 +236,8 @@ body {
 .input, .form p input, form select {
     display: block;
     text-align: left;
-    width: 100%;
-    padding: 0.6rem;
+    width: 15rem;
+    padding: 0.6rem 1rem;
     margin: .5rem 0;
     background-color: #f8fafc;
     border-radius: .6rem;

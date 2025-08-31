@@ -8,14 +8,10 @@
             <h2>Editar perfil</h2>
             {% csrf_token %}
             <p>
-                <label for="">
-                    Nombre de usuario 
-                </label>
+                <span class='form-p-label' style='font-weight:500;'>Nombre de usuario:</span>
+                <span style='width:15rem;'>{{ request.user.username }}</span>
             </p>
-            <p style='text-align:left; color:#b3b3b4;' class='input'>
-                {{ request.user.username }}
-            </p>
-            <span style="text-align:left">El nombre de usuario no se puede editar</span>
+            <span style='text-align:left; margin-bottom:1rem'>El nombre de usuario no se puede editar</span>
             {{ form.as_p }}
             <div class='btn-side-to-side'>
                 <button type="submit">Guardar</button>
@@ -26,9 +22,18 @@
     </form>
     <div class='profile-container'>
         <h2>Datos del usuario:</h2>
-        <p>Nombre: {{ request.user.first_name }}</p>
-        <p>Apellido: {{ request.user.last_name }}</p>
-        <p>Correo: {{ request.user.email }}</p>
+        <div class='profile-info'>
+            <p class='profile-info'>Nombre:</p>
+            <p>{{ request.user.first_name }}</p>
+        </div>
+        <div class='profile-info'>
+            <p class='profile-info'>Apellidos:</p>
+            <p>{{ request.user.last_name }}</p>
+        </div>
+        <div class='profile-info'>
+            <p class='profile-info'>Correo:</p>
+            <p>{{ request.user.email }}</p>
+        </div>
     </div>
 </div>
 {% endblock content %}
