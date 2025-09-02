@@ -15,13 +15,17 @@ body {
 
 /* sidebar */
 .sidebar {
-    width: 250px;
+    width: 14vw;
+    height: 100vh;
     background: #0b3378;
     color: rgb(225, 226, 228);
     display: flex;
     flex-direction: column;
     padding: 1rem 0;
     box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    position: fixed;      
+    top: 0;
+    left: 0;
 }
 
 .profile {
@@ -102,6 +106,7 @@ body {
 
 /* main */
 .main {
+    margin-left: 14vw;
     flex: 1;
     padding: 2rem;
     display: flex;
@@ -125,6 +130,33 @@ body {
 
 .container div {
     margin: 1rem;
+}
+
+.container-roles-permisos {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 2rem;
+    text-align: center;
+}
+
+.container-roles-permisos table {
+    width: 100%;
+    margin-top: 1rem;
+    text-align: left;
+
+}
+
+.container-roles-permisos td {
+    border: 1px solid #ddd;
+    padding: 0.8rem;
+}
+
+.container-roles-permisos th {
+    border: 1px solid #ddd;
+    padding: 0.8rem;
+    text-align: center;
 }
 
 .profile-container {
@@ -198,6 +230,13 @@ body {
     margin-top: .5rem;
     justify-content: space-between;
 }
+
+/* oculta contraseña, para testeo
+
+.form #id_password {
+    display: none;
+}
+*/
 
 .errorlist {
     margin-top: 1rem;

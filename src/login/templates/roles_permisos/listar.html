@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Ver roles y permisos</title>
+{% endblock title %}
+
+{% block content %}
+<div class='container'>
+    <div class='container-roles-permisos'>
+        <h1>Roles</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre del Rol</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in roles %}
+                <tr>
+                    <td>{{ r.name }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class='container-roles-permisos'>
+        <h1>Permisos</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre del Permiso</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in permisos %}
+                <tr>
+                    <td>{{ p.name }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock content %}

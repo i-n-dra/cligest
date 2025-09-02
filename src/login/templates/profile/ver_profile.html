@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block title %}
+    <title>Mi perfil</title>
+{% endblock title %}
+
 {% block content %}
 <h1>Mi perfil</h1>
 <div class='container'>
@@ -18,7 +22,7 @@
                 <a href="{% url "home" %}">Volver</a>
             </div>
         </div>
-        <a class='anchor' href="{% url "home" %}">¿Desea editar sus datos de inicio de sesión?</a>
+        <a class='anchor' href="{% url "update-user" request.user.id %}">¿Desea editar sus datos de inicio de sesión?</a>
     </form>
     <div class='profile-container'>
         <h2>Datos del usuario:</h2>

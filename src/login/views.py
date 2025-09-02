@@ -1,10 +1,14 @@
+from django.shortcuts import render
 from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic import DetailView, ListView
 from django.urls import reverse_lazy
-from .models import Profile
+from .models import Profile, Role
 from .forms import (
     ProfileForm,
-    ProfileCreateForm
+    ProfileCreateForm,
+    UserForm
     )
+from django.contrib.auth.models import Permission, User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import UserChangeForm
 from django import forms
@@ -37,21 +41,50 @@ class SignUpView(CreateView):
         return form    
 
 class UserUpdateView(UpdateView):
-    form_class = UserChangeForm
+    model = User
+    form_class = UserForm
+    template_name = 'user/update_user.html'
     success_url = reverse_lazy('profile')
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('auth.add_profile', raise_exception=True), name='dispatch')
 class ProfileCreateView(CreateView):
     form_class = ProfileCreateForm
     success_url = reverse_lazy('profile')
-    template_name = 'profile_create.html'
+    template_name = 'profile/profile_create.html'
 
 @method_decorator(login_required, name='dispatch')
 class ProfileUpdate(UpdateView):
     form_class = ProfileForm
     success_url = reverse_lazy('profile')
-    template_name = 'profile.html'
+    template_name = 'profile/ver_profile.html'
 
     def get_object(self):
         profile, created = Profile.objects.get_or_create(user = self.request.user)
         return profile
+
+class RoleListView(ListView):
+    model = Role
+    template_name = 'roles_permisos/listar_roles.html'
+    context_object_name = 'roles'
+    queryset = Role.objects.all()
+
+class PermissionListView(ListView):
+    model = Permission
+    template_name = 'roles_permisos/listar_permisos.html'
+    context_object_name = 'permisos'
+    queryset = Permission.objects.all()
+
+class RolePermissionListView(ListView):
+    @method_decorator(login_required)
+    @method_decorator(never_cache)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        roles = Role.objects.all()
+        permisos = Permission.objects.all()
+        context = {
+            'roles': roles,
+            'permisos': permisos
+        }
+        return render(request, 'roles_permisos/listar.html', context)

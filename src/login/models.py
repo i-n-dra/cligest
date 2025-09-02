@@ -1,16 +1,23 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
+from django.contrib.auth.models import Permission
 from django.core.validators import RegexValidator
 
 # Create your models here.
-class Role(models.Model): # probablemente se va a borrar
-    name = models.CharField(
-    max_length=40,
-    verbose_name='Cargo',
-    help_text='Ingrese un cargo, máximo de 40 caracteres.',
-    default='Sin cargo'
+class Role(models.Model):
+    name = models.OneToOneField(
+        Group,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        max_length=40,
+        verbose_name='Rol',
+        help_text='Ingrese un rol, máximo de 40 caracteres.',
+        default='Sin rol'
     )
+    permissions = models.ManyToManyField(Permission, verbose_name='Permisos')
+
     def __str__(self):
         return f'{self.name}'
 
@@ -26,6 +33,9 @@ class Profile(models.Model):
                 regex=r'^\d{7,8}-[\dkK]$',
             )
         ],
+        error_messages={
+            'invalid': 'El formato de RUN es incorrecto'
+        },
         null=True # temporal
     )
     date_of_birth = models.DateField(
@@ -46,10 +56,9 @@ class Profile(models.Model):
     )
     profile_picture = models.ImageField(
         upload_to='profile_pictures/',
-        null=True,
-        blank=True,
         verbose_name='Foto de perfil',
-        help_text='Opcional'
+        help_text='Opcional',
+        default='profile_pictures/default_pfp.jpg'
     )
 
     def __str__(self):
