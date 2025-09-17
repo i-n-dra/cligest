@@ -15,11 +15,17 @@
                 </tr>
             </thead>
             <tbody>
+                {% if roles %}
                 {% for r in roles %}
                 <tr>
                     <td>{{ r.name }}</td>
                 </tr>
                 {% endfor %}
+                {% else %}
+                <tr>
+                    <td>No existen roles</td>
+                </tr>
+                {% endif %}
             </tbody>
         </table>
     </div>

@@ -6,37 +6,54 @@
 
 {% block content %}
 <h1>Mi perfil</h1>
-<div class='container'>
+<div class='form'>
     <form method="post" enctype="multipart/form-data">
+        <h2>Editar perfil</h2>            
         <div class='form'>
-            <h2>Editar perfil</h2>
             {% csrf_token %}
             <p>
-                <span class='form-p-label' style='font-weight:500;'>Nombre de usuario:</span>
-                <span style='width:15rem;'>{{ request.user.username }}</span>
+                <span class='form-p-label' style='font-weight:500;font-size:medium'>Nombre de usuario:</span>
+                <span style='width:10rem;'>{{ request.user.username }}</span>
+                <span>El nombre de usuario no se puede editar</span>
             </p>
-            <span style='text-align:left; margin-bottom:1rem'>El nombre de usuario no se puede editar</span>
+            <p>
+            </p>
             {{ form.as_p }}
             <div class='btn-side-to-side'>
                 <button type="submit">Guardar</button>
                 <a href="{% url "home" %}">Volver</a>
             </div>
         </div>
-        <a class='anchor' href="{% url "update-user" request.user.id %}">¿Desea editar sus datos de inicio de sesión?</a>
     </form>
-    <div class='profile-container'>
+    <hr class='solid-divider'>
+    <div style='margin-top:2rem'>
         <h2>Datos del usuario:</h2>
-        <div class='profile-info'>
-            <p class='profile-info'>Nombre:</p>
-            <p>{{ request.user.first_name }}</p>
-        </div>
-        <div class='profile-info'>
-            <p class='profile-info'>Apellidos:</p>
-            <p>{{ request.user.last_name }}</p>
-        </div>
-        <div class='profile-info'>
-            <p class='profile-info'>Correo:</p>
-            <p>{{ request.user.email }}</p>
+        <div class='form'>
+            <div class='profile-info'>
+                <p class='profile-info profile-info-p'>Nombre:</p>
+                {% if request.user.first_name %}
+                <p>{{ request.user.first_name }}</p>
+                {% else %}
+                <p>No hay un nombre establecido</p>
+                {% endif %}
+            </div>
+            <div class='profile-info'>
+                <p class='profile-info profile-info-p'>Apellidos:</p>
+                {% if request.user.last_name %}
+                <p>{{ request.user.last_name }}</p>
+                {% else %}
+                <p>No hay apellidos establecidos</p>
+                {% endif %}
+            </div>
+            <div class='profile-info'>
+                <p class='profile-info profile-info-p'>Correo:</p>
+                {% if request.user.email %}
+                <p>{{ request.user.email }}</p>
+                {% else %}
+                <p>No hay un correo establecido</p>
+                {% endif %}
+            </div>
+            <a class='anchor' href="{% url "update-user" request.user.id %}">¿Desea editar sus datos de inicio de sesión?</a>
         </div>
     </div>
 </div>

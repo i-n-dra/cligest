@@ -5,10 +5,10 @@
 {% endblock title %}
 
 {% block content %}
-<h1>Editar usuario</h1>
 <div class='container'>
     <form method="post">
         <div class='form'>
+        <h1>Editar usuario</h1>
         {% csrf_token %}
             {{ form.as_p }}
             <div class='btn-side-to-side'>

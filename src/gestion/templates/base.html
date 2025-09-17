@@ -40,6 +40,9 @@
           <a href="#">Estadísticas de Impuestos</a>
           <a href="#">Reportes</a>
           <a href="{% url "admin:index" %}">Configuración</a>
+          {% if user.is_superuser %}
+          <a href="{% url "listar-roles-permisos" %}">Roles y permisos</a>
+          {% endif %}
         </div>
         <div class='menu-bottom'>
           <a>

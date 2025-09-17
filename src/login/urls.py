@@ -12,5 +12,5 @@ urlpatterns = [
     path("update-user/<int:pk>/", UserUpdateView.as_view(), name="update-user"),
     path('profile-creation/', ProfileCreateView.as_view(), name='profile-create'),
     path('profile/', ProfileUpdate.as_view(), name='profile'),
-    path("roles-y-permisos/", RolePermissionListView.as_view(), name="listar-roles-permisos")
+    path('roles-y-permisos/', RolePermissionListView.as_view(), name='listar-roles-permisos')
 ]

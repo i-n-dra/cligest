@@ -9,9 +9,10 @@ def home(request):
 
 # mensaje dia/tarde
 def horario_am():
-    if time.localtime().index(3) > 12: # index 3 -> tm_hour
+    hora = time.localtime().index(3) # index 3 -> tm_hour
+    if hora > 12: 
         return False
-    else:
+    elif hora < 12:
         return True
 
 def request_user_role(username):

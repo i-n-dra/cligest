@@ -9,7 +9,7 @@
 body {
     display: flex;
     min-height: 100vh;
-    background: #f8fafc;
+    background:#d7d7d8;
     color: #0a0f35;
 }
 
@@ -162,10 +162,16 @@ body {
 .profile-container {
     display: flex;
     flex-direction: column;
-    background: #cdcdce;
+    background: #d7d7d8;
     padding: 2rem;
     margin-top: 3rem;
     border-radius: .6rem;
+}
+
+.anchor{
+    color: #0b3378;
+    text-decoration: underline;
+    align-self: center;
 }
 
 .buttons {
@@ -194,7 +200,7 @@ body {
 }
 
 .btn-login {
-    background: #cdcdce;
+    background: #d7d7d8;
     color: #0b3378;
     border: 2px solid #0b3378;
 }
@@ -203,21 +209,25 @@ body {
     background: #f4f4f4;
 }
 
-.anchor {
-    color: #0b3378;
-    text-decoration: underline;
-}
-
 .profile-info {
     display: flex;
     justify-content: space-between;
+}
+
+.profile-info-p {
+    font-weight:500;
+    padding:0 1rem
+}
+
+.solid-divider {
+    border: 0.1px solid #ddd;
 }
 
 /* form */
 .form {
     display: flex;
     flex-direction: column;
-    background: #cdcdce;
+    background: #f8fafc;
     padding: 2rem;
     margin-top: 3rem;
     border-radius: .6rem;
@@ -230,13 +240,6 @@ body {
     margin-top: .5rem;
     justify-content: space-between;
 }
-
-/* oculta contraseña, para testeo
-
-.form #id_password {
-    display: none;
-}
-*/
 
 .errorlist {
     margin-top: 1rem;
@@ -311,4 +314,12 @@ body {
     transition: 0.3s ease;
     background: #5370a1;
     cursor: pointer;
+}
+
+bdi { /* info hash de contraseña usuario */
+    margin-inline-end: 4rem;
+}
+
+.button { /* para btn cambio contraseña*/
+    margin: 2rem auto !important;
 }

@@ -8,7 +8,7 @@ from .forms import (
     ProfileCreateForm,
     UserForm
     )
-from django.contrib.auth.models import Permission, User
+from django.contrib.auth.models import Permission, User, Group
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import UserChangeForm
 from django import forms
@@ -62,18 +62,6 @@ class ProfileUpdate(UpdateView):
         profile, created = Profile.objects.get_or_create(user = self.request.user)
         return profile
 
-class RoleListView(ListView):
-    model = Role
-    template_name = 'roles_permisos/listar_roles.html'
-    context_object_name = 'roles'
-    queryset = Role.objects.all()
-
-class PermissionListView(ListView):
-    model = Permission
-    template_name = 'roles_permisos/listar_permisos.html'
-    context_object_name = 'permisos'
-    queryset = Permission.objects.all()
-
 class RolePermissionListView(ListView):
     @method_decorator(login_required)
     @method_decorator(never_cache)
@@ -81,7 +69,7 @@ class RolePermissionListView(ListView):
         return super().dispatch(*args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        roles = Role.objects.all()
+        roles = Group.objects.all()
         permisos = Permission.objects.all()
         context = {
             'roles': roles,
