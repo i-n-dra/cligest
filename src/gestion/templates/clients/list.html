@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Clientes</title>
+{% endblock title %}
+
+{% block content %}
+<div class='list-container'>
+    <h1>Clientes</h1>
+    {% if clientes %}
+    <table>
+        <thead>
+            <tr>
+                <th>Cliente</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in clientes %}
+            <tr>
+                <td>{{ c.nombre_rep_legal }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <h3>No hay clientes registrados en el sistema, ¿Desea <a class='anchor' href="{% url "create_client" %}">añadir uno</a>?</h3>
+    {% endif %}
+</div>
+{% endblock content %}

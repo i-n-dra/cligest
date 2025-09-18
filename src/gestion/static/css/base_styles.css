@@ -168,7 +168,7 @@ body {
     border-radius: .6rem;
 }
 
-.anchor{
+.anchor {
     color: #0b3378;
     text-decoration: underline;
     align-self: center;
@@ -322,4 +322,11 @@ bdi { /* info hash de contraseña usuario */
 
 .button { /* para btn cambio contraseña*/
     margin: 2rem auto !important;
+}
+
+/* listar */
+
+.list-container {
+    background-color: #d7d7d8;
+    display: flex;
 }
