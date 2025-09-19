@@ -5,7 +5,12 @@ cligest
 `The BeeWare Project`_. **If you want to see more tools like Briefcase, please
 consider** `becoming a financial member of BeeWare`_.
 
-Aplicacion para gestion de clientes
+Aplicación para gestion de clientes
+
+.. to-do: 
+    - separar fields en client/create.html
+    - crud contraseñas
+    - exportar clientes a excel
 
 .. _`Briefcase`: https://briefcase.readthedocs.io/
 .. _`The BeeWare Project`: https://beeware.org/

@@ -44,7 +44,7 @@ class CodigoSII(models.Model):
     )
 
     def __str__(self):
-        return str(self.code)
+        return f'{str(self.code)} - {self.activity}'
 
 class RegTributario(models.Model):
     name = models.CharField(
@@ -210,6 +210,11 @@ class Client(models.Model):
     tipo_contabilidad = models.ForeignKey(
         TipoContabilidad,
         verbose_name='Tipo de Contabilidad',
+        on_delete=models.RESTRICT
+    )
+    reg_tributario = models.ForeignKey(
+        RegTributario,
+        verbose_name='Régimen Tributario',
         on_delete=models.RESTRICT
     )
     cuenta_corriente = models.CharField(

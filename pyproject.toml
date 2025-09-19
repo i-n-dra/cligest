@@ -3,8 +3,7 @@
 project_name = "cligest"
 bundle = "com.ejemplo"
 version = "0.0.1"
-# cambiar a localhost / github repo
-url = "https://gac.com/cligest"
+url = "https://github.com/i-n-dra/cligest"
 license.file = "LICENSE"
 author = "PSTV"
 author_email = "-"
@@ -12,7 +11,7 @@ author_email = "-"
 [tool.briefcase.app.cligest]
 formal_name = "cligest"
 description = "Aplicacion para gestion de clientes"
-long_description = """More details about the app should go here.
+long_description = """
 """
 
 # agregar cada app django aqui

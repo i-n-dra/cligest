@@ -329,4 +329,10 @@ bdi { /* info hash de contraseña usuario */
 .list-container {
     background-color: #d7d7d8;
     display: flex;
+    flex-direction: column;
+}
+
+/* form.as_table */
+form table tr td {
+    padding: .5rem;
 }

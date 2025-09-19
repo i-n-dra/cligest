@@ -2,8 +2,13 @@ from django.shortcuts import render
 import time
 from django.contrib.auth.models import User
 from login.models import Profile
-from .models import Client
+from .models import (
+    Client,
+)
+from .forms import ClientForm
 from django.views.generic import DetailView, ListView
+from django.views.generic.edit import CreateView, UpdateView
+from django.urls import reverse_lazy
 
 # Create your views here.
 def home(request):
@@ -32,5 +37,8 @@ class ClientListView(ListView):
     paginate_by = 10
     ordering = ['last_name_1_rep_legal']
 
-def ClientCreateView():
-    pass
+class ClientCreateView(CreateView):
+    model = Client
+    template_name = 'clients/create.html'
+    form_class = ClientForm
+    success_url = reverse_lazy('list_clients')
