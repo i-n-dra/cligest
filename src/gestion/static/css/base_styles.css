@@ -332,6 +332,57 @@ bdi { /* info hash de contraseña usuario */
     flex-direction: column;
 }
 
+/* detail */
+
+.detail-container {
+    background-color: #f8fafc;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    margin-top: 3rem;
+    border-radius: .6rem;
+}
+.detail-container h1 {
+    margin-bottom: .3rem;
+}
+.detail-container h2 {
+    margin-bottom: 2rem;
+}
+.detail-container h3 {
+    margin: 2rem 0;
+}
+.detail-container th {
+    margin-right: 2rem;
+}
+.detail-container hr {
+    margin: 2rem;
+}
+.detail-table {
+    text-align: left;
+}
+.detail-table tr {
+    display: flex;
+    justify-content: space-between;
+    padding: .3rem;
+}
+.detail-button {
+    width: 60%;
+    margin: 2rem 0;
+    padding: 0.7rem 1.6rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    background: #0b3378;
+    color: #f8fafc;
+    text-decoration: none;
+}
+.detail-button:hover {
+    transition: 0.3s ease;
+    background: #5370a1;
+    cursor: pointer;
+}
+
 /* form.as_table */
 form table tr td {
     padding: .5rem;

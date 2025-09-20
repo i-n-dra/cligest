@@ -136,35 +136,82 @@ class Client(models.Model):
         max_length=20,
         verbose_name='Tipo de empresa',
         choices=[
-            ('p_natural', 'Persona Natural'),
-            ('p_juridica', 'Persona Jurídica')
+            ('Persona Natural', 'Persona Natural'),
+            ('Persona Jurídica', 'Persona Jurídica')
         ]
     )
     giro_rubro = models.CharField(
         max_length=100,
         verbose_name='Giro / Rubro',
         choices=[
-            ('agricultura', 'Agricultura, Ganadería, Silvicultura Y Pesca'),
-            ('explotacion_minas', 'Explotación De Minas Y Canteras'),
-            ('i_manufacturera', 'Industria Manufacturera'),
-            ('sum_electricidad', 'Suministro De Electricidad, Gas, Vapor Y Aire Acondicionado'),
-            ('sum_agua', 'Suministro De Agua; Evacuación De Aguas Residuales, Gestión De Desechos Y Descontaminación'),
-            ('construccion', 'Construcción'),
-            ('comercio_reparacion', 'Comercio Al Por Mayor Y Al Por Menor; Reparación De Vehiculos Automotores Y Motocicletas'),
-            ('transporte_almacenamiento', 'Transporte Y Almacenamiento'),
-            ('act_alojamiento', 'Actividades De Alojamiento Y De Servicio De Comidas'),
-            ('info_com', 'Información Y Comunicaciones'),
-            ('act_financieras', 'Actividades Financieras Y De Seguros'),
-            ('act_inmobiliarias', 'Actividades Inmobiliarias'),
-            ('act_profesionales', 'Actividades Profesionales, Cientificas Y Técnicas'),
-            ('act_administrativos', 'Actividades De Servicios Administrativos Y De Apoyo'),
-            ('admin_publica', 'Administración Pública Y Defensa; Planes De Seguridad Social De Afiliación Obligatoria'),
-            ('ensenianza', 'Enseñanza'),
-            ('act_atención_salud', 'Actividades De Atención De La Salud Humana Y De Asistencia Social'),
-            ('act_artisticas', 'Actividades Artísticas, De Entretenimiento Y Recreativas'),
-            ('otras_act_servicios', 'Otras Actividades De Servicios'),
-            ('act_hogares', 'Actividades De Los Hogares Como Empleadores; Actividades No Diferenciadas De Los Hogares'),
-            ('act_organizaciones', 'Actividades De Organizaciones Y Órganos Extraterritoriales'),
+            (
+                'Agricultura, Ganadería, Silvicultura Y Pesca',
+                'Agricultura, Ganadería, Silvicultura Y Pesca'
+            ),
+            (
+                'Explotación De Minas Y Canteras',
+                'Explotación De Minas Y Canteras'
+            ),
+            (
+                'Industria Manufacturera',
+                'Industria Manufacturera'
+            ),
+            (
+                'Suministro De Electricidad, Gas, Vapor Y Aire Acondicionado',
+                'Suministro De Electricidad, Gas, Vapor Y Aire Acondicionado'
+            ),
+            (
+                'Suministro De Agua; Evacuación De Aguas Residuales, Gestión De Desechos Y Descontaminación',
+                'Suministro De Agua; Evacuación De Aguas Residuales, Gestión De Desechos Y Descontaminación'
+            ),
+            (   'Construcción',
+                'Construcción'
+            ),
+            (   'Comercio Al Por Mayor Y Al Por Menor; Reparación De Vehiculos Automotores Y Motocicletas',
+                'Comercio Al Por Mayor Y Al Por Menor; Reparación De Vehiculos Automotores Y Motocicletas'
+            ),
+            (   'Transporte Y Almacenamiento',
+                'Transporte Y Almacenamiento'
+            ),
+            (   'Actividades De Alojamiento Y De Servicio De Comidas',
+                'Actividades De Alojamiento Y De Servicio De Comidas'
+            ),
+            (   'Información Y Comunicaciones',
+                'Información Y Comunicaciones'
+            ),
+            (   'Actividades Financieras Y De Seguros',
+                'Actividades Financieras Y De Seguros'
+            ),
+            (   'Actividades Inmobiliarias',
+                'Actividades Inmobiliarias'
+            ),
+            (   'Actividades Profesionales, Cientificas Y Técnicas',
+                'Actividades Profesionales, Cientificas Y Técnicas'
+            ),
+            (   'Actividades De Servicios Administrativos Y De Apoyo',
+                'Actividades De Servicios Administrativos Y De Apoyo'
+            ),
+            (   'Administración Pública Y Defensa; Planes De Seguridad Social De Afiliación Obligatoria',
+                'Administración Pública Y Defensa; Planes De Seguridad Social De Afiliación Obligatoria'
+            ),
+            (   'Enseñanza',
+                'Enseñanza'
+            ),
+            (   'Actividades De Atención De La Salud Humana Y De Asistencia Social',
+                'Actividades De Atención De La Salud Humana Y De Asistencia Social'
+            ),
+            (   'Actividades Artísticas, De Entretenimiento Y Recreativas',
+                'Actividades Artísticas, De Entretenimiento Y Recreativas'
+            ),
+            (   'Otras Actividades De Servicios',
+                'Otras Actividades De Servicios'
+            ),
+            (   'Actividades De Los Hogares Como Empleadores; Actividades No Diferenciadas De Los Hogares',
+                'Actividades De Los Hogares Como Empleadores; Actividades No Diferenciadas De Los Hogares'
+            ),
+            (   'Actividades De Organizaciones Y Órganos Extraterritoriales',
+                'Actividades De Organizaciones Y Órganos Extraterritoriales'
+            ),
         ]
     )
     codigo_sii = models.ForeignKey(
@@ -178,7 +225,7 @@ class Client(models.Model):
         help_text=' Ejemplo: correo@ejemplo.com'
     )
     phone_number = models.CharField(
-        max_length=11,
+        max_length=18,
         verbose_name='Teléfono/Celular',
         help_text='Ejemplo: +56912345678',
         validators=[
@@ -221,19 +268,19 @@ class Client(models.Model):
         max_length=30,
         verbose_name='Cuenta Corriente',
         choices=[
-            ('bice', 'Banco Bice'),
-            ('consorcio', 'Banco Consorcio'),
-            ('chile', 'Banco De Chile'),
-            ('estado', 'Banco Del Estado De Chile'),
-            ('falabella', 'Banco Falabella'),
-            ('internacional', 'Banco Internacional'),
-            ('itau', 'Banco Itaú Chile'),
-            ('ripley', 'Banco Ripley'),
-            ('santander Chile', 'Banco Santander Chile'),
-            ('security', 'Banco Security'),
-            ('bci', 'Banco Bci'),
-            ('scotiabank', 'Scotiabank Chile'),
-            ('btg_pactual', 'Btg Pactual Chile')
+            ('Banco Bice', 'Banco Bice'),
+            ('Banco Consorcio', 'Banco Consorcio'),
+            ('Banco De Chile', 'Banco De Chile'),
+            ('Banco Del Estado De Chile', 'Banco Del Estado De Chile'),
+            ('Banco Falabella', 'Banco Falabella'),
+            ('Banco Internacional', 'Banco Internacional'),
+            ('Banco Itaú Chile', 'Banco Itaú Chile'),
+            ('Banco Ripley', 'Banco Ripley'),
+            ('Banco Santander Chile', 'Banco Santander Chile'),
+            ('Banco Security', 'Banco Security'),
+            ('Banco Bci', 'Banco Bci'),
+            ('Scotiabank Chile', 'Scotiabank Chile'),
+            ('Btg Pactual Chile', 'Btg Pactual Chile')
         ]
     )
     n_cuenta_corriente = models.CharField(
@@ -268,22 +315,22 @@ class Claves(models.Model):
     )
 
     sii = models.CharField(
-        max_length=70,
+        max_length=130,
         verbose_name='Clave S.I.I.'
     )
     factura_electronica = models.CharField(
-        max_length=70,
+        max_length=130,
         verbose_name='Clave Factura Electrónica'
     )
     dir_trabajo = models.CharField(
-        max_length=70,
+        max_length=130,
         verbose_name='Clave Dirección de Trabajo'
     )
     unica = models.CharField(
-        max_length=70,
+        max_length=130,
         verbose_name='Clave Única'
     )
 
     def __str__(self):
-        return f'Claves de {self.client.name} {self.client.last_name_1} {self.client.last_name_2} - RUN: {self.client.run}'
+        return f'Claves de {self.client.nombre_rep_legal} {self.client.last_name_1_rep_legal} {self.client.last_name_2_rep_legal} - RUN: {self.client.run_rep_legal}'
 

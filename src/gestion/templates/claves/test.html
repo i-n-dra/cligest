@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Claves - Crear</title>
+{% endblock title %}
+
+{% block content %}
+<div class='list-container'>
+    <h1>Listar claves</h1>
+    {% if clave_obj %}
+        <p>encrypted (en bd): {{ clave_obj.unica }}</p>
+        <p>decrypted: {{ decrypted_unica }}</p>
+    {% else %}
+        <p>algo salió mal :[</p>
+    {% endif %}
+</div>
+{% endblock content %}

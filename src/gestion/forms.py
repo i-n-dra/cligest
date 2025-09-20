@@ -1,5 +1,8 @@
 from django import forms
-from .models import Client
+from .models import (
+    Client,
+    Claves
+)
 
 class ClientForm(forms.ModelForm):
     class Meta:
@@ -36,4 +39,22 @@ class ClientForm(forms.ModelForm):
             'cuenta_corriente' : forms.Select(attrs={"class": "js-example-basic-single"}),
             'region' : forms.Select(attrs={"class": "js-example-basic-single"}),
             'comuna' : forms.Select(attrs={"class": "js-example-basic-single"}),
+        }
+
+class ClaveForm(forms.ModelForm):
+    class Meta:
+        model = Claves
+        fields = [
+            'client',
+            'unica',
+            'sii',
+            'factura_electronica',
+            'dir_trabajo'
+        ]
+        widgets = {
+            'client' : forms.Select(attrs={"class": "js-example-basic-single"}),
+            'unica' : forms.PasswordInput(),
+            'sii' : forms.PasswordInput(),
+            'factura_electronica' : forms.PasswordInput(),
+            'dir_trabajo' : forms.PasswordInput()
         }

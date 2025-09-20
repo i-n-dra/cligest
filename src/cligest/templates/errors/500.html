@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Error</title>
+{% endblock title %}
+
+{% block content %}
+<h1>Error de servidor (500)</h1>
+<a href="{% url "home" %}">Volver al inicio</a>
+{% endblock content %}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Claves - Crear</title>
+{% endblock title %}
+
+{% block content %}
+<div class='list-container'>
+    <h1>Añadir clave</h1>
+    <form action="" method="post">
+        {% csrf_token %}
+<table>
+  <tr>
+    <th><label for="id_client">Cliente:</label></th>
+    <td>{{ form.client }}</td>
+  </tr>
+  <tr>
+    <th>Clave única:</td>
+    <td>{{ form.unica }}</td>
+  </tr>
+  <tr>
+    <th>Clave S.I.I.:</td>
+    <td>{{ form.sii}}</td>
+  </tr>
+  <tr>
+    <th>Clave Factura Electrónica:</td>
+    <td>{{ form.factura_electronica }}</td>
+  </tr>
+  <tr>
+    <th>Clave Dirección de Trabajo:</td>
+    <td>{{ form.dir_trabajo }}</td>
+  </tr>
+</table>
+<button type="submit">Guardar clave(s)</button>
+</form>
+</div>
+{% endblock content %}
