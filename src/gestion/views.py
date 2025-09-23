@@ -1,6 +1,7 @@
 from django.shortcuts import render
-import time
+import time, os, ast
 from django.contrib.auth.models import User
+from django.contrib.auth.hashers import PBKDF2PasswordHasher
 from login.models import Profile
 from .models import (
     Client,
@@ -11,11 +12,10 @@ from .forms import (
     ClaveForm
 )
 from django.views.generic import DetailView, ListView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 # Importación de encriptación AES 
 from .static.py.aes import AES
-import os
 
 # Create your views here.
 def home(request):
@@ -37,7 +37,15 @@ def request_user_role(username):
         role = 'Sin cargo'
     return role
 
+# class para pedir la pass e igualarla con la hash de la key
+
 ### Clientes Views ###
+
+class ClientExport(ListView):
+    model = Client
+    def get_queryset(self):
+        return super().get_queryset()
+
 
 class ClientListView(ListView):
     model = Client
@@ -51,6 +59,12 @@ class ClientDetailView(DetailView):
     template_name = 'clients/detail.html'
     context_object_name = 'c'
 
+class ClientUpdateView(UpdateView):
+    model = Client
+    template_name = 'clients/update.html'
+    form_class = ClientForm
+    success_url = reverse_lazy('list_clients')
+
 class ClientCreateView(CreateView):
     model = Client
     template_name = 'clients/create.html'
@@ -63,7 +77,12 @@ class ClientCreateView(CreateView):
         client_id = form.instance.id
         return super().form_valid(form)
 
-### Claves Views ###
+class ClientDeleteView(DeleteView):
+    model = Client
+    template_name = 'clients/delete.html'
+    success_url = reverse_lazy('list_clients')
+
+### Claves Views ### wip nada funciona
 
 class ClavesCreateView(CreateView):
     model = Claves
@@ -80,67 +99,119 @@ class ClavesCreateView(CreateView):
         return form
     
     def form_valid(self, form):
-        # revisar static/py/ para ver ejemplos y source code
-        global key
-        global iv
-        # cambiar a: contraseña de request.user | secret_key de settings | variable de entorno
-        # actualmente solo funciona con el ultimo obj de claves creado
-        key = os.urandom(16)
-        iv = os.urandom(16)
-
-        clave1 = str(form.instance.unica)
-        clave1 = clave1.encode('utf-8')
-        clave2 = str(form.instance.sii)
-        clave2 = clave2.encode('utf-8')
-        clave3 = str(form.instance.factura_electronica)
-        clave3 = clave3.encode('utf-8')
-        clave4 = str(form.instance.dir_trabajo)
-        clave4 = clave4.encode('utf-8')
-
-        clave1_encrypted = AES(key).encrypt_cbc(clave1, iv)
-        clave2_encrypted = AES(key).encrypt_cbc(clave2, iv)
-        clave3_encrypted = AES(key).encrypt_cbc(clave3, iv)
-        clave4_encrypted = AES(key).encrypt_cbc(clave4, iv)
-
-        form.instance.unica = str(clave1_encrypted)
-        form.instance.sii = str(clave2_encrypted)
-        form.instance.factura_electronica = str(clave3_encrypted)
-        form.instance.dir_trabajo = str(clave4_encrypted)
-
-        print(f'unica: {form.instance.unica}, sii: {form.instance.sii}, factura: {form.instance.factura_electronica}')
-
-        form.save()
         return super().form_valid(form)
 
-class TestView(ListView): # no funciona aún :[
+    def post(self, request, *args, **kwargs):
+        #unica = request.POST.get('unica')
+        #unica = unica.encode('utf-8')
+#
+        #sii = request.POST.get('sii')
+        #sii = sii.encode('utf-8')
+#
+        #factura_electronica = request.POST.get('factura_electronica')
+        #factura_electronica = factura_electronica.encode('utf-8')
+#
+        #dir_trabajo = request.POST.get('dir_trabajo')
+        #dir_trabajo = dir_trabajo.encode('utf-8')
+
+        form = self.get_form()
+        if form.is_valid():
+            # revisar static/py/ para ver ejemplos y source code
+            # cambiar a contraseña de request.user
+            key = b'passw0rdpassw0rd'
+            # key = 'passw0rd'
+            # key_bytes = key.encode('utf-8')
+            # key = key_bytes.ljust(16, b'\0')[:16]
+            iv = os.urandom(16)
+
+            clave1 = str(form.instance.unica)
+            clave1 = clave1.encode('utf-8')
+            clave2 = str(form.instance.sii)
+            clave2 = clave2.encode('utf-8')
+            clave3 = str(form.instance.factura_electronica)
+            clave3 = clave3.encode('utf-8')
+            clave4 = str(form.instance.dir_trabajo)
+            clave4 = clave4.encode('utf-8')
+            clave1_encrypted = AES(key).encrypt_cfb(clave1, iv)
+            clave2_encrypted = AES(key).encrypt_cfb(clave2, iv)
+            clave3_encrypted = AES(key).encrypt_cfb(clave3, iv)
+            clave4_encrypted = AES(key).encrypt_cfb(clave4, iv)
+
+            # clave1_encrypted = AES(key).encrypt_cbc(unica, iv)
+            # clave2_encrypted = AES(key).encrypt_cbc(sii, iv)
+            # clave3_encrypted = AES(key).encrypt_cbc(factura_electronica, iv)
+            # clave4_encrypted = AES(key).encrypt_cbc(dir_trabajo, iv)
+
+            form.instance.unica = clave1_encrypted
+            form.instance.sii = clave2_encrypted
+            form.instance.factura_electronica = clave3_encrypted
+            form.instance.dir_trabajo = clave4_encrypted
+            form.instance.iv = iv
+
+            form.save()
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+class TestView(DetailView): 
     model = Claves
     template_name = 'claves/test.html'
     context_object_name = 'claves'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Get the first Claves object (or adjust as needed)
-        clave_obj = Claves.objects.all()
-        if clave_obj:
-            clave_obj = clave_obj.last()
+        clave = self.get_object()
+        decrypted_u = None
+        decrypted_s = None
+        decrypted_fe = None
+        decrypted_dt = None
+
+        # key = auth.user.request password, theres going to be a request for input,
+        # then the hashed result compared to the password in the database
+        key = b'passw0rdpassw0rd'
+
+        if clave and bytes(key):
+            iv = clave.iv
+            print('clave.unica:', clave.unica, type(clave.unica))
             try:
-                decrypted = AES(key).decrypt_cbc(clave_obj.unica.encode('utf-8'), iv).decode('utf-8')
+                encrypted_u = ast.literal_eval(clave.unica)
+                print('encrypted_u:', encrypted_u, type(encrypted_u),'\niv:',clave.iv, type(clave.iv))
+                decrypted_u = AES(key).decrypt_cfb(encrypted_u, iv).decode('utf-8', 'replace')
+                print('decrypted_u:', decrypted_u)
+                
+                encrypted_s = ast.literal_eval(clave.sii) if isinstance(clave.sii, str) else clave.sii
+                decrypted_s = AES(key).decrypt_cfb(encrypted_s, iv).decode('utf-8')
+
+                encrypted_fe = ast.literal_eval(clave.factura_electronica) if isinstance(clave.factura_electronica, str) else clave.factura_electronica
+                decrypted_fe = AES(key).decrypt_cfb(encrypted_fe, iv).decode('utf-8')
+
+                encrypted_dt = ast.literal_eval(clave.dir_trabajo) if isinstance(clave.dir_trabajo, str) else clave.dir_trabajo
+                decrypted_dt = AES(key).decrypt_cfb(encrypted_dt, iv).decode('utf-8')
             except Exception:
-                decrypted = None
+                raise
+                None
+
         else:
-            decrypted = None
-        context['decrypted_unica'] = decrypted
-        context['clave_obj'] = clave_obj
+            print('no clave_obj')
+            decrypted_u = None
+
+        context['decrypted_unica'] = decrypted_u
+        context['decrypted_sii'] = decrypted_s
+        context['decrypted_factura_electronica'] = decrypted_fe
+        context['decrypted_dir_trabajo'] = decrypted_dt
+        context['clave'] = clave
         return context
 
 def ClavesExportar():
     claves = Claves.objects.all()
+    key = None
+    iv = None
 
     for c in claves:
         c.unica = c.unica.encode('utf-8')
 
-        print(f'decrypted: {AES(key).decrypt_cbc(c.unica, iv).decode('utf-8')}')
-        clave1_decrypted = AES(key).decrypt_cbc(c.unica, iv).decode('utf-8')
+        print(f'decrypted: {AES(key).decrypt_cfb(c.unica, iv).decode('utf-8')}')
+        clave1_decrypted = AES(key).decrypt_cfb(c.unica, iv).decode('utf-8')
 
     if clave1_decrypted:
         return clave1_decrypted

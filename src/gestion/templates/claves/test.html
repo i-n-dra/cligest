@@ -7,8 +7,17 @@
 {% block content %}
 <div class='list-container'>
     <h1>Listar claves</h1>
-    {% if clave_obj %}
-        <p>encrypted (en bd): {{ clave_obj.unica }}</p>
+    <form method="get">
+        <input type="password" name="password" placeholder="Ingrese su contraseña para ver la clave">
+        <button type="submit">Ver clave</button>
+    </form>
+    {% if clave %}
+        <p>client: {{ clave.client.nombre_rep_legal }} {{ clave.client.last_name_1_rep_legal }} {{ clave.client.last_name_2_rep_legal }}</p>
+        <p>encrypted (en bd): {{ clave.sii }}</p>
+        <p>encrypted (en bd): {{ clave.unica }}</p>
+        <p>encrypted (en bd): {{ clave.factura_electronica }}</p>
+        <p>encrypted (en bd): {{ clave.dir_trabajo }}</p>
+        <p>encrypted (en bd): {{ clave.iv }}</p>
         <p>decrypted: {{ decrypted_unica }}</p>
     {% else %}
         <p>algo salió mal :[</p>

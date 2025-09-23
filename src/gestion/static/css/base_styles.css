@@ -337,7 +337,6 @@ bdi { /* info hash de contraseña usuario */
 .detail-container {
     background-color: #f8fafc;
     display: flex;
-    flex-direction: column;
     padding: 2rem;
     margin-top: 3rem;
     border-radius: .6rem;
@@ -365,10 +364,24 @@ bdi { /* info hash de contraseña usuario */
     justify-content: space-between;
     padding: .3rem;
 }
+.detail-container div {
+    margin: 1rem 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.detail-container div div {
+    margin: 1rem 2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
 .detail-button {
-    width: 60%;
-    margin: 2rem 0;
-    padding: 0.7rem 1.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 .2rem;
+    padding: 0.7rem 1.1rem;
     border: none;
     border-radius: 8px;
     font-size: 1rem;

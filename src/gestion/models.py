@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
-import re
+import re, os
 
 def cuenta_corriente_validator(value):
     if not re.match(r'^(\d{9,15}|\d{1,4}(?:-\d{1,4})+|\d{1,4}(?: \d{1,4})+)$', value):
@@ -308,27 +308,31 @@ class Client(models.Model):
         return f'{self.nombre_rep_legal} {self.last_name_1_rep_legal} {self.last_name_2_rep_legal} - {self.run_rep_legal}'
 
 class Claves(models.Model):
-    client = models.ForeignKey(
+    client = models.OneToOneField(
         Client,
         on_delete=models.CASCADE,
         verbose_name='Cliente'
     )
 
     sii = models.CharField(
-        max_length=130,
-        verbose_name='Clave S.I.I.'
+        max_length=150,
+        verbose_name='Clave S.I.I.',
     )
     factura_electronica = models.CharField(
-        max_length=130,
-        verbose_name='Clave Factura Electrónica'
+        max_length=150,
+        verbose_name='Clave Factura Electrónica',
     )
     dir_trabajo = models.CharField(
-        max_length=130,
-        verbose_name='Clave Dirección de Trabajo'
+        max_length=150,
+        verbose_name='Clave Dirección de Trabajo',
     )
     unica = models.CharField(
-        max_length=130,
-        verbose_name='Clave Única'
+        max_length=150,
+        verbose_name='Clave Única',
+    )
+
+    iv = models.BinaryField(
+        auto_created=True,
     )
 
     def __str__(self):

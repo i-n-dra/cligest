@@ -6,117 +6,130 @@
 
 {% block content %}
 <div class='detail-container'>
-    <h1>Visualizando información</h1>
-    <h2>{{ c.nombre_rep_legal }} {{ c.last_name_1_rep_legal }}</h2>
-    {% if c %}
-    <h3>Datos Representante Legal</h3>
-    <table class="detail-table">
-        <tr>
-            <th>Nombre</th>
-            <td>{{ c.nombre_rep_legal }}</td>
-        </tr>
-            <th>Apellidos</th>
-            <td>{{ c.last_name_1_rep_legal }} {{ c.last_name_2_rep_legal }}</td>
-        </tr>
-            <th>RUN</th>
-            <td>{{ c.run_rep_legal }}</td>
-        </tr>
-        <tr>
-            <th>Tipo de empresa</th>
-            <td>{{ c.tipo_empresa }}</td>
-        </tr>
-    </table>
-
-    <hr class="solid-divider">
-
-    <h3>Datos Empresa</h3>
-    <table class="detail-table">
-        <tr>
-            <th>Razón Social</th>
-            {% if c.razon_social %}
-            <td>{{ c.razon_social }}</td>
-            {% else %}
-            <td>No tiene</td>
-            {% endif %}
-        </tr>
-        <tr>
-            <th>Nombre de fantasía</th>
-            {% if c.nombre_fantasia %}
-            <td>{{ c.nombre_fantasia }}</td>
-            {% else %}
-            <td>No tiene</td>
-            {% endif %}
-        </tr>
-        <tr>
-            <th>RUN</th>
-            <td>{{ c.run_empresa }}</td>
-        </tr>
-        <tr>
-            <th>Régimen Tributario</th>
-            <td>{{ c.reg_tributario }}</td>
-        </tr>
-        <tr>
-            <th>Giro / Rubro</th>
-            <td>{{ c.giro_rubro }}</td>
-        </tr>
-        <tr>
-            <th>Código S.I.I.</th>
-            <td>{{ c.codigo_sii }}</td>
-        </tr>
-    </table>
-
-    <!--agregar nuevo div desde aqui-->
-
-    <h3>Datos Financieros</h3>
-    <table class="detail-table">
-            <tr>
-                <th>Tipo de contabilidad</th>
-                <td>{{ c.tipo_contabilidad }}</td>
-            </tr>
-                <th>Cuenta corriente</th>
-                <td>{{ c.cuenta_corriente }}</td>
-            </tr>
-            <tr>
-                <th>N° Cuenta Corriente</th>
-                <td>{{ c.n_cuenta_corriente }}</td>
-            </tr>
-    </table>
-
-    <hr class="solid-divider">
-
-    <h3>Datos de Contacto</h3>
-    <table class="detail-table">
-            <tr>
-                <th>Correo electrónico</th>
-                <td>{{ c.email }}</td>
-            </tr>
-            <tr>
-                <th>Teléfono / Celular</th>
-                <td>{{ c.phone_number }}</td>
-            </tr>
-            <tr>
-                <th>Región</th>
-                <td>{{ c.region }}</td>
-            </tr>
-            <tr>
-                <th>Comuna</th>
-                <td>{{ c.comuna }}</td>
-            </tr>
-            <tr>
-                <th>Dirección</th>
-                <td>{{ c.address }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <hr class="solid-divider">
-
-    <h3>Opciones</h3>
     <div>
-        <a href="" class='detail-button'>Editar</a> <a href="" class='detail-button'>Administrar claves</a>
-        <a href="" class='detail-button'>Eliminar</a>
-        <a href="{% url "list_clients" %}" class='detail-button'>Ver clientes</a>
-        <a href="" class='detail-button'>Exportar cliente</a>
+        <h1>Visualizando información</h1>
+        <h2>{{ c.nombre_rep_legal }} {{ c.last_name_1_rep_legal }}</h2>
+        {% if c %}
+        <h3>Datos Representante Legal</h3>
+        <table class="detail-table">
+            <tr>
+                <th>Nombre</th>
+                <td>{{ c.nombre_rep_legal }}</td>
+            </tr>
+                <th>Apellidos</th>
+                <td>{{ c.last_name_1_rep_legal }} {{ c.last_name_2_rep_legal }}</td>
+            </tr>
+                <th>RUN</th>
+                <td>{{ c.run_rep_legal }}</td>
+            </tr>
+            <tr>
+                <th>Tipo de empresa</th>
+                <td>{{ c.tipo_empresa }}</td>
+            </tr>
+        </table>
+    
+        <hr class="solid-divider">
+    
+        <h3>Datos Empresa</h3>
+        <table class="detail-table">
+            <tr>
+                <th>Razón Social</th>
+                {% if c.razon_social %}
+                <td>{{ c.razon_social }}</td>
+                {% else %}
+                <td>No tiene</td>
+                {% endif %}
+            </tr>
+            <tr>
+                <th>Nombre de fantasía</th>
+                {% if c.nombre_fantasia %}
+                <td>{{ c.nombre_fantasia }}</td>
+                {% else %}
+                <td>No tiene</td>
+                {% endif %}
+            </tr>
+            <tr>
+                <th>RUN</th>
+                <td>{{ c.run_empresa }}</td>
+            </tr>
+            <tr>
+                <th>Régimen Tributario</th>
+                <td>{{ c.reg_tributario }}</td>
+            </tr>
+            <tr>
+                <th>Giro / Rubro</th>
+                <td>{{ c.giro_rubro }}</td>
+            </tr>
+            <tr>
+                <th>Código S.I.I.</th>
+                <td>{{ c.codigo_sii }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div>
+        <h3>Opciones</h3>
+        <div>
+            <a href="{% url "update_client" c.id %}" class='detail-button' title='Editar cliente'>
+                <i class="fa fa-pencil-square-o" style="font-size:24px; padding-left:.1rem"></i>
+            </a>
+            <a href="" class='detail-button' title='Editar claves'>
+                <i class="fa fa-unlock-alt" style="font-size:24px; padding-left:.1rem"></i>
+            </a>
+            <a href="{% url "delete_client" c.id %}" class='detail-button' title='Eliminar cliente'>
+                <i class="fa fa-trash" style="font-size:24px; padding-left:.1rem"></i>
+            </a>
+            <a href="" class='detail-button' title='Exportar'>
+                <i class="fa fa-file-excel-o" style="font-size:24px; padding-left:.1rem"></i>
+            </a>
+            <a href="{% url "list_clients" %}" class='detail-button' title='Volver a la lista de clientes'>
+                <i class="fa fa-users" style="font-size:24px; padding-left:.1rem"></i>
+            </a>
+        </div>
+        
+        <hr class="solid-divider">
+
+        <h3>Datos Financieros</h3>
+        <table class="detail-table">
+                <tr>
+                    <th>Tipo de contabilidad</th>
+                    <td>{{ c.tipo_contabilidad }}</td>
+                </tr>
+                    <th>Cuenta corriente</th>
+                    <td>{{ c.cuenta_corriente }}</td>
+                </tr>
+                <tr>
+                    <th>N° Cuenta Corriente</th>
+                    <td>{{ c.n_cuenta_corriente }}</td>
+                </tr>
+        </table>
+    
+        <hr class="solid-divider">
+
+        <h3>Datos de Contacto</h3>
+        <table class="detail-table">
+                <tr>
+                    <th>Correo electrónico</th>
+                    <td>{{ c.email }}</td>
+                </tr>
+                <tr>
+                    <th>Teléfono / Celular</th>
+                    <td>{{ c.phone_number }}</td>
+                </tr>
+                <tr>
+                    <th>Región</th>
+                    <td>{{ c.region }}</td>
+                </tr>
+                <tr>
+                    <th>Comuna</th>
+                    <td>{{ c.comuna }}</td>
+                </tr>
+                <tr>
+                    <th>Dirección</th>
+                    <td>{{ c.address }}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
     {% else %}
     <h3>El cliente no pudo ser encontrado.</h3>
