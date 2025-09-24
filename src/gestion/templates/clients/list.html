@@ -8,7 +8,9 @@
 <div class='list-container'>
     <h1>Clientes</h1>
     {% if clientes %}
-    <a href="{% url "home" %}">Exportar clientes</a>
+    <a href="{% url "export_clients" %}" title='Exportar clientes'>
+        <i class="fa fa-file-excel-o" aria-hidden="true" style="font-size:24px;"></i>
+    </a>
     <table id="myTable" class="display">
         <thead>
             <tr>

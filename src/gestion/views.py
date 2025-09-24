@@ -14,8 +14,9 @@ from .forms import (
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-# Importación de encriptación AES 
+# encriptación AES 
 from .static.py.aes import AES
+from .static.py.exportar_clientes import exportar_clientes_main
 
 # Create your views here.
 def home(request):
@@ -41,11 +42,10 @@ def request_user_role(username):
 
 ### Clientes Views ###
 
-class ClientExport(ListView):
-    model = Client
-    def get_queryset(self):
-        return super().get_queryset()
-
+def ClientExport(request):
+    clientes = Client.objects.all()
+    exportar_clientes_main(clientes)
+    return render(request, 'index.html')
 
 class ClientListView(ListView):
     model = Client

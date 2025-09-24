@@ -1,4 +1,5 @@
 from django.urls import path
+from . import views
 from .views import (
     ClientCreateView,
     ClientListView,
@@ -12,6 +13,7 @@ from .views import (
 urlpatterns = [
     # Clientes
     path("list-clients/", ClientListView.as_view(), name="list_clients"),
+    path("export-clients/", views.ClientExport, name="export_clients"),
     path("create-client/", ClientCreateView.as_view(), name="create_client"),
     path("detail-client/<int:pk>", ClientDetailView.as_view(), name="detail_client"),
     path("update-client/<int:pk>", ClientUpdateView.as_view(), name="update_client"),

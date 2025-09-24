@@ -1,8 +1,10 @@
+from openpyxl import load_workbook
 from openpyxl import Workbook
 from openpyxl.styles import Font, Border, Alignment, Side
 from openpyxl.worksheet.dimensions import Dimension, RowDimension, ColumnDimension
 from tempfile import NamedTemporaryFile
 from django.http import Http404
+from django.db.models.query import QuerySet
 
 titulo_font = Font(
     name='Century Gothic',
@@ -38,83 +40,92 @@ ficha_border = Border(
     )
 )
 
-wb = Workbook(write_only=False)
+def exportar_clientes_main(clientes=QuerySet):
+    path = 'D:/py_venvs/proyectos/proyecto_integracion/cligest/Clientes.xlsx'
+    wb = load_workbook(path)
+    if not wb:
+        create_file()
 
-# grab the active worksheet
-ws = wb.active
-ws.title = "Clientes"
-ws.freeze_panes = 'A3' # freeze top rows
+    # grab the active worksheet
+    ws = wb.active
 
-ws['A1'] = 'CLIENTES'
-titulo_cell = ws['A1']
-titulo_cell.font = titulo_font
-titulo_cell.alignment = center_align
-ws.merge_cells('A1:S1')
+    # wip
+    print(clientes)
+    for c in clientes:
+        pass
 
-# Rows can also be appended
-subtitles = [
-    # Datos Representante Legal #
-    'Nombre(s)', # preguntar sobre esto ??
-    'Apellido Paterno',
-    'Apellido Materno',
-    'RUN',
-    'Tipo de Empresa',
-    # Datos Empresa #
-    'Razón Social',
-    'Nombre de fantasía',
-    'RUN',
-    'Régimen Tributario',
-    'Giro / Rubro',
-    'Código S.I.I.',
-    # Datos Financieros #
-    'Tipo de contabilidad',
-    'Cuenta corriente',
-    'N° Cuenta Corriente',
-    # Datos Contacto #
-    'Correo electrónico',
-    'Teléfono / Celular',
-    'Región',
-    'Comuna',
-    'Dirección'
-] # borde thick por cada categoria de datos
-subtitle_row = ws.append(subtitles)
-subtitle_cells = ws['A2:S2']
-for row in subtitle_cells:
-    for c in row:
-        c.font = subtitle_font
+    # Save the file
 
-for column in ws.columns:
-    max_length = 0
-    col = column[1].column_letter # Get the column letter (e.g., 'A', 'B')
-    for cell in column:
-        if cell.value is not None:
-            curr_length = len(str(cell.value))
-            if curr_length > max_length:
-                max_length = curr_length
-    
-    # Add padding to the width
-    adjusted_width = (max_length + 2) * 1.2 
-    ws.column_dimensions[col].width = adjusted_width
+    # opción 1
+    # with NamedTemporaryFile() as tmp:
+    #         wb.save(tmp.name)
+    #         tmp.seek(0)
+    #         stream = tmp.read()
 
-ws.row_dimensions[1].height = 24
+    # opción 2
+    try:
+        wb.save('Clientes.xlsx') 
+        # + guardar una copia en el escritorio?
+    except PermissionError:
+        raise Http404('Por favor, cierre el archivo antes de confirmar los cambios')
 
-# wip
-cliente_rows = {'nombre':'juan'}
-for k,v in cliente_rows.items():
-    for r in ws.iter_rows(min_row=3,min_col=1):
-        for c in r:
-            c = v
+def create_file():
+    wb = Workbook(write_only=False)
 
-# Save the file
+    # grab the active worksheet
+    ws = wb.active
+    ws.title = "Clientes"
+    ws.freeze_panes = 'A3' # freeze top rows
 
-# opción 1
-# with NamedTemporaryFile() as tmp:
-#         wb.save(tmp.name)
-#         tmp.seek(0)
-#         stream = tmp.read()
+    ws['A1'] = 'CLIENTES'
+    titulo_cell = ws['A1']
+    titulo_cell.font = titulo_font
+    titulo_cell.alignment = center_align
+    ws.merge_cells('A1:S1')
 
-# opción 2
-try:
-    wb.save('Clientes.xlsx')
-except PermissionError:
-    raise Http404('Por favor, cierre el archivo antes de confirmar los cambios')
+    # Rows can also be appended
+    subtitles = [
+        # Datos Representante Legal #
+        'Nombre(s)', # preguntar sobre esto ??
+        'Apellido Paterno',
+        'Apellido Materno',
+        'RUN',
+        'Tipo de Empresa',
+        # Datos Empresa #
+        'Razón Social',
+        'Nombre de fantasía',
+        'RUN',
+        'Régimen Tributario',
+        'Giro / Rubro',
+        'Código S.I.I.',
+        # Datos Financieros #
+        'Tipo de contabilidad',
+        'Cuenta corriente',
+        'N° Cuenta Corriente',
+        # Datos Contacto #
+        'Correo electrónico',
+        'Teléfono / Celular',
+        'Región',
+        'Comuna',
+        'Dirección'
+    ] # borde thick por cada categoria de datos
+    ws.append(subtitles)
+    subtitle_cells = ws['A2:S2']
+    for row in subtitle_cells:
+        for c in row:
+            c.font = subtitle_font
+
+    for column in ws.columns:
+        max_length = 0
+        col = column[1].column_letter # Get the column letter (e.g., 'A', 'B')
+        for cell in column:
+            if cell.value is not None:
+                curr_length = len(str(cell.value))
+                if curr_length > max_length:
+                    max_length = curr_length
+
+        # Add padding to the width
+        adjusted_width = (max_length + 2) * 1.2 
+        ws.column_dimensions[col].width = adjusted_width
+
+    ws.row_dimensions[1].height = 24
