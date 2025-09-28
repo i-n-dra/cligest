@@ -282,8 +282,8 @@ body {
     padding: 0.6rem 1rem;
     margin: .5rem 0;
     background-color: #f8fafc;
-    border-radius: .6rem;
-    border: #f8fafc 3px solid;
+    border-radius: .2rem;
+    border: #d7d7d8 1px solid;
 }
 
 .btn-side-to-side {
@@ -394,6 +394,83 @@ bdi { /* info hash de contraseña usuario */
     transition: 0.3s ease;
     background: #5370a1;
     cursor: pointer;
+}
+
+/* dialog box */
+.dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4); /* fondo semitransparente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.dialog-box {
+    background: #f8fafc;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.dialog-box h2 {
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+    color: #0a0f35;
+}
+
+.dialog-box ul {
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+    color: #475569;
+}
+
+.dialog-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.dialog-buttons button {
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.btn-confirm {
+    background: #0b3378;
+    color: #f8fafc;
+}
+
+.btn-confirm:hover {
+    background: #0284c7;
+}
+
+.btn-cancel {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+.btn-cancel:hover {
+    background: #cbd5e1;
+}
+
+/* Animación */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
 }
 
 /* form.as_table */

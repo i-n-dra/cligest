@@ -7,16 +7,18 @@
 {% block content %}
 <div class='list-container'>
     <h1>Confirmar acción</h1>
-    <form action="" method="post">
-        <div>
-            {% csrf_token %}
-            <h3>¿Está seguro que desea eliminar el cliente {{ object }}?</h3>
-            <p>Esta acción no se puede deshacer</p>
-        </div>
-        <div>
-            <button type="submit">Si, eliminar</button>
-            <a href="{% url "detail_client" object.id %}">No, volver</a>
-        </div>
-    </form>
+    <dialog>
+        <form action="" method="post">
+            <div>
+                {% csrf_token %}
+                <h3>¿Está seguro que desea eliminar el cliente {{ object }}?</h3>
+                <p>Esta acción no se puede deshacer</p>
+            </div>
+            <div>
+                <button type="submit">Si, eliminar</button>
+                <a href="{% url "detail_client" object.id %}">No, volver</a>
+            </div>
+        </form>
+    </dialog>
 </div>
 {% endblock content %}

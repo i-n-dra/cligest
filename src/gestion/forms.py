@@ -1,7 +1,8 @@
 from django import forms
 from .models import (
     Client,
-    Claves
+    Claves,
+    PagosCliente
 )
 
 class ClientForm(forms.ModelForm):
@@ -32,9 +33,9 @@ class ClientForm(forms.ModelForm):
         ]
         widgets = {
             'tipo_empresa' : forms.Select(attrs={"class": "js-example-basic-single"}),
-            'reg_tributario': forms.Select(attrs={"class": "js-example-basic-single"}),
-            'giro_rubro' : forms.Select(attrs={"class": "js-example-basic-single"}),
-            'codigo_sii': forms.Select(attrs={"class": "js-example-basic-single"}),
+            'reg_tributario': forms.SelectMultiple(attrs={"class": "my-select2-multiple"}),
+            'giro_rubro' : forms.SelectMultiple(attrs={"class": "my-select2-multiple"}),
+            'codigo_sii': forms.SelectMultiple(attrs={"class": "my-select2-multiple"}),
             'tipo_contabilidad' : forms.Select(attrs={"class": "js-example-basic-single"}),
             'cuenta_corriente' : forms.Select(attrs={"class": "js-example-basic-single"}),
             'region' : forms.Select(attrs={"class": "js-example-basic-single"}),
@@ -58,3 +59,14 @@ class ClaveForm(forms.ModelForm):
             'factura_electronica' : forms.PasswordInput(),
             'dir_trabajo' : forms.PasswordInput()
         }
+
+class PagosClienteForm(forms.ModelForm):
+    class Meta:
+        model = PagosCliente
+        fields = [
+            'client',
+            'compras',
+            'ventas',
+            'retenciones',
+            'honorarios',
+        ]

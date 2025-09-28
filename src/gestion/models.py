@@ -46,6 +46,15 @@ class CodigoSII(models.Model):
     def __str__(self):
         return f'{str(self.code)} - {self.activity}'
 
+class GiroRubro(models.Model):
+    name = models.CharField(
+        max_length=150,
+        verbose_name='Giro / Rubro'
+    )
+
+    def __str__(self):
+        return self.name
+
 class RegTributario(models.Model):
     name = models.CharField(
         max_length=70,
@@ -140,83 +149,12 @@ class Client(models.Model):
             ('Persona Jurídica', 'Persona Jurídica')
         ]
     )
-    giro_rubro = models.CharField(
-        max_length=100,
-        verbose_name='Giro / Rubro',
-        choices=[
-            (
-                'Agricultura, Ganadería, Silvicultura Y Pesca',
-                'Agricultura, Ganadería, Silvicultura Y Pesca'
-            ),
-            (
-                'Explotación De Minas Y Canteras',
-                'Explotación De Minas Y Canteras'
-            ),
-            (
-                'Industria Manufacturera',
-                'Industria Manufacturera'
-            ),
-            (
-                'Suministro De Electricidad, Gas, Vapor Y Aire Acondicionado',
-                'Suministro De Electricidad, Gas, Vapor Y Aire Acondicionado'
-            ),
-            (
-                'Suministro De Agua; Evacuación De Aguas Residuales, Gestión De Desechos Y Descontaminación',
-                'Suministro De Agua; Evacuación De Aguas Residuales, Gestión De Desechos Y Descontaminación'
-            ),
-            (   'Construcción',
-                'Construcción'
-            ),
-            (   'Comercio Al Por Mayor Y Al Por Menor; Reparación De Vehiculos Automotores Y Motocicletas',
-                'Comercio Al Por Mayor Y Al Por Menor; Reparación De Vehiculos Automotores Y Motocicletas'
-            ),
-            (   'Transporte Y Almacenamiento',
-                'Transporte Y Almacenamiento'
-            ),
-            (   'Actividades De Alojamiento Y De Servicio De Comidas',
-                'Actividades De Alojamiento Y De Servicio De Comidas'
-            ),
-            (   'Información Y Comunicaciones',
-                'Información Y Comunicaciones'
-            ),
-            (   'Actividades Financieras Y De Seguros',
-                'Actividades Financieras Y De Seguros'
-            ),
-            (   'Actividades Inmobiliarias',
-                'Actividades Inmobiliarias'
-            ),
-            (   'Actividades Profesionales, Cientificas Y Técnicas',
-                'Actividades Profesionales, Cientificas Y Técnicas'
-            ),
-            (   'Actividades De Servicios Administrativos Y De Apoyo',
-                'Actividades De Servicios Administrativos Y De Apoyo'
-            ),
-            (   'Administración Pública Y Defensa; Planes De Seguridad Social De Afiliación Obligatoria',
-                'Administración Pública Y Defensa; Planes De Seguridad Social De Afiliación Obligatoria'
-            ),
-            (   'Enseñanza',
-                'Enseñanza'
-            ),
-            (   'Actividades De Atención De La Salud Humana Y De Asistencia Social',
-                'Actividades De Atención De La Salud Humana Y De Asistencia Social'
-            ),
-            (   'Actividades Artísticas, De Entretenimiento Y Recreativas',
-                'Actividades Artísticas, De Entretenimiento Y Recreativas'
-            ),
-            (   'Otras Actividades De Servicios',
-                'Otras Actividades De Servicios'
-            ),
-            (   'Actividades De Los Hogares Como Empleadores; Actividades No Diferenciadas De Los Hogares',
-                'Actividades De Los Hogares Como Empleadores; Actividades No Diferenciadas De Los Hogares'
-            ),
-            (   'Actividades De Organizaciones Y Órganos Extraterritoriales',
-                'Actividades De Organizaciones Y Órganos Extraterritoriales'
-            ),
-        ]
+    giro_rubro = models.ManyToManyField(
+        GiroRubro,
+        verbose_name='Giro / Rubro',  
     )
-    codigo_sii = models.ForeignKey(
+    codigo_sii = models.ManyToManyField(
         CodigoSII,
-        on_delete=models.RESTRICT,
         verbose_name='Código Actividad S.I.I.'
     )
     email = models.EmailField(
@@ -254,15 +192,13 @@ class Client(models.Model):
             )
         ]
     )
-    tipo_contabilidad = models.ForeignKey(
+    tipo_contabilidad = models.ManyToManyField(
         TipoContabilidad,
         verbose_name='Tipo de Contabilidad',
-        on_delete=models.RESTRICT
     )
-    reg_tributario = models.ForeignKey(
+    reg_tributario = models.ManyToManyField(
         RegTributario,
         verbose_name='Régimen Tributario',
-        on_delete=models.RESTRICT
     )
     cuenta_corriente = models.CharField(
         max_length=30,
@@ -291,14 +227,10 @@ class Client(models.Model):
             'invalid': 'Solo se permiten dígitos y espacios o guiones (-)'
         }
     )
-    
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    updated_at = models.DateTimeField(
-        auto_now=True,
-        verbose_name='Última actualización'
+    n_trabajadores = models.IntegerField(
+        verbose_name='Trabajadores'
     )
-    
+        
     class Meta: # https://youtu.be/AR5hjQ8nla0?si=-o-ipQxpwiqOeJJK&t=909
         permissions = [
             ('export_client', 'Puede exportar clientes'),
@@ -316,15 +248,15 @@ class Claves(models.Model):
 
     sii = models.CharField(
         max_length=150,
-        verbose_name='Clave S.I.I.',
+        verbose_name='S.I.I.',
     )
     factura_electronica = models.CharField(
         max_length=150,
-        verbose_name='Clave Factura Electrónica',
+        verbose_name='Factura Electrónica',
     )
     dir_trabajo = models.CharField(
         max_length=150,
-        verbose_name='Clave Dirección de Trabajo',
+        verbose_name='Dirección de Trabajo',
     )
     unica = models.CharField(
         max_length=150,
@@ -338,3 +270,24 @@ class Claves(models.Model):
     def __str__(self):
         return f'Claves de {self.client.nombre_rep_legal} {self.client.last_name_1_rep_legal} {self.client.last_name_2_rep_legal} - RUN: {self.client.run_rep_legal}'
 
+class PagosCliente(models.Model):
+    client = models.OneToOneField(
+        Client,
+        on_delete=models.CASCADE,
+        verbose_name='Cliente'
+    )
+
+    compras = models.IntegerField()
+    ventas = models.IntegerField()
+    retenciones = models.IntegerField()
+    honorarios = models.IntegerField()
+    a_pagar = models.IntegerField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        verbose_name='Última actualización'
+    )
+
+    def __str__(self):
+        return f'${self.a_pagar}'

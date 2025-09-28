@@ -5,7 +5,8 @@ from django.contrib.auth.hashers import PBKDF2PasswordHasher
 from login.models import Profile
 from .models import (
     Client,
-    Claves
+    Claves,
+    PagosCliente
 )
 from .forms import (
     ClientForm,
@@ -44,8 +45,9 @@ def request_user_role(username):
 
 def ClientExport(request):
     clientes = Client.objects.all()
-    exportar_clientes_main(clientes)
-    return render(request, 'index.html')
+    pagos = PagosCliente.objects.all()
+    msg = exportar_clientes_main(clientes)
+    return render(request, 'clients/msg_exportacion.html', { 'msg': msg })
 
 class ClientListView(ListView):
     model = Client
@@ -81,6 +83,10 @@ class ClientDeleteView(DeleteView):
     model = Client
     template_name = 'clients/delete.html'
     success_url = reverse_lazy('list_clients')
+
+### PagosCliente Views ###
+
+
 
 ### Claves Views ### wip nada funciona
 
@@ -189,7 +195,6 @@ class TestView(DetailView):
                 decrypted_dt = AES(key).decrypt_cfb(encrypted_dt, iv).decode('utf-8')
             except Exception:
                 raise
-                None
 
         else:
             print('no clave_obj')
