@@ -10,7 +10,8 @@ from .models import (
 )
 from .forms import (
     ClientForm,
-    ClaveForm
+    ClaveForm,
+    PagosClienteForm
 )
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -86,7 +87,34 @@ class ClientDeleteView(DeleteView):
 
 ### PagosCliente Views ###
 
+class PagosCreateView(CreateView):
+    model = PagosCliente
+    template_name = 'pagos/create.html'
+    form_class = PagosClienteForm
+    success_url = reverse_lazy('list_pagos')
 
+    def get_form(self, form_class = None):
+        form = super().get_form(form_class)
+        return form
+    
+    def form_valid(self, form):
+        
+
+        # que no haya otro pago creado en el mismo mes
+        # calcular aqui y comparar con el int que entrega js (tiempo real para el formulario)
+        return super().form_valid(form)
+
+class PagosListView(ListView):
+    model = PagosCliente
+    template_name = "pagos/list.html"
+    context_object_name = 'pagos'
+    paginate_by = 20
+    ordering = ['created_at']
+
+class PagosUpdateView(UpdateView):
+    model = PagosCliente
+    template_name = "pagos/update.html"
+    # solo se podrán editar los pagos de los últimos 2 meses (sujeto a cambio??)  
 
 ### Claves Views ### wip nada funciona
 

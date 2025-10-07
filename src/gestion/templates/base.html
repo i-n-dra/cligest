@@ -41,12 +41,10 @@
       </div>
       <nav class="menu menu-on">
         <div class='menu'>
-          <a href="{% url "profile" %}">Ver Perfil</a>
+          <a href="{% url "profile" %}" title="Ver perfil">Perfil</a>
           <a href="#">Dashboard</a>
-          <a href="{% url "list_clients" %}">Clientes</a>
-          <a href="#">Empresas</a>
-          <a href="#">Estadísticas de Impuestos</a>
-          <a href="#">Reportes</a>
+          <a href="{% url "list_clients" %}" title="Ver clientes">Clientes</a>
+          <a href="{% url "list_pagos" %}" title="Ver declaraciones de renta">Declaraciones</a>
           <a href="#">Configuración</a>
           <a href="{% url "create_claves" %}">Crear claves</a>
           <a href="{% url "test" 1 %}">Test</a>
@@ -74,11 +72,9 @@
         <p>No autenticado</p>
       </div>
       <nav class="menu menu-off">
-        <a href="#">Dashboard</a>
+        <a href="#">Perfil</a>
         <a href="#">Clientes</a>
-        <a href="#">Empresas</a>
-        <a href="#">Estadísticas de Impuestos</a>
-        <a href="#">Reportes</a>
+        <a href="#">Declaraciones</a>
         <a href="#">Configuración</a>
       </nav>
       </aside>

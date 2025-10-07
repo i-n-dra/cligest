@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Declaración de Renta - Editar</title>
+{% endblock title %}
+
+{% block content %}
+<div class='list-container'>
+    <h1>Editar Declaración de Renta</h1>
+    <form action="" method="post">
+        <table>
+            {% csrf_token %}
+            {{ form.as_table }}
+        </table>
+        <button type="submit">Confirmar cambios</button>
+    </form>
+</div>
+{% endblock content %}

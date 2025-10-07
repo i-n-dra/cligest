@@ -288,6 +288,10 @@ class PagosCliente(models.Model):
         auto_now=True,
         verbose_name='Última actualización'
     )
-
+    def get_month(self):
+        if self.updated_at:
+            return f'{self.updated_at.month}/{self.updated_at.year}'
+        else:
+            return ''
     def __str__(self):
-        return f'${self.a_pagar}'
+        return f'${self.a_pagar} - {self.get_month()}'

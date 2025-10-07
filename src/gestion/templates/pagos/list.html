@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Declaraciones de Renta</title>
+{% endblock title %}
+
+{% block content %}
+<div class='list-container'>
+    <h1>Declaraciones de Renta</h1>
+    {% if clientes %}
+    <a href="{% url "export_clients" %}" title='Exportar clientes'>
+        <i class="fa fa-file-excel-o" aria-hidden="true" style="font-size:24px;"></i>
+    </a>
+    <table id="myTable" class="display">
+        <thead>
+            <tr>
+                <th>Cliente</th>
+                <th>Monto a pagar</th>
+                <th>Fecha</th>
+                <th> </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in pagos %}
+            <tr>
+                <td>{{ p.client }}</td>
+                <td>$ {{ p.a_pagar|floatformat:"-3g" }}</td> # https://docs.djangoproject.com/en/5.2/ref/templates/builtins/#stringformat:~:text=%7B%7B%20value-,%7Cfloatformat%3A%22%2D3g%22,-%7D%7D 
+                <td>{{ p.created_at|date: "E, Y" }}</td>
+                <td>
+                    <a href="{% url "detail_pagos" p.id %}" title='Ver detalles'>
+                    <i class="fa fa-info" aria-hidden="true" style="font-size:24px;"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <h3>No hay declaraciones registradas en el sistema, ¿Desea <a class='anchor' href="{% url "create_pagos" %}">añadir una</a>?</h3>
+    {% endif %}
+</div>
+
+{% endblock content %}
