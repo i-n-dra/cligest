@@ -271,27 +271,22 @@ class Claves(models.Model):
         return f'Claves de {self.client.nombre_rep_legal} {self.client.last_name_1_rep_legal} {self.client.last_name_2_rep_legal} - RUN: {self.client.run_rep_legal}'
 
 class PagosCliente(models.Model):
-    client = models.OneToOneField(
+    client = models.ManyToManyField(
         Client,
-        on_delete=models.CASCADE,
         verbose_name='Cliente'
     )
 
-    compras = models.IntegerField()
-    ventas = models.IntegerField()
-    retenciones = models.IntegerField()
+    iva_a_pagar = models.IntegerField()
+    iva_anticipado = models.IntegerField()
+    ppm_vehiculo = models.IntegerField()
+    ppm_ventas = models.IntegerField()
     honorarios = models.IntegerField()
+    f301 = models.IntegerField()
+    imposiciones = models.IntegerField()
+    otros = models.IntegerField()
     a_pagar = models.IntegerField()
 
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(
-        auto_now=True,
-        verbose_name='Última actualización'
-    )
-    def get_month(self):
-        if self.updated_at:
-            return f'{self.updated_at.month}/{self.updated_at.year}'
-        else:
-            return ''
+
     def __str__(self):
-        return f'${self.a_pagar} - {self.get_month()}'
+        return f'${self.a_pagar} - {self.created_at.month}/{self.created_at.year}'

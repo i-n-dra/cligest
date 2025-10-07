@@ -65,8 +65,13 @@ class PagosClienteForm(forms.ModelForm):
         model = PagosCliente
         fields = [
             'client',
-            'compras',
-            'ventas',
-            'retenciones',
+            'iva_a_pagar',
+            'iva_anticipado',
+            'ppm_vehiculo',
+            'ppm_ventas',
             'honorarios',
+            'f301',
+            'imposiciones',
+            'otros',
+            'a_pagar'
         ]
