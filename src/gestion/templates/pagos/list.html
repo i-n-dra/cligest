@@ -25,7 +25,7 @@
             <tr>
                 <td>{{ p.client }}</td>
                 <td>$ {{ p.a_pagar|floatformat:"-3g" }}</td> # https://docs.djangoproject.com/en/5.2/ref/templates/builtins/#stringformat:~:text=%7B%7B%20value-,%7Cfloatformat%3A%22%2D3g%22,-%7D%7D 
-                <td>{{ p.created_at|date: "E, Y" }}</td>
+                <td>{{ p.created_at|date:"F, Y" }}</td>
                 <td>
                     <a href="{% url "detail_pagos" p.id %}" title='Ver detalles'>
                     <i class="fa fa-info" aria-hidden="true" style="font-size:24px;"></i>

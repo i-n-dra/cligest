@@ -42,15 +42,15 @@
       <nav class="menu menu-on">
         <div class='menu'>
           <a href="{% url "profile" %}" title="Ver perfil">Perfil</a>
-          <a href="#">Dashboard</a>
+          <!--<a href="#">Dashboard</a>-->
           <a href="{% url "list_clients" %}" title="Ver clientes">Clientes</a>
           <a href="{% url "list_pagos" %}" title="Ver declaraciones de renta">Declaraciones</a>
           <a href="#">Configuración</a>
           <a href="{% url "create_claves" %}">Crear claves</a>
-          <a href="{% url "test" 1 %}">Test</a>
           {% if user.is_superuser %}
           <a href="{% url "admin:index" %}">Administración</a>
           <a href="{% url "listar-roles-permisos" %}">Roles y permisos</a>
+          <a href="{% url "test" 1 %}">Test</a>
           {% endif %}
         </div>
         <div class='menu-bottom'>
@@ -102,6 +102,7 @@
       $('#myTable').DataTable();
       } );
     </script>
+    <script src="{% static "js/validations.js" %}"></script>
 
 </body>
 </html>

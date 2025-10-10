@@ -8,9 +8,14 @@
 <div class='list-container'>
     <h1>Clientes</h1>
     {% if clientes %}
-    <a href="{% url "export_clients" %}" title='Exportar clientes'>
-        <i class="fa fa-file-excel-o" aria-hidden="true" style="font-size:24px;"></i>
-    </a>
+    <div class="btn-side-to-side">
+        <a href="{% url "export_clients" %}" class='list-button' title='Exportar clientes'>
+            <i class="fa fa-file-excel-o" aria-hidden="true" style="font-size:24px;"></i>
+        </a>
+        <a href="{% url "create_client" %}" class='list-button' title='Añadir cliente'>
+            <i class="fa fa-user-plus" aria-hidden="true" style="font-size:24px;"></i>
+        </a>
+    </div>
     <table id="myTable" class="display">
         <thead>
             <tr>

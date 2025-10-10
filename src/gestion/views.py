@@ -19,6 +19,7 @@ from django.urls import reverse_lazy
 # encriptación AES 
 from .static.py.aes import AES
 from .static.py.exportar_clientes import exportar_clientes_main
+from django.http import JsonResponse
 
 # Create your views here.
 def home(request):
@@ -84,6 +85,11 @@ class ClientDeleteView(DeleteView):
     model = Client
     template_name = 'clients/delete.html'
     success_url = reverse_lazy('list_clients')
+
+def check_run(request):
+    run = request.GET.get("run")
+    exists = Client.objects.filter(run_empresa=run).exists() #falta agregar el de rep_legal
+    return JsonResponse({"exists": exists})
 
 ### PagosCliente Views ###
 

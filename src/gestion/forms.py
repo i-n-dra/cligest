@@ -9,13 +9,13 @@ class ClientForm(forms.ModelForm):
     class Meta:
         model = Client
         fields = [
+            'run_rep_legal',
+            'run_empresa',
             'nombre_rep_legal',
             'last_name_1_rep_legal',
             'last_name_2_rep_legal',
             'razon_social',
             'nombre_fantasia',
-            'run_rep_legal',
-            'run_empresa',
             'tipo_empresa',
             'reg_tributario',
             'giro_rubro',
@@ -32,11 +32,13 @@ class ClientForm(forms.ModelForm):
             'address',
         ]
         widgets = {
+            'run_rep_legal': forms.TextInput(attrs={"onchange": "run_validacion()"}),
+            'run_empresa': forms.TextInput(attrs={"onchange": "run_validacion()"}),
             'tipo_empresa' : forms.Select(attrs={"class": "js-example-basic-single"}),
             'reg_tributario': forms.SelectMultiple(attrs={"class": "my-select2-multiple"}),
             'giro_rubro' : forms.SelectMultiple(attrs={"class": "my-select2-multiple"}),
             'codigo_sii': forms.SelectMultiple(attrs={"class": "my-select2-multiple"}),
-            'tipo_contabilidad' : forms.Select(attrs={"class": "js-example-basic-single"}),
+            'tipo_contabilidad' : forms.SelectMultiple(attrs={"class": "my-select2-multiple"}),
             'cuenta_corriente' : forms.Select(attrs={"class": "js-example-basic-single"}),
             'region' : forms.Select(attrs={"class": "js-example-basic-single"}),
             'comuna' : forms.Select(attrs={"class": "js-example-basic-single"}),

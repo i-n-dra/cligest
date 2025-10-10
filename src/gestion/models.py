@@ -129,7 +129,8 @@ class Client(models.Model):
             RegexValidator(
                 regex=r'^\d{7,8}-[\dkK]$',
             )
-        ]
+        ],
+        unique=True
     )
     run_empresa = models.CharField(
         max_length=12,
@@ -139,7 +140,8 @@ class Client(models.Model):
             RegexValidator(
                 regex=r'^\d{7,8}-[\dkK]$',
             )
-        ]
+        ],
+        unique=True
     )
     tipo_empresa = models.CharField(
         max_length=20,

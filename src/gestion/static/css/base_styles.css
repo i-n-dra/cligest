@@ -297,7 +297,7 @@ body {
     margin: 2rem !important;
 }
 
-.form button, .form a {
+.form button[type="submit"], .form a {
     width: 60%;
     margin: 2rem 0;
     padding: 0.7rem 1.6rem;
@@ -308,9 +308,10 @@ body {
     background: #0b3378;
     color: #f8fafc;
     text-decoration: none;
+    align-self: center;
 }
 
-.form button:hover, .form a:hover {
+.form button[type="submit"]:hover, .form a:hover {
     transition: 0.3s ease;
     background: #5370a1;
     cursor: pointer;
@@ -327,9 +328,55 @@ bdi { /* info hash de contraseña usuario */
 /* listar */
 
 .list-container {
+    background-color: #f8fafc;
+    display: flex;
+    padding: 2rem;
+    margin-top: 3rem;
+    border-radius: .6rem;
+    flex-direction: column;
+}
+
+/* update */
+
+.update-container {
     background-color: #d7d7d8;
     display: flex;
     flex-direction: column;
+}
+
+.update-container th {
+    text-align: right;
+}
+
+.update-container input {
+    display: block;
+    width: 15rem;
+    padding-left: .5rem;
+    padding-right: 1.25rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.75rem;
+    border-radius: .3rem;
+    border: 0.063rem solid #aaa;
+    font-size: .9em;
+    padding: .25rem;
+    background-color: transparent;
+}
+
+.update-container td {
+    display: flex;
+    text-align: left;
+    margin: .5rem 1rem;
+    align-items: center;
+}
+
+.update-container .helptext, .update-container th label {
+    margin-left: 2rem;
+}
+
+.update-container span { /* sobreescribe select2 */
+    background-color: transparent !important; 
 }
 
 /* detail */
@@ -390,6 +437,23 @@ bdi { /* info hash de contraseña usuario */
     color: #f8fafc;
     text-decoration: none;
 }
+
+.list-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: min-content;
+    margin: auto;
+    padding: 0.7rem 1.1rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    background: #0b3378;
+    color: #f8fafc;
+    text-decoration: none;
+}
+
 .detail-button:hover {
     transition: 0.3s ease;
     background: #5370a1;
@@ -431,6 +495,10 @@ bdi { /* info hash de contraseña usuario */
     margin-bottom: 1.5rem;
     font-size: 1rem;
     color: #475569;
+}
+
+.dialog-box ul li {
+    list-style: none;
 }
 
 .dialog-buttons {

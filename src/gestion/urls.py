@@ -21,6 +21,7 @@ urlpatterns = [
     path("detail-client/<int:pk>", ClientDetailView.as_view(), name="detail_client"),
     path("update-client/<int:pk>", ClientUpdateView.as_view(), name="update_client"),
     path("delete-client/<int:pk>", ClientDeleteView.as_view(), name="delete_client"),
+    path("create-client/run-validacion/", views.check_run, name="check_run"),
 
     # Claves
     path("create-claves/", ClavesCreateView.as_view(), name="create_claves"),
