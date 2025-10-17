@@ -54,15 +54,33 @@
             </tr>
             <tr>
                 <th>Régimen Tributario</th>
-                <td>{{ c.reg_tributario }}</td>
+                <td>
+                <ul>
+                    {% for reg in c.reg_tributario.all %}
+                    <li style="list-style: none;">{{ reg.name }}</li>
+                    {% endfor %}
+                </ul>
+                </td>
             </tr>
             <tr>
                 <th>Giro / Rubro</th>
-                <td>{{ c.giro_rubro }}</td>
+                <td>
+                <ul>
+                    {% for giro in c.giro_rubro.all %}
+                    <li style="list-style: none;">{{ giro.name }}</li>
+                    {% endfor %}
+                </ul>
+                </td>
             </tr>
             <tr>
                 <th>Código S.I.I.</th>
-                <td>{{ c.codigo_sii }}</td>
+                <td>
+                <ul>
+                    {% for codsii in c.codigo_sii.all %}
+                    <li style="list-style: none;">{{ codsii }}</li>
+                    {% endfor %}
+                </ul>
+                </td>
             </tr>
         </table>
     </div>
@@ -93,7 +111,9 @@
         <table class="detail-table">
                 <tr>
                     <th>Tipo de contabilidad</th>
-                    <td>{{ c.tipo_contabilidad }}</td>
+                    {% for tipoc in c.tipo_contabilidad.all %}
+                    <td>{{ tipoc.name }}</td>
+                    {% endfor %}
                 </tr>
                     <th>Cuenta corriente</th>
                     <td>{{ c.cuenta_corriente }}</td>

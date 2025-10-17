@@ -55,7 +55,6 @@ class ClientListView(ListView):
     model = Client
     template_name = 'clients/list.html'
     context_object_name = 'clientes'
-    paginate_by = 10
     ordering = ['last_name_1_rep_legal']
 
 class ClientDetailView(DetailView):

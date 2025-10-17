@@ -411,6 +411,10 @@ bdi { /* info hash de contraseña usuario */
     justify-content: space-between;
     padding: .3rem;
 }
+.detail-table td {
+    max-width: 25rem;
+    text-align: right;
+}
 .detail-container div {
     margin: 1rem 2rem;
     display: flex;
@@ -488,6 +492,12 @@ bdi { /* info hash de contraseña usuario */
 .dialog-box h2 {
     margin-bottom: 1rem;
     font-size: 1.4rem;
+    color: #0a0f35;
+}
+
+.dialog-box p {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
     color: #0a0f35;
 }
 
