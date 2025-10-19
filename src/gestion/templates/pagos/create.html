@@ -5,14 +5,15 @@
 {% endblock title %}
 
 {% block content %}
-<div class='list-container'>
+<div class='update-container'>
     <h1>Añadir Declaración de Renta</h1>
-    <form action="" method="post">
+    <form action="" method="post" class="form">
         <table>
+            <p>Ingresar valores únicamente numéricos, sin comas ni puntos.</p>
             {% csrf_token %}
             {{ form.as_table }}
         </table>
-        <button type="submit">Agregar</button>
+        <button type="submit">Añadir</button>
     </form>
 </div>
 {% endblock content %}

@@ -134,7 +134,7 @@ class Client(models.Model):
     )
     run_empresa = models.CharField(
         max_length=12,
-        verbose_name='RUN (Empresa)',
+        verbose_name='RUT (Empresa)',
         help_text='Ejemplo: 12345678-9',
         validators=[
             RegexValidator(
@@ -273,20 +273,38 @@ class Claves(models.Model):
         return f'Claves de {self.client.nombre_rep_legal} {self.client.last_name_1_rep_legal} {self.client.last_name_2_rep_legal} - RUN: {self.client.run_rep_legal}'
 
 class PagosCliente(models.Model):
-    client = models.ManyToManyField(
+    client = models.ForeignKey(
         Client,
-        verbose_name='Cliente'
+        verbose_name='Cliente',
+        on_delete=models.CASCADE
     )
-
-    iva_a_pagar = models.IntegerField()
-    iva_anticipado = models.IntegerField()
-    ppm_vehiculo = models.IntegerField()
-    ppm_ventas = models.IntegerField()
-    honorarios = models.IntegerField()
-    f301 = models.IntegerField()
-    imposiciones = models.IntegerField()
-    otros = models.IntegerField()
-    a_pagar = models.IntegerField()
+    iva_a_pagar = models.IntegerField(
+        verbose_name="IVA a Pagar"
+    )
+    iva_anticipado = models.IntegerField(
+        verbose_name="IVA Anticipado"
+    )
+    ppm_vehiculo = models.IntegerField(
+        verbose_name="PPM de Vehículo"
+    )
+    ppm_ventas = models.IntegerField(
+        verbose_name="PPM de Ventas"
+    )
+    honorarios = models.IntegerField(
+        verbose_name="Honorarios"
+    )
+    f301 = models.IntegerField(
+        verbose_name="F30-1"
+    )
+    imposiciones = models.IntegerField(
+        verbose_name="Imposiciones"
+    )
+    otros = models.IntegerField(
+        verbose_name="Otros"
+    )
+    a_pagar = models.IntegerField(
+        verbose_name="A Pagar"
+    )
 
     created_at = models.DateTimeField(auto_now_add=True)
 

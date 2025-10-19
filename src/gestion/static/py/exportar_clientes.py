@@ -291,24 +291,24 @@ def create_file(wb=Workbook):
         'Tipo de Empresa',
         # Datos Empresa #
         'Razón Social',
-        'Nombre de fantasía',
-        'RUN',
+        'Nombre de Fantasía',
+        'RUT',
         'Régimen Tributario',
         'Giro / Rubro',
         'Código S.I.I.',
         'Trabajadores',
         # Datos Financieros #
-        'Tipo de contabilidad',
-        'Cuenta corriente',
+        'Tipo de Contabilidad',
+        'Cuenta Corriente',
         'N° Cuenta Corriente',
         'Deuda',
         # Datos Contacto #
-        'Correo electrónico',
+        'Correo Electrónico',
         'Teléfono / Celular',
         'Región',
         'Comuna',
         'Dirección',
-        'Añadido'
+        'Añadido el'
     ]
 
     subt_index = 0

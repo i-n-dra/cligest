@@ -23,7 +23,7 @@
                 <th>Apellidos</th>
                 <th>RUN (Representante Legal)</th>
                 <th>RUN (Empresa)</th>
-                <th> </th>
+                <th>Ver Más</th>
             </tr>
         </thead>
         <tbody>
@@ -35,7 +35,7 @@
                 <td>{{ c.run_empresa }}</td>
                 <td>
                     <a href="{% url "detail_client" c.id %}" title='Ver detalles'>
-                    <i class="fa fa-info" aria-hidden="true" style="font-size:24px;"></i>
+                    <i class="fa fa-info btn-table" aria-hidden="true" style="font-size:24px;"></i>
                     </a>
                 </td>
             </tr>

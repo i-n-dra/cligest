@@ -87,7 +87,12 @@ class ClientDeleteView(DeleteView):
 
 def check_run(request):
     run = request.GET.get("run")
-    exists = Client.objects.filter(run_empresa=run).exists() #falta agregar el de rep_legal
+    exists = Client.objects.filter(run_rep_legal=run).exists()
+    return JsonResponse({"exists": exists})
+
+def check_rut(request):
+    run = request.GET.get("rut")
+    exists = Client.objects.filter(run_empresa=run).exists()
     return JsonResponse({"exists": exists})
 
 ### PagosCliente Views ###
@@ -101,20 +106,41 @@ class PagosCreateView(CreateView):
     def get_form(self, form_class = None):
         form = super().get_form(form_class)
         return form
-    
     def form_valid(self, form):
-        
+        total = 0
+        iva_a_pagar = form.instance.iva_a_pagar
+        iva_anticipado = form.instance.iva_anticipado
+        ppm_vehiculo = form.instance.ppm_vehiculo
+        ppm_ventas = form.instance.ppm_ventas
+        honorarios = form.instance.honorarios
+        f301 = form.instance.f301
+        imposiciones = form.instance.imposiciones
+        otros = form.instance.otros
 
+        total += (iva_a_pagar + iva_anticipado + ppm_vehiculo + ppm_ventas + honorarios + f301 + imposiciones + otros)
+        
+        if total == form.instance.a_pagar:
+            return super().form_valid(form)
+        else:
+            return Exception("Ocurrió un error en la validación, por favor intente de nuevo.")
         # que no haya otro pago creado en el mismo mes
-        # calcular aqui y comparar con el int que entrega js (tiempo real para el formulario)
-        return super().form_valid(form)
+        # que esté asociado a solo 1 cliente (many to many, pero cada instancia debe pertenecer a un cliente)
 
 class PagosListView(ListView):
     model = PagosCliente
     template_name = "pagos/list.html"
     context_object_name = 'pagos'
-    paginate_by = 20
     ordering = ['created_at']
+
+class PagosDetailView(DetailView):
+    model = PagosCliente
+    template_name = 'pagos/detail.html'
+    context_object_name = 'p'
+
+class PagosDeleteView(DeleteView):
+    model = PagosCliente
+    template_name = 'pagos/delete.html'
+    success_url = reverse_lazy('list_pagos')
 
 class PagosUpdateView(UpdateView):
     model = PagosCliente

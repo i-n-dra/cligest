@@ -10,6 +10,8 @@ from .views import (
     PagosCreateView,
     PagosListView,
     PagosUpdateView,
+    PagosDeleteView,
+    PagosDetailView,
     TestView
 )
 
@@ -22,6 +24,7 @@ urlpatterns = [
     path("update-client/<int:pk>", ClientUpdateView.as_view(), name="update_client"),
     path("delete-client/<int:pk>", ClientDeleteView.as_view(), name="delete_client"),
     path("create-client/run-validacion/", views.check_run, name="check_run"),
+    path("create-client/rut-validacion/", views.check_rut, name="check_rut"),
 
     # Claves
     path("create-claves/", ClavesCreateView.as_view(), name="create_claves"),
@@ -32,4 +35,5 @@ urlpatterns = [
     path("list-pagos/", PagosListView.as_view(), name="list_pagos"),
     path("create-pago/", PagosCreateView.as_view(), name="create_pago"),
     path("update-pago/<int:pk>", PagosUpdateView.as_view(), name="update_pago"),
+    path("detail-pago/<int:pk>", PagosDetailView.as_view(), name="detail_pago"),
 ]

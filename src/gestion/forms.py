@@ -33,7 +33,7 @@ class ClientForm(forms.ModelForm):
         ]
         widgets = {
             'run_rep_legal': forms.TextInput(attrs={"onchange": "run_validacion()"}),
-            'run_empresa': forms.TextInput(attrs={"onchange": "run_validacion()"}),
+            'run_empresa': forms.TextInput(attrs={"onchange": "rut_validacion()"}),
             'tipo_empresa' : forms.Select(attrs={"class": "js-example-basic-single"}),
             'reg_tributario': forms.SelectMultiple(attrs={"class": "my-select2-multiple"}),
             'giro_rubro' : forms.SelectMultiple(attrs={"class": "my-select2-multiple"}),
@@ -77,3 +77,15 @@ class PagosClienteForm(forms.ModelForm):
             'otros',
             'a_pagar'
         ]
+        widgets = {
+            'client': forms.Select(attrs={"class": "js-example-basic-single"}),
+            'iva_a_pagar': forms.NumberInput(attrs={"onchange": "suma_pagos()"}),
+            'iva_anticipado': forms.NumberInput(attrs={"onchange": "suma_pagos()"}),
+            'ppm_vehiculo': forms.NumberInput(attrs={"onchange": "suma_pagos()"}),
+            'ppm_ventas': forms.NumberInput(attrs={"onchange": "suma_pagos()"}),
+            'honorarios': forms.NumberInput(attrs={"onchange": "suma_pagos()"}),
+            'f301': forms.NumberInput(attrs={"onchange": "suma_pagos()"}),
+            'imposiciones': forms.NumberInput(attrs={"onchange": "suma_pagos()"}),
+            'otros': forms.NumberInput(attrs={"onchange": "suma_pagos()"}),
+            'a_pagar': forms.NumberInput(attrs={"onchange": "suma_pagos()", "readonly": "true", "class":"num-read-only"}),
+        }

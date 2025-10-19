@@ -46,10 +46,10 @@
           <a href="{% url "list_clients" %}" title="Ver clientes">Clientes</a>
           <a href="{% url "list_pagos" %}" title="Ver declaraciones de renta">Declaraciones</a>
           <a href="#">Configuración</a>
-          <a href="{% url "create_claves" %}">Crear claves</a>
+          <a href="{% url "create_claves" %}">Crear Claves</a>
           {% if user.is_superuser %}
           <a href="{% url "admin:index" %}">Administración</a>
-          <a href="{% url "listar-roles-permisos" %}">Roles y permisos</a>
+          <a href="{% url "listar-roles-permisos" %}">Roles y Permisos</a>
           <a href="{% url "test" 1 %}">Test</a>
           {% endif %}
         </div>
