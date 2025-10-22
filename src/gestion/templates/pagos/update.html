@@ -5,9 +5,10 @@
 {% endblock title %}
 
 {% block content %}
-<div class='list-container'>
+<div class='update-container'>
     <h1>Editar Declaración de Renta</h1>
-    <form action="" method="post">
+    <h2>{{ object.client.nombre_rep_legal }} {{ object.client.last_name_1_rep_legal }}</h2>
+    <form action="" method="post" class="form">
         <table>
             {% csrf_token %}
             {{ form.as_table }}

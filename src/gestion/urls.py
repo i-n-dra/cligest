@@ -36,4 +36,6 @@ urlpatterns = [
     path("create-pago/", PagosCreateView.as_view(), name="create_pago"),
     path("update-pago/<int:pk>", PagosUpdateView.as_view(), name="update_pago"),
     path("detail-pago/<int:pk>", PagosDetailView.as_view(), name="detail_pago"),
+    path("delete-pago/<int:pk>", PagosDeleteView.as_view(), name="delete_pago"),
+    path("export-pagos/", views.ClientExport, name="export_pagos"),
 ]

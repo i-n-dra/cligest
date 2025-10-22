@@ -285,22 +285,25 @@ class PagosCliente(models.Model):
         verbose_name="IVA Anticipado"
     )
     ppm_vehiculo = models.IntegerField(
-        verbose_name="PPM de Vehículo"
+        verbose_name="PPM Sobre Vehículo"
     )
     ppm_ventas = models.IntegerField(
-        verbose_name="PPM de Ventas"
+        verbose_name="PPM Sobre las Ventas"
     )
     honorarios = models.IntegerField(
         verbose_name="Honorarios"
     )
     f301 = models.IntegerField(
-        verbose_name="F30-1"
+        verbose_name="Certificado F30-1"
     )
     imposiciones = models.IntegerField(
         verbose_name="Imposiciones"
     )
     otros = models.IntegerField(
         verbose_name="Otros"
+    )
+    total = models.IntegerField(
+        verbose_name="Total"
     )
     a_pagar = models.IntegerField(
         verbose_name="A Pagar"

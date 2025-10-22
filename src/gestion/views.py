@@ -11,7 +11,8 @@ from .models import (
 from .forms import (
     ClientForm,
     ClaveForm,
-    PagosClienteForm
+    PagosClienteForm,
+    PagosClienteUpdateForm
 )
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -20,6 +21,7 @@ from django.urls import reverse_lazy
 from .static.py.aes import AES
 from .static.py.exportar_clientes import exportar_clientes_main
 from django.http import JsonResponse
+from django.utils import timezone
 
 # Create your views here.
 def home(request):
@@ -107,7 +109,21 @@ class PagosCreateView(CreateView):
         form = super().get_form(form_class)
         return form
     def form_valid(self, form):
-        total = 0
+        pagos_clientes = self.model
+        calc_total = 0
+        form_cliente = form.instance.client
+
+        now = timezone.now()
+        validation = PagosCliente.objects.filter(
+            client=form_cliente,
+            created_at__year = now.year,
+            created_at__month = now.month
+        ).exists()
+
+        if validation:
+            form.add_error('client', "El cliente seleccionado ya tiene una declaración este mes.")
+            return self.form_invalid(form)
+        
         iva_a_pagar = form.instance.iva_a_pagar
         iva_anticipado = form.instance.iva_anticipado
         ppm_vehiculo = form.instance.ppm_vehiculo
@@ -117,15 +133,23 @@ class PagosCreateView(CreateView):
         imposiciones = form.instance.imposiciones
         otros = form.instance.otros
 
-        total += (iva_a_pagar + iva_anticipado + ppm_vehiculo + ppm_ventas + honorarios + f301 + imposiciones + otros)
+        calc_total = (
+            iva_a_pagar +
+            iva_anticipado +
+            ppm_vehiculo +
+            ppm_ventas +
+            honorarios +
+            f301 +
+            imposiciones +
+            otros
+        ) - iva_anticipado
         
-        if total == form.instance.a_pagar:
+        if calc_total == form.instance.a_pagar:
             return super().form_valid(form)
         else:
-            return Exception("Ocurrió un error en la validación, por favor intente de nuevo.")
-        # que no haya otro pago creado en el mismo mes
-        # que esté asociado a solo 1 cliente (many to many, pero cada instancia debe pertenecer a un cliente)
-
+            form.add_error("a_pagar", "Ocurrió un error validando los montos, por favor intente de nuevo.")
+            return self.form_invalid(form)
+        
 class PagosListView(ListView):
     model = PagosCliente
     template_name = "pagos/list.html"
@@ -141,10 +165,13 @@ class PagosDeleteView(DeleteView):
     model = PagosCliente
     template_name = 'pagos/delete.html'
     success_url = reverse_lazy('list_pagos')
+    # solo se podrá eliminar el último pago hecho de cada cliente
 
 class PagosUpdateView(UpdateView):
     model = PagosCliente
     template_name = "pagos/update.html"
+    form_class = PagosClienteUpdateForm
+    success_url = reverse_lazy('list_pagos')
     # solo se podrán editar los pagos de los últimos 2 meses (sujeto a cambio??)  
 
 ### Claves Views ### wip nada funciona

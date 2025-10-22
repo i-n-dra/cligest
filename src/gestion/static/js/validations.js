@@ -58,11 +58,11 @@ async function suma_pagos() {
   let input_imposiciones = document.getElementById("id_imposiciones");
   let input_otros = document.getElementById("id_otros");
   let input_a_pagar = document.getElementById("id_a_pagar");
+  let input_total = document.getElementById("id_total");
 
-  // isNaN(input_iva1.value) ? input_iva1.value = 0 : input_iva1.value;
   const inputs = [
     input_iva1, input_iva2, input_ppm_vehiculo, input_ppm_ventas,
-    input_honorarios, input_f301, input_imposiciones, input_otros
+    input_honorarios, input_f301, input_imposiciones, input_otros, input_total
   ];
 
   inputs.forEach(input => {
@@ -72,15 +72,19 @@ async function suma_pagos() {
   });
   
   let total = 0;
-  total += (
+  total +=
     parseInt(input_iva1.value) +
-    parseInt(input_iva2.value) +
     parseInt(input_ppm_vehiculo.value) +
     parseInt(input_ppm_ventas.value) +
     parseInt(input_honorarios.value) +
     parseInt(input_f301.value) + 
     parseInt(input_imposiciones.value) +
-    parseInt(input_otros.value)
-  );
+    parseInt(input_otros.value) +
+    parseInt(input_iva2.value);
+
+  input_total.value = total;
+
+  total -= parseInt(input_iva2.value);
+
   input_a_pagar.value = total;
 }

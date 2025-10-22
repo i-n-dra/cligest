@@ -75,6 +75,7 @@ class PagosClienteForm(forms.ModelForm):
             'f301',
             'imposiciones',
             'otros',
+            'total',
             'a_pagar'
         ]
         widgets = {
@@ -87,5 +88,34 @@ class PagosClienteForm(forms.ModelForm):
             'f301': forms.NumberInput(attrs={"onchange": "suma_pagos()"}),
             'imposiciones': forms.NumberInput(attrs={"onchange": "suma_pagos()"}),
             'otros': forms.NumberInput(attrs={"onchange": "suma_pagos()"}),
+            'total': forms.NumberInput(attrs={"onchange": "suma_pagos()", "readonly": "true", "class":"num-read-only"}),
+            'a_pagar': forms.NumberInput(attrs={"onchange": "suma_pagos()", "readonly": "true", "class":"num-read-only"}),
+        }
+
+class PagosClienteUpdateForm(forms.ModelForm):
+    class Meta:
+        model = PagosCliente
+        fields = [
+            'iva_a_pagar',
+            'iva_anticipado',
+            'ppm_vehiculo',
+            'ppm_ventas',
+            'honorarios',
+            'f301',
+            'imposiciones',
+            'otros',
+            'total',
+            'a_pagar'
+        ]
+        widgets = {
+            'iva_a_pagar': forms.NumberInput(attrs={"onchange": "suma_pagos()"}),
+            'iva_anticipado': forms.NumberInput(attrs={"onchange": "suma_pagos()"}),
+            'ppm_vehiculo': forms.NumberInput(attrs={"onchange": "suma_pagos()"}),
+            'ppm_ventas': forms.NumberInput(attrs={"onchange": "suma_pagos()"}),
+            'honorarios': forms.NumberInput(attrs={"onchange": "suma_pagos()"}),
+            'f301': forms.NumberInput(attrs={"onchange": "suma_pagos()"}),
+            'imposiciones': forms.NumberInput(attrs={"onchange": "suma_pagos()"}),
+            'otros': forms.NumberInput(attrs={"onchange": "suma_pagos()"}),
+            'total': forms.NumberInput(attrs={"onchange": "suma_pagos()", "readonly": "true", "class":"num-read-only"}),
             'a_pagar': forms.NumberInput(attrs={"onchange": "suma_pagos()", "readonly": "true", "class":"num-read-only"}),
         }

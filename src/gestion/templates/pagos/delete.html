@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Declaraciones de Renta - Confirmar Eliminación</title>
+{% endblock title %}
+
+{% block content %}
+<div class='list-container'>
+    <h1></h1>
+    <div >
+    </div>
+</div>
+
+    <div class="dialog-overlay">
+    <div class="dialog-box">
+        <h2>Confirmar Acción</h2>
+        <form action="" method="post">
+            {% csrf_token %}
+            <p>¿Está seguro que desea eliminar la declaración de renta de {{ object.client.nombre_rep_legal }} {{ object.client.last_name_1_rep_legal }}</p>
+            <p>creada el {{ object.created_at }}?</p>
+            <p>Esta acción no se puede deshacer</p>
+            <div class="dialog-buttons">
+                <button type="submit" class="btn-confirm">Si, eliminar</button>
+                <a href="{% url "detail_pago" object.id %}" class="btn-cancel detail-button">No, volver</a>
+            </div>
+        </form>
+    </div>
+    </div>
+
+{% endblock content %}

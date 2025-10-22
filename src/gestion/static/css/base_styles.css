@@ -374,6 +374,14 @@ bdi { /* info hash de contraseña usuario */
     text-align: left;
     margin: .5rem 1rem;
     align-items: center;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+}
+
+.update-container td .errorlist {
+    margin: auto;
+    padding-left: 1rem;
+    max-width: 15rem;
 }
 
 .update-container .helptext, .update-container th label {
