@@ -8,8 +8,8 @@
 <div class='detail-container'>
     <div>
         <h1>Visualizando Declaración de Renta</h1>
-        <h2>{{ p.client.nombre_rep_legal }} {{ p.client.last_name_1_rep_legal }}</h2>
         {% if p %}
+        <h2>{{ p.client.nombre_rep_legal }} {{ p.client.last_name_1_rep_legal }}</h2>
 
         <h3>Resumen</h3>
         <table class="detail-table">
@@ -62,6 +62,20 @@
             <tr>
                 <th>Otros</th>
                 <td>{{ p.otros }}</td>
+            </tr>
+        </table>
+
+        <hr class="solid-divider">
+
+        <h3>Creación</h3>
+        <table class="detail-table">
+            <tr>
+                <th>Fecha:</th>
+                <td>{{ p.created_at.day }} de {{ p.created_at|date:"F" }} del {{ p.created_at.year }}</td>
+            </tr>
+            <tr>
+                <th>Hora:</th>
+                <td>{{ p.created_at.time }}</td>
             </tr>
         </table>
     </div>

@@ -20,8 +20,9 @@ from django.urls import reverse_lazy
 # encriptación AES 
 from .static.py.aes import AES
 from .static.py.exportar_clientes import exportar_clientes_main
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.utils import timezone
+from django.core.exceptions import PermissionDenied
 
 # Create your views here.
 def home(request):
@@ -50,7 +51,7 @@ def request_user_role(username):
 def ClientExport(request):
     clientes = Client.objects.all()
     pagos = PagosCliente.objects.all()
-    msg = exportar_clientes_main(clientes)
+    msg = exportar_clientes_main(clientes, pagos)
     return render(request, 'clients/msg_exportacion.html', { 'msg': msg })
 
 class ClientListView(ListView):
@@ -109,7 +110,6 @@ class PagosCreateView(CreateView):
         form = super().get_form(form_class)
         return form
     def form_valid(self, form):
-        pagos_clientes = self.model
         calc_total = 0
         form_cliente = form.instance.client
 
@@ -165,15 +165,64 @@ class PagosDeleteView(DeleteView):
     model = PagosCliente
     template_name = 'pagos/delete.html'
     success_url = reverse_lazy('list_pagos')
-    # solo se podrá eliminar el último pago hecho de cada cliente
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        
+        now = timezone.now()
+        created = self.object.created_at
+
+        if created.year != now.year or created.month != now.month:
+            raise PermissionDenied("Las declaraciones históricas no se pueden eliminar.")
+
+        self.object.delete()
+        return HttpResponseRedirect(self.get_success_url())
 
 class PagosUpdateView(UpdateView):
     model = PagosCliente
     template_name = "pagos/update.html"
     form_class = PagosClienteUpdateForm
     success_url = reverse_lazy('list_pagos')
-    # solo se podrán editar los pagos de los últimos 2 meses (sujeto a cambio??)  
 
+    def get_form(self, form_class=None): # needs testing
+        form = super().get_form(form_class)
+        
+        obj = PagosCliente.objects.filter(id=form.instance.id).order_by('-created_at').get().created_at
+        now = timezone.now()
+
+        if obj.year != now.year or obj.month != now.month:
+            raise PermissionDenied("Las declaraciones históricas no se pueden eliminar.")
+        return form
+    
+    def form_valid(self, form):
+        calc_total = 0
+        
+        iva_a_pagar = form.instance.iva_a_pagar
+        iva_anticipado = form.instance.iva_anticipado
+        ppm_vehiculo = form.instance.ppm_vehiculo
+        ppm_ventas = form.instance.ppm_ventas
+        honorarios = form.instance.honorarios
+        f301 = form.instance.f301
+        imposiciones = form.instance.imposiciones
+        otros = form.instance.otros
+
+        calc_total = (
+            iva_a_pagar +
+            iva_anticipado +
+            ppm_vehiculo +
+            ppm_ventas +
+            honorarios +
+            f301 +
+            imposiciones +
+            otros
+        ) - iva_anticipado
+        
+        if calc_total == form.instance.a_pagar:
+            return super().form_valid(form)
+        else:
+            form.add_error("a_pagar", "Ocurrió un error validando los montos, por favor intente de nuevo.")
+            return self.form_invalid(form)
+    
 ### Claves Views ### wip nada funciona
 
 class ClavesCreateView(CreateView):

@@ -1,19 +1,22 @@
 from openpyxl import load_workbook
 from openpyxl import Workbook
 from openpyxl.styles import Font, Border, Alignment, Side, PatternFill
+from tempfile import NamedTemporaryFile
+from django.http import Http404
 from django.db.models.query import QuerySet
-from django.utils import timezone
-from openpyxl.worksheet.table import Table, TableStyleInfo
+from datetime import datetime, time
+
+### cuando esté terminado, link view hacia permission export_client
 
 titulo_font = Font(
     name='Century Gothic',
-    size=16,
+    size=18,
     bold=True,
     italic=False,
     vertAlign=None,
     underline='none',
     strike=False,
-    color='203764'
+    color='808080'
 )
 subtitle_font = Font(
     name='Century Gothic',
@@ -52,8 +55,8 @@ ficha_border = Border(
     )
 )
 
-def exportar_clientes_main(clientes=QuerySet, pagos=QuerySet):
-    path = 'D:/py_venvs/proyectos/proyecto_integracion/cligest/src/FichasClientes.xlsx' # reemplazar
+def exportar_clientes_main(clientes=QuerySet, pagos=QuerySet): # 2do arg: pagos=queryset
+    path = 'D:/py_venvs/proyectos/proyecto_integracion/cligest/FichasClientes.xlsx'
     msg = []
     try:
         wb = load_workbook(path)
@@ -64,28 +67,16 @@ def exportar_clientes_main(clientes=QuerySet, pagos=QuerySet):
 
     # grab the active worksheet
     ws = wb.active
-    
     ws.sheet_view.showGridLines = False
 
     # agregar clientes
+    # falta probar con mas de uno xd
     n_row = 3
-    n_cli = (clientes.__len__())+3
-    while n_row < n_cli:
+    while n_row<(clientes.__len__())+3:
         for c in clientes.all():
-            now = timezone.now()
-            a_pagar_exists = pagos.filter(
-                client=c.id,
-                created_at__year=now.year,
-                created_at__month=now.month
-            ).exists()
-            if a_pagar_exists:
-                a_pagar_obj = pagos.filter(
-                    client=c.id,
-                    created_at__year=now.year,
-                    created_at__month=now.month
-                ).last()
-                a_pagar = a_pagar_obj.a_pagar
-            else: a_pagar = 0
+            print(f'ingresando cliente: {c.id}')
+
+            #a_pagar = pagos.filter(self=pagos,client=c.id)
 
             reg_tri_list = list(c.reg_tributario.all())
             reg_tri_str = ''
@@ -112,43 +103,117 @@ def exportar_clientes_main(clientes=QuerySet, pagos=QuerySet):
             tipo_cont_str.rstrip('\n')
 
             # rellenando celdas
-            n_cols = 1
-            cells_values = [
-                c.nombre_rep_legal,
-                c.last_name_1_rep_legal,
-                c.last_name_2_rep_legal,
-                c.run_rep_legal,
-                c.tipo_empresa,
-                c.razon_social,
-                c.nombre_fantasia,
-                c.run_empresa,
-                reg_tri_str,
-                gir_ru_str,
-                cod_sii_str,
-                c.n_trabajadores,
-                tipo_cont_str,
-                c.cuenta_corriente,
-                c.n_cuenta_corriente,
-                a_pagar,
-                c.email,
-                c.phone_number,
-                str(c.region),
-                str(c.comuna),
-                c.address,
-            ]
+            ws.cell(
+                n_row,
+                column = 1,
+                value = c.nombre_rep_legal
+            ).border = ficha_border
 
-            for cell_value in cells_values:
-                ws.cell(
-                    n_row,
-                    column = n_cols,
-                    value = cell_value
-                ).border = ficha_border
+            ws.cell(
+                n_row,
+                2,
+                c.last_name_1_rep_legal
+            ).border = ficha_border
+            ws.cell(
+                n_row,
+                3,
+                c.last_name_2_rep_legal
+            ).border = ficha_border
+            ws.cell(
+                n_row,
+                4,
+                c.run_rep_legal
+            ).border = ficha_border
+            ws.cell(
+                n_row,
+                5,
+                c.tipo_empresa
+            ).border = ficha_border
+            ws.cell(
+                n_row,
+                6,
+                c.razon_social
+            ).border = ficha_border
+            ws.cell(
+                n_row,
+                7,
+                c.nombre_fantasia
+            ).border = ficha_border
+            ws.cell(
+                n_row,
+                8,
+                c.run_empresa
+            ).border = ficha_border
+            ws.cell(
+                n_row,
+                9,
+                reg_tri_str
+            ).border = ficha_border
+            ws.cell(
+                n_row,
+                10,
+                gir_ru_str
+            ).border = ficha_border
+            ws.cell(
+                n_row,
+                11,
+                cod_sii_str
+            ).border = ficha_border
+            ws.cell(
+                n_row,
+                12,
+                c.n_trabajadores
+            ).border = ficha_border
+            ws.cell(
+                n_row,
+                13,
+                tipo_cont_str
+            ).border = ficha_border
+            ws.cell(
+                n_row,
+                14,
+                c.cuenta_corriente
+            ).border = ficha_border
+            ws.cell(
+                n_row,
+                15,
+                c.n_cuenta_corriente
+            ).border = ficha_border
+            # ws.cell(
+            #     n_row,
+            #     16,
+            #     a_pagar
+            # ).border = ficha_border
 
-                n_cols += 1
+            ws.cell(
+                n_row,
+                17,
+                c.email
+            ).border = ficha_border
+            ws.cell(
+                n_row,
+                18,
+                c.phone_number
+            ).border = ficha_border
+            ws.cell(
+                n_row,
+                19,
+                str(c.region)
+            ).border = ficha_border
+            ws.cell(
+                n_row,
+                20,
+                str(c.comuna)
+            ).border = ficha_border
+            ws.cell(
+                n_row,
+                21,
+                c.address
+            ).border = ficha_border
 
             n_row += 1
-    
-    # h/w cols
+            
+
     for column in ws.columns:
         max_length = 0
         col = column[2].column_letter # Get the column letter (e.g., 'A', 'B')
@@ -161,34 +226,29 @@ def exportar_clientes_main(clientes=QuerySet, pagos=QuerySet):
 
         ws.column_dimensions[col].width = max_length + 2
 
-    ws.column_dimensions["P"].width = 14
     ws.row_dimensions[1].height = 24
 
-    # tabla
-    try:
-        t = Table(displayName="Clientes", ref=f"A2:U{str(n_cli)}")
-        ws.add_table(t)
-    except ValueError:
-        pass # ya existe una tabla
-
-    # currency
-    for cell in ws["P"]:
-        cell.number_format = "$#,##0"
-
     # Save the file
+
+    # opción 1
+    # with NamedTemporaryFile() as tmp:
+    #         wb.save(tmp.name)
+    #         tmp.seek(0)
+    #         stream = tmp.read()
+
+    # opción 2
     try:
         wb.save('FichasClientes.xlsx') 
         # + guardar una copia en el escritorio?
         msg.append('Se ha creado "FichasClientes.xlsx" exitosamente')
         return msg
     except PermissionError:
-        msg.append('No se puede escribir el archivo mientras está abierto, por favor, cierre el archivo e intente de nuevo.')
-        return msg
+        raise Http404('Por favor, cierre el archivo antes de confirmar los cambios')
 
 def create_file(wb=Workbook):
     # grab the active worksheet
     ws = wb.active
-    ws.title = "CLIENTES"
+    ws.title = "Clientes"
     ws.freeze_panes = 'A3' # freeze top rows
 
     cat1 = ws['E1:E3']
@@ -196,11 +256,11 @@ def create_file(wb=Workbook):
         for cell in row:
             cell.border = thick_border
 
-    ws['A1'] = 'DATOS REPRESENTANTE LEGAL'
-    ws['F1'] = 'DATOS EMPRESA'
-    ws['L1'] = 'DATOS FINANCIEROS'
-    ws['Q1'] = 'DATOS DE CONTACTO'
-    ws['U1'] = 'OTROS'
+    ws['A1'] = 'Datos Representante Legal'
+    ws['F1'] = 'Datos Empresa'
+    ws['L1'] = 'Datos Financieros'
+    ws['Q1'] = 'Datos de Contacto'
+    ws['U1'] = 'Otros'
     rep_legal_cell = ws['A1']
     rep_legal_cell.font = titulo_font
     rep_legal_cell.alignment = center_align
@@ -213,7 +273,7 @@ def create_file(wb=Workbook):
     fin_cell.font = titulo_font
     fin_cell.alignment = center_align
     ws.merge_cells('L1:P1')
-    cont_cell = ws['Q1']
+    cont_cell = ws['P1']
     cont_cell.font = titulo_font
     cont_cell.alignment = center_align
     ws.merge_cells('Q1:T1')
@@ -221,9 +281,10 @@ def create_file(wb=Workbook):
     otro_cell.font = titulo_font
     otro_cell.alignment = center_align
 
+    # Rows can also be appended
     subtitles = [
         # Datos Representante Legal #
-        'Nombre(s)',
+        'Nombre(s)', # preguntar sobre esto ??
         'Apellido Paterno',
         'Apellido Materno',
         'RUN',
@@ -231,7 +292,7 @@ def create_file(wb=Workbook):
         # Datos Empresa #
         'Razón Social',
         'Nombre de Fantasía',
-        'RUN / RUT',
+        'RUT',
         'Régimen Tributario',
         'Giro / Rubro',
         'Código S.I.I.',
@@ -240,13 +301,14 @@ def create_file(wb=Workbook):
         'Tipo de Contabilidad',
         'Cuenta Corriente',
         'N° Cuenta Corriente',
-        'A Pagar',
+        'Deuda',
         # Datos Contacto #
         'Correo Electrónico',
         'Teléfono / Celular',
         'Región',
         'Comuna',
         'Dirección',
+        'Añadido el'
     ]
 
     subt_index = 0
