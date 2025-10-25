@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Usuarios / Perfiles</title>
+{% endblock title %}
+
+{% block content %}
+<div class='list-container'>
+    <h1>Usuarios / Perfiles</h1>
+    {% if perfiles %}
+    <table id="myTable" class="display">
+        <thead>
+            <tr>
+                <th>Usuario</th>
+                <th>RUN</th>
+                <th>Rol</th>
+                <th>Ver Más</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in perfiles %}
+            <tr>
+                <td>{{ p.user.username }} ({{ p.user.first_name }} {{ p.user.last_name }})</td>
+                <td>{{ p.run }}</td> 
+                <td>{{ p.user.group }}</td>
+                <td>
+                    <a href="{% url "detail_u_p" p.user %}" title='Ver detalles'>
+                    <i class="fa fa-info" aria-hidden="true" style="font-size:24px;"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <h3>No existen usuarios registrados en el sistema.</h3>
+    {% endif %}
+</div>
+
+{% endblock content %}

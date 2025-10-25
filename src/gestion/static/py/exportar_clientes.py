@@ -3,7 +3,7 @@ from openpyxl import Workbook
 from openpyxl.styles import Font, Border, Alignment, Side, PatternFill
 from django.db.models.query import QuerySet
 from django.utils import timezone
-from openpyxl.worksheet.table import Table, TableStyleInfo
+from openpyxl.worksheet.table import Table
 
 titulo_font = Font(
     name='Century Gothic',

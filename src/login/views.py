@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic import DetailView, ListView
 from django.urls import reverse_lazy
-from .models import Profile, Role
+from .models import Profile
 from .forms import (
     ProfileForm,
     ProfileCreateForm,
@@ -40,13 +40,14 @@ class SignUpView(CreateView):
         
         return form    
 
+@method_decorator(login_required, name='dispatch')
 class UserUpdateView(UpdateView):
     model = User
     form_class = UserForm
     template_name = 'user/update_user.html'
     success_url = reverse_lazy('profile')
 
-@method_decorator(permission_required('auth.add_profile', raise_exception=True), name='dispatch')
+@method_decorator(login_required, name='dispatch')
 class ProfileCreateView(CreateView):
     form_class = ProfileCreateForm
     success_url = reverse_lazy('profile')
@@ -65,6 +66,7 @@ class ProfileUpdate(UpdateView):
 class RolePermissionListView(ListView):
     @method_decorator(login_required)
     @method_decorator(never_cache)
+    @method_decorator(permission_required(["view_permission", "view_group"]))
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
 
@@ -75,4 +77,20 @@ class RolePermissionListView(ListView):
             'roles': roles,
             'permisos': permisos
         }
-        return render(request, 'roles_permisos/listar.html', context)
+        return render(request, 'roles_permisos/list.html', context)
+    
+class UsersProfilesListView(ListView):
+    @method_decorator(login_required)
+    @method_decorator(never_cache)
+    @method_decorator(permission_required(["view_profile", "view_user"]))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        users = User.objects.all()
+        profiles = Profile.objects.all()
+        context = {
+            'usuarios': users,
+            'perfiles': profiles
+        }
+        return render(request, 'usuarios_perfiles/list.html', context)

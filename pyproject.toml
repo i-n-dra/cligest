@@ -2,15 +2,15 @@
 [tool.briefcase]
 project_name = "cligest"
 bundle = "com.ejemplo"
-version = "0.0.1"
+version = "0.1.0"
 url = "https://github.com/i-n-dra/cligest"
 license.file = "LICENSE"
 author = "PSTV"
 author_email = "-"
 
 [tool.briefcase.app.cligest]
-formal_name = "cligest"
-description = "Aplicacion para gestion de clientes"
+formal_name = "Orbis Clientes"
+description = "Aplicación orientada a la gestion de clientes"
 long_description = """
 """
 

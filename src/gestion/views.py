@@ -23,6 +23,8 @@ from .static.py.exportar_clientes import exportar_clientes_main
 from django.http import JsonResponse, HttpResponseRedirect
 from django.utils import timezone
 from django.core.exceptions import PermissionDenied
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import permission_required
 
 # Create your views here.
 def home(request):
@@ -36,18 +38,11 @@ def horario_am():
     elif hora < 12:
         return True
 
-def request_user_role(username):
-    profile = Profile.objects.filter(user__username=username).first()
-    if profile and profile.role:
-        role = profile.role.name
-    else:
-        role = 'Sin cargo'
-    return role
-
 # class para pedir la pass e igualarla con la hash de la key
 
 ### Clientes Views ###
 
+@permission_required('gestion.export_client', raise_exception=True, login_url="/")
 def ClientExport(request):
     clientes = Client.objects.all()
     pagos = PagosCliente.objects.all()
