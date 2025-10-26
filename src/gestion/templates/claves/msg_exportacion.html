@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Claves - Resultados de la exportación</title>
+{% endblock title %}
+
+{% block content %}
+    <div class="dialog-overlay">
+    <div class="dialog-box">
+        <h2>Exportación terminada</h2>
+        <ul>
+            {% for m in msg %}
+                <li>{{ m }}</li>
+            {% endfor %}
+        </ul>
+        <div class="dialog-buttons">
+            <button class="btn-confirm" id="close_dialog">Aceptar</button>
+        </div>
+    </div>
+    </div>
+    <script>
+        const close = document.querySelector('#close_dialog')
+        close.addEventListener('click', function() {
+            window.location.replace('{% url "list_claves" %}');
+        })
+    </script>
+{% endblock content %}

@@ -245,28 +245,29 @@ class Claves(models.Model):
     client = models.OneToOneField(
         Client,
         on_delete=models.CASCADE,
-        verbose_name='Cliente'
+        verbose_name='Cliente',
+        help_text='Asegúrese de que el cliente seleccionado sea correcto'
     )
 
-    sii = models.CharField(
-        max_length=150,
+    sii = models.TextField(
         verbose_name='S.I.I.',
+        blank=True
     )
-    factura_electronica = models.CharField(
-        max_length=150,
+    factura_electronica = models.TextField(
         verbose_name='Factura Electrónica',
+        blank=True
     )
-    dir_trabajo = models.CharField(
-        max_length=150,
+    dir_trabajo = models.TextField(
         verbose_name='Dirección de Trabajo',
+        blank=True
     )
-    unica = models.CharField(
-        max_length=150,
+    unica = models.TextField(
         verbose_name='Clave Única',
+        blank=True
     )
 
     iv = models.BinaryField(
-        auto_created=True,
+        auto_created=False,
     )
 
     def __str__(self):

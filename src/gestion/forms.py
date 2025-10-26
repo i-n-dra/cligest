@@ -4,6 +4,7 @@ from .models import (
     Claves,
     PagosCliente
 )
+from django.contrib.auth.models import User
 
 class ClientForm(forms.ModelForm):
     class Meta:
@@ -61,6 +62,13 @@ class ClaveForm(forms.ModelForm):
             'factura_electronica' : forms.PasswordInput(),
             'dir_trabajo' : forms.PasswordInput()
         }
+
+        
+class ExportClavesForm(forms.Form):
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'placeholder': 'Ingrese su contraseña'}),
+        label="Contraseña"
+    )
 
 class PagosClienteForm(forms.ModelForm):
     class Meta:

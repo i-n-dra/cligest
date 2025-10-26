@@ -297,6 +297,17 @@ body {
     margin: 2rem !important;
 }
 
+.form-btn-side-to-side {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-btn-side-to-side button, .form-btn-side-to-side a {
+    width: 48% !important;
+    margin: 1rem !important;
+}
+
 .form button[type="submit"], .form a {
     width: 60%;
     margin: 2rem 0;
@@ -341,19 +352,29 @@ bdi { /* info hash de contraseña usuario */
     color: #0b3378;
 }
 
+.list-button-fa-icons {
+    align-items: center;
+    justify-content: center;
+    width: min-content;
+    margin: .1rem;
+    padding: 0.3rem .7rem;
+    color: #f8fafc;
+    text-decoration: none;
+}
+
 /* update */
 
-.update-container {
+.update-container, .update-container-claves {
     background-color: #d7d7d8;
     display: flex;
     flex-direction: column;
 }
 
-.update-container th {
+.update-container th, .update-container-claves th {
     text-align: right;
 }
 
-.update-container input {
+.update-container input, .update-container-claves input {
     display: block;
     width: 15rem;
     padding-left: .5rem;
@@ -374,21 +395,29 @@ bdi { /* info hash de contraseña usuario */
     text-align: left;
     margin: .5rem 1rem;
     align-items: center;
-    flex-direction: row-reverse;
-    justify-content: flex-end;
+    justify-content: flex-start;
 }
 
-.update-container td .errorlist {
+.update-container-claves td {
+    display: flex;
+    text-align: left;
+    margin: .5rem 1rem;
+    align-items: center;
+}
+
+.update-container td .errorlist, .update-container-claves td .errorlist {
     margin: auto;
     padding-left: 1rem;
     max-width: 15rem;
 }
 
-.update-container .helptext, .update-container th label {
+.update-container .helptext, .update-container th label, .update-container-claves .helptext, .update-container-claves th label {
+    display: block;
     margin-left: 2rem;
+    max-width: 15rem;
 }
 
-.update-container span { /* sobreescribe select2 */
+.update-container span, .update-container-claves span { /* sobreescribe select2 */
     background-color: transparent !important; 
 }
 
@@ -505,6 +534,22 @@ bdi { /* info hash de contraseña usuario */
     width: 90%;
     text-align: center;
     animation: fadeIn 0.3s ease;
+}
+
+.dialog-update-container input {
+    display: block;
+    width: 12rem;
+    padding-left: .5rem;
+    padding-right: 1.25rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.75rem;
+    border-radius: .3rem;
+    border: 0.063rem solid #aaa;
+    font-size: .9em;
+    padding: .25rem;
+    background-color: transparent;
 }
 
 .dialog-box h2 {

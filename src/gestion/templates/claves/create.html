@@ -10,26 +10,33 @@
     <form action="" method="post" class="form">
         {% csrf_token %}
 <table>
-  <tr>
-    <th><label for="id_client">Cliente:</label></th>
-    <td>{{ form.client }}</td>
-  </tr>
-  <tr>
-    <th>Clave única:</td>
-    <td>{{ form.unica }}</td>
-  </tr>
-  <tr>
-    <th>Clave S.I.I.:</td>
-    <td>{{ form.sii}}</td>
-  </tr>
-  <tr>
-    <th>Clave Factura Electrónica:</td>
-    <td>{{ form.factura_electronica }}</td>
-  </tr>
-  <tr>
-    <th>Clave Dirección de Trabajo:</td>
-    <td>{{ form.dir_trabajo }}</td>
-  </tr>
+  <tbody>
+    <tr>
+      <th><label for="id_client">Cliente:</label></th>
+      <td>
+        {{ form.client }}
+        {% if form.errors.client %}
+          <span class="helptext">Ya existe un conjunto de claves para este cliente</span>
+        {% endif %}
+      </td>
+    </tr>
+    <tr>
+      <th>Clave única:</td>
+      <td>{{ form.unica }}</td>
+    </tr>
+    <tr>
+      <th>Clave S.I.I.:</td>
+      <td>{{ form.sii }}</td>
+    </tr>
+    <tr>
+      <th>Clave Factura Electrónica:</td>
+      <td>{{ form.factura_electronica }}</td>
+    </tr>
+    <tr>
+      <th>Clave Dirección de Trabajo:</td>
+      <td>{{ form.dir_trabajo }}</td>
+    </tr>
+  </tbody>
 </table>
 <button type="submit">Guardar clave(s)</button>
 </form>

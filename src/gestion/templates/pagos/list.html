@@ -13,7 +13,7 @@
             <i class="fa fa-file-excel-o" aria-hidden="true" style="font-size:24px;"></i>
         </a>
         <a href="{% url "create_pago" %}" class='list-button' title='Añadir declaración de renta'>
-            <i class="fa fa-user-plus" aria-hidden="true" style="font-size:24px;"></i>
+            <i class="fa fa-plus" aria-hidden="true" style="font-size:24px;"></i>
         </a>
     </div>
     <table id="myTable" class="display">
@@ -34,7 +34,7 @@
                 <td>{{ p.created_at|date:"F, Y" }}</td>
                 <td>
                     <a href="{% url "detail_pago" p.id %}" title='Ver detalles'>
-                    <i class="fa fa-info" aria-hidden="true" style="font-size:24px;"></i>
+                    <i class="fa fa-info btn-table" aria-hidden="true" style="font-size:24px;"></i>
                     </a>
                 </td>
             </tr>

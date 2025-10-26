@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Declaraciones de Renta</title>
+{% endblock title %}
+
+{% block content %}
+<div class='detail-container'>
+    <div>
+        <h1>Visualizando Claves</h1>
+        {% if c %}
+        <h2>De {{ c.client.nombre_rep_legal }} {{ c.client.last_name_1_rep_legal }}</h2>
+
+        <div>
+            <a href="{% url "update_clave" c.id %}" class='detail-button' title='Editar claves, se deberán ingresar todas las claves nuevamente.'>
+                <i class="fa fa-pencil-square-o" style="font-size:24px; padding-left:.1rem"></i>
+            </a>
+            <a href="{% url "delete_clave" c.id %}" class='detail-button' title='Eliminar claves'>
+                <i class="fa fa-trash" style="font-size:24px; padding-left:.1rem"></i>
+            </a>
+            <a href="{% url "list_claves" %}" class='detail-button' title='Volver a claves'>
+                <i class="fa fa-unlock-alt" style="font-size:24px; padding-left:.1rem"></i>
+            </a>
+            <a href="{% url "export_claves_client" c.id %}" class='detail-button' title='Exportar claves del cliente'>
+                <i class="fa fa-file-excel-o" style="font-size:24px; padding-left:.1rem"></i>
+            </a>
+        </div>
+
+        <hr class="solid-divider">
+
+        <h3>Detalles del Cliente</h3>
+        <table class="detail-table">
+            <tr>
+                <th>Cliente:</th>
+                <td>{{ c.client.nombre_rep_legal }} {{ c.client.last_name_1_rep_legal }} {{ c.client.last_name_2_rep_legal }} ({{ c.client.run_rep_legal }})</td>
+            </tr>
+            <tr>
+                <th>Nombre de Empresa:</th>
+                <td>{{ c.client.razon_social }} / {{ c.client.nombre_fantasia }} ({{ c.client.run_empresa }})</td>
+            </tr>
+            <tr>
+                <th>Correo electrónico:</th>
+                <td>{{ c.client.email }}</td>
+            </tr>
+            <tr>
+                <th>Teléfono / Celular:</th>
+                <td>{{ c.client.phone_number }}</td>
+            </tr>
+        </table>
+
+        <hr class="solid-divider">
+
+        <h3>Claves Ingresadas</h3>
+        <table class="detail-table">
+            <tr>
+                <th>Clave Única:</th>
+                <td>
+                    {% if c.unica %}
+                    <i class="fa fa-check" aria-hidden="true" style="font-size:24px; padding-left:.1rem"></i>
+                    {% else %}
+                    <i class="fa fa-times" aria-hidden="true" style="font-size:24px; padding-right:.2rem"></i>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Clave S.I.I.:</th>
+                <td>
+                    {% if c.sii %}
+                    <i class="fa fa-check" aria-hidden="true" style="font-size:24px; padding-left:.1rem"></i>
+                    {% else %}
+                    <i class="fa fa-times" aria-hidden="true" style="font-size:24px; padding-right:.2rem"></i>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Factura electrónica:</th>
+                <td>
+                    {% if c.factura_electronica %}
+                    <i class="fa fa-check" aria-hidden="true" style="font-size:24px; padding-left:.1rem"></i>
+                    {% else %}
+                    <i class="fa fa-times" aria-hidden="true" style="font-size:24px; padding-right:.2rem"></i>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Dirección de Trabajo:</th>
+                <td>
+                    {% if c.dir_trabajo %}
+                    <i class="fa fa-check" aria-hidden="true" style="font-size:24px; padding-left:.1rem"></i>
+                    {% else %}
+                    <i class="fa fa-times" aria-hidden="true" style="font-size:24px; padding-right:.2rem"></i>
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+
+    </div>
+    {% else %}
+    <h3>La declaración de renta no pudo ser encontrada.</h3>
+    {% endif %}
+</div>
+{% endblock content %}

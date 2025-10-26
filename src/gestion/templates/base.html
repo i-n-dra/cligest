@@ -48,16 +48,18 @@
         <div class='menu'>
           <a href="{% url "home" %}">Inicio</a>
           <a href="{% url "profile" %}" title="Ver perfil">Perfil</a>
-          {% if user.groups.all.0.name == "Operador" or user.groups.all.0.name == "Administrador" %}
-          <a href="{% url "list_clients" %}" title="Ver clientes">Clientes</a>
-          <a href="{% url "list_pagos" %}" title="Ver declaraciones de renta">Declaraciones</a>
-          <a href="#">Configuración</a>
-          <a href="{% url "create_claves" %}">Crear Claves</a> <!-- cambiar a list -->
-          {% endif %}
 
           {% if user.groups.all.0.name == "Invitado" %}
           <a href="#">Configuración</a>
           {% endif %}
+
+          {% if user.groups.all.0.name == "Operador" or user.groups.all.0.name == "Administrador" %}
+          <a href="#">Configuración</a>
+          <a href="{% url "list_clients" %}" title="Ver clientes">Clientes</a>
+          <a href="{% url "list_pagos" %}" title="Ver declaraciones de renta">Declaraciones</a>
+          <a href="{% url "list_claves" %}">Claves</a>
+          {% endif %}
+
 
           {% if user.is_superuser %}
           <a href="{% url "admin:index" %}">Administración</a>
@@ -66,7 +68,6 @@
           {% if user.groups.all.0.name == "Administrador" %}
           <a href="{% url "list_r_p" %}">Roles y Permisos</a>
           <a href="{% url "list_r_p" %}">Usuarios y Perfiles</a>
-          <a href="{% url "test" 1 %}">Test</a>
           {% endif %}
 
         </div>

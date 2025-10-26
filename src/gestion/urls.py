@@ -6,13 +6,18 @@ from .views import (
     ClientDetailView,
     ClientUpdateView,
     ClavesCreateView,
+    ClaveDetailView,
+    ClaveListView,
+    ClaveDeleteView,
+    ClaveUpdateView,
+    ClavesExportar,
+    ClavesExportarCliente,
     ClientDeleteView,
     PagosCreateView,
     PagosListView,
     PagosUpdateView,
     PagosDeleteView,
     PagosDetailView,
-    TestView
 )
 
 urlpatterns = [
@@ -27,9 +32,13 @@ urlpatterns = [
     path("create-client/rut-validacion/", views.check_rut, name="check_rut"),
 
     # Claves
-    path("create-claves/", ClavesCreateView.as_view(), name="create_claves"),
-    path("test/<int:pk>", TestView.as_view(), name="test"), # pk para testeo
-    # en view agregar def get() para tomar el id del cliente y mostrar solo esas claves
+    path("create-clave/", ClavesCreateView.as_view(), name="create_clave"),
+    path("list-claves/", ClaveListView.as_view(), name="list_claves"),
+    path("update-clave/<int:pk>", ClaveUpdateView.as_view(), name="update_clave"),
+    path("detail-clave/<int:pk>", ClaveDetailView.as_view(), name="detail_clave"),
+    path("delete-clave/<int:pk>", ClaveDeleteView.as_view(), name="delete_clave"),
+    path("export-claves/", ClavesExportar.as_view(), name="export_claves"),
+    path("export-claves/<int:pk>", ClavesExportarCliente.as_view(), name="export_claves_client"),
 
     # Pagos
     path("list-pagos/", PagosListView.as_view(), name="list_pagos"),

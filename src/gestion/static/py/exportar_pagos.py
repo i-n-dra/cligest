@@ -6,7 +6,7 @@ from django.http import Http404
 from django.db.models.query import QuerySet
 from datetime import datetime, time
 
-### cuando esté terminado, link view hacia permission export_client
+### copy paste de exportar clientes, wip
 
 titulo_font = Font(
     name='Century Gothic',
@@ -55,7 +55,7 @@ ficha_border = Border(
     )
 )
 
-def exportar_clientes_main(clientes=QuerySet, pagos=QuerySet): # 2do arg: pagos=queryset
+def exportar_pagos_main(clientes=QuerySet, pagos=QuerySet): # 2do arg: pagos=queryset
     path = 'D:/py_venvs/proyectos/proyecto_integracion/cligest/FichasClientes.xlsx'
     msg = []
     try:
