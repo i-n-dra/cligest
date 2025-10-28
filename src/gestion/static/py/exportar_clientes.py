@@ -4,6 +4,8 @@ from openpyxl.styles import Font, Border, Alignment, Side, PatternFill
 from django.db.models.query import QuerySet
 from django.utils import timezone
 from openpyxl.worksheet.table import Table
+from pathlib import Path
+import ctypes.wintypes
 
 titulo_font = Font(
     name='Century Gothic',
@@ -53,10 +55,16 @@ ficha_border = Border(
 )
 
 def exportar_clientes_main(clientes=QuerySet, pagos=QuerySet):
-    path = 'D:/py_venvs/proyectos/proyecto_integracion/cligest/src/FichasClientes.xlsx' # reemplazar
+    def get_desktop_path():
+                CSIDL_DESKTOP = 0  # escritorio
+                SHGFP_TYPE_CURRENT = 0
+                buf = ctypes.create_unicode_buffer(ctypes.wintypes.MAX_PATH)
+                ctypes.windll.shell32.SHGetFolderPathW(None, CSIDL_DESKTOP, None, SHGFP_TYPE_CURRENT, buf)
+                return Path(buf.value)
+    desktop = get_desktop_path() / "FichasClientes.xlsx"    
     msg = []
     try:
-        wb = load_workbook(path)
+        wb = load_workbook(str(desktop))
     except FileNotFoundError:
         msg.append('No se encontró el archivo "FichasClientes.xlsx" en el directorio, se ha creado uno nuevo')
         wb = Workbook(write_only=False)
@@ -177,8 +185,7 @@ def exportar_clientes_main(clientes=QuerySet, pagos=QuerySet):
 
     # Save the file
     try:
-        wb.save('FichasClientes.xlsx') 
-        # + guardar una copia en el escritorio?
+        wb.save(str(desktop))
         msg.append('Se ha creado "FichasClientes.xlsx" exitosamente')
         return msg
     except PermissionError:

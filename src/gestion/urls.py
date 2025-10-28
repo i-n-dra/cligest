@@ -9,7 +9,6 @@ from .views import (
     ClaveDetailView,
     ClaveListView,
     ClaveDeleteView,
-    ClaveUpdateView,
     ClavesExportar,
     ClavesExportarCliente,
     ClientDeleteView,
@@ -34,7 +33,6 @@ urlpatterns = [
     # Claves
     path("create-clave/", ClavesCreateView.as_view(), name="create_clave"),
     path("list-claves/", ClaveListView.as_view(), name="list_claves"),
-    path("update-clave/<int:pk>", ClaveUpdateView.as_view(), name="update_clave"),
     path("detail-clave/<int:pk>", ClaveDetailView.as_view(), name="detail_clave"),
     path("delete-clave/<int:pk>", ClaveDeleteView.as_view(), name="delete_clave"),
     path("export-claves/", ClavesExportar.as_view(), name="export_claves"),

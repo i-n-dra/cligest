@@ -1,8 +1,6 @@
 from django.shortcuts import render
-import time, os, ast, base64
+import time, os, base64
 from django.contrib.auth.models import User
-from django.contrib.auth.hashers import PBKDF2PasswordHasher
-from login.models import Profile
 from .models import (
     Client,
     Claves,
@@ -13,7 +11,7 @@ from .forms import (
     ClaveForm,
     PagosClienteForm,
     PagosClienteUpdateForm,
-    ExportClavesForm
+    ExportClavesForm,
 )
 from django.views.generic import DetailView, ListView, FormView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -28,7 +26,7 @@ from django.core.exceptions import PermissionDenied
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth import authenticate
-from django.db.models.base import Model
+from django.utils.decorators import method_decorator
 
 # Create your views here.
 def home(request):
@@ -51,23 +49,27 @@ def ClientExport(request):
     msg = exportar_clientes_main(clientes, pagos)
     return render(request, 'clients/msg_exportacion.html', { 'msg': msg })
 
+@method_decorator(login_required, name='dispatch')
 class ClientListView(ListView):
     model = Client
     template_name = 'clients/list.html'
     context_object_name = 'clientes'
     ordering = ['last_name_1_rep_legal']
 
+@method_decorator(login_required, name='dispatch')
 class ClientDetailView(DetailView):
     model = Client
     template_name = 'clients/detail.html'
     context_object_name = 'c'
 
+@method_decorator(login_required, name='dispatch')
 class ClientUpdateView(UpdateView):
     model = Client
     template_name = 'clients/update.html'
     form_class = ClientForm
     success_url = reverse_lazy('list_clients')
 
+@method_decorator(login_required, name='dispatch')
 class ClientCreateView(CreateView):
     model = Client
     template_name = 'clients/create.html'
@@ -80,6 +82,7 @@ class ClientCreateView(CreateView):
         client_id = form.instance.id
         return super().form_valid(form)
 
+@method_decorator(login_required, name='dispatch')
 class ClientDeleteView(DeleteView):
     model = Client
     template_name = 'clients/delete.html'
@@ -97,6 +100,7 @@ def check_rut(request):
 
 ### PagosCliente Views ###
 
+@method_decorator(login_required, name='dispatch')
 class PagosCreateView(CreateView):
     model = PagosCliente
     template_name = 'pagos/create.html'
@@ -146,18 +150,21 @@ class PagosCreateView(CreateView):
         else:
             form.add_error("a_pagar", "Ocurrió un error validando los montos, por favor intente de nuevo.")
             return self.form_invalid(form)
-        
+
+@method_decorator(login_required, name='dispatch')
 class PagosListView(ListView):
     model = PagosCliente
     template_name = "pagos/list.html"
     context_object_name = 'pagos'
     ordering = ['created_at']
 
+@method_decorator(login_required, name='dispatch')
 class PagosDetailView(DetailView):
     model = PagosCliente
     template_name = 'pagos/detail.html'
     context_object_name = 'p'
 
+@method_decorator(login_required, name='dispatch')
 class PagosDeleteView(DeleteView):
     model = PagosCliente
     template_name = 'pagos/delete.html'
@@ -175,6 +182,7 @@ class PagosDeleteView(DeleteView):
         self.object.delete()
         return HttpResponseRedirect(self.get_success_url())
 
+@method_decorator(login_required, name='dispatch')
 class PagosUpdateView(UpdateView):
     model = PagosCliente
     template_name = "pagos/update.html"
@@ -221,7 +229,7 @@ class PagosUpdateView(UpdateView):
             return self.form_invalid(form)
     
 ### Claves Views ### en progreso
-
+@method_decorator(login_required, name='dispatch')
 class ClavesExportarCliente(DetailView): # exportar un conjunto de claves
     model = Claves
     template_name = ""
@@ -241,6 +249,7 @@ class ClavesExportarCliente(DetailView): # exportar un conjunto de claves
             return "Error"
 
 #@permission_required('gestion.export_claves', raise_exception=True, login_url="/")
+@method_decorator(login_required, name='dispatch')
 class ClavesExportar(FormView): 
     claves = Claves.objects.all()
     users = User.objects.all()
@@ -259,12 +268,11 @@ class ClavesExportar(FormView):
         db_user = self.users.get(username=user)
         user_password = db_user.password
         key = bytes(user_password.encode())
-        key = key.ljust(16, b'\0')[:16]
-        # key = key.rjust(16, b'\0')[:16]
+        key = key.rjust(16, b'\0')[:16]
         aes = AES(key)
         msg = exportar_claves_all(self.claves, user_password, aes)
 
-        if msg:
+        if len(msg) >= 1:
             return render(request, 'claves/msg_exportacion.html', {'msg': msg})
         else:
             return render(request, 'claves/msg_exportacion.html', {'msg': ["Ocurrió un error al exportar"]})    
@@ -272,7 +280,6 @@ class ClavesExportar(FormView):
     def form_valid(self, form):
         password = form.cleaned_data.get("password")
         return self.export(self.request, password)
-        return super().form_valid(form)
     
     def form_invalid(self, form):
         return super().form_invalid(form)
@@ -287,6 +294,7 @@ def get_aes_key(request): # para CreateView y UpdateView
         key = bytes(user_password.encode())
         return key
 
+@method_decorator(login_required, name='dispatch')
 class ClavesCreateView(CreateView):
     model = Claves
     template_name = 'claves/create.html'
@@ -307,14 +315,13 @@ class ClavesCreateView(CreateView):
         
         # revisar static/py/aes para ver ejemplos y source code
         if form.is_valid():
-            key = get_aes_key(request).ljust(16, b'\0')[:16]
+            key = get_aes_key(request).rjust(16, b'\0')[:16]
             iv = os.urandom(16)
             aes = AES(key)
 
             def encrypt_field(value):
                 data = value.encode('utf-8')
                 encrypted = aes.encrypt_cfb(data, iv)
-                print("b64 encrypted: ", base64.b64encode(encrypted).decode('utf-8'))
                 return base64.b64encode(encrypted).decode('utf-8')
 
             form.instance.unica = encrypt_field(form.cleaned_data['unica'])
@@ -323,32 +330,29 @@ class ClavesCreateView(CreateView):
             form.instance.dir_trabajo = encrypt_field(form.cleaned_data['dir_trabajo'])
             form.instance.iv = iv
 
-            # decryption test
-            encrypted = base64.b64decode(form.instance.unica)
-            decrypted = aes.decrypt_cfb(encrypted, form.instance.iv)
-            print("decryption test: ", decrypted, type(decrypted))
+            ## decryption test
+            #encrypted = base64.b64decode(form.instance.unica)
+            #decrypted = aes.decrypt_cfb(encrypted, form.instance.iv)
+            #print("decryption test: ", decrypted, type(decrypted))
 
             form.save()
             return super().form_valid(form)
         else:
             return super().form_invalid(form)
-        
+
+@method_decorator(login_required, name='dispatch')
 class ClaveListView(ListView):
     model = Claves
     template_name = 'claves/list.html'
     context_object_name = 'claves'
 
+@method_decorator(login_required, name='dispatch')
 class ClaveDetailView(DetailView):
     model = Claves
     template_name = 'claves/detail.html'
     context_object_name = 'c'
 
-class ClaveUpdateView(UpdateView):
-    model = Claves
-    template_name = 'claves/update.html'
-    form_class = ClaveForm
-    success_url = reverse_lazy('list_claves')
-
+@method_decorator(login_required, name='dispatch')
 class ClaveDeleteView(DeleteView):
     model = Claves
     template_name = 'claves/delete.html'

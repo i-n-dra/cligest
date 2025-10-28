@@ -63,6 +63,21 @@ class ClaveForm(forms.ModelForm):
             'dir_trabajo' : forms.PasswordInput()
         }
 
+class UpdateClaveForm(forms.ModelForm):
+    class Meta:
+        model = Claves
+        fields = [
+            'unica',
+            'sii',
+            'factura_electronica',
+            'dir_trabajo'
+        ]
+        widgets = {
+            'unica' : forms.PasswordInput(),
+            'sii' : forms.PasswordInput(),
+            'factura_electronica' : forms.PasswordInput(),
+            'dir_trabajo' : forms.PasswordInput()
+        }
         
 class ExportClavesForm(forms.Form):
     password = forms.CharField(

@@ -12,9 +12,6 @@
         <h2>De {{ c.client.nombre_rep_legal }} {{ c.client.last_name_1_rep_legal }}</h2>
 
         <div>
-            <a href="{% url "update_clave" c.id %}" class='detail-button' title='Editar claves, se deberán ingresar todas las claves nuevamente.'>
-                <i class="fa fa-pencil-square-o" style="font-size:24px; padding-left:.1rem"></i>
-            </a>
             <a href="{% url "delete_clave" c.id %}" class='detail-button' title='Eliminar claves'>
                 <i class="fa fa-trash" style="font-size:24px; padding-left:.1rem"></i>
             </a>

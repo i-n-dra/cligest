@@ -9,7 +9,7 @@ author = "PSTV"
 author_email = "-"
 
 [tool.briefcase.app.cligest]
-formal_name = "Orbis Clientes"
+formal_name = "Orbis"
 description = "Aplicación orientada a la gestion de clientes"
 long_description = """
 """
@@ -26,6 +26,7 @@ test_sources = [
 
 requires = [
     "django~=5.1",
+    "openpyxl==3.1.5"
 ]
 test_requires = [
     "pytest",
