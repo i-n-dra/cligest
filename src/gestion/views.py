@@ -12,13 +12,14 @@ from .forms import (
     PagosClienteForm,
     PagosClienteUpdateForm,
     ExportClavesForm,
+    PagosExportSelectForm
 )
 from django.views.generic import DetailView, ListView, FormView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from .static.py.aes import AES
 from .static.py.exportar_clientes import exportar_clientes_main
-from .static.py.exportar_pagos import exportar_pagos_main
+from .static.py.exportar_pagos import exportar_pagos_deuda, exportar_pagos_historial
 from .static.py.exportar_claves import exportar_claves_all, exportar_clave
 from django.http import JsonResponse, HttpResponseRedirect
 from django.utils import timezone
@@ -27,6 +28,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth import authenticate
 from django.utils.decorators import method_decorator
+from django.db.models import OuterRef, Subquery, F
 
 # Create your views here.
 def home(request):
@@ -42,34 +44,34 @@ def horario_am():
 
 ### Clientes Views ###
 
-@permission_required('gestion.export_client', raise_exception=True, login_url="/")
+@permission_required('gestion.export_client', raise_exception=True)
 def ClientExport(request):
     clientes = Client.objects.all()
     pagos = PagosCliente.objects.all()
     msg = exportar_clientes_main(clientes, pagos)
     return render(request, 'clients/msg_exportacion.html', { 'msg': msg })
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator([login_required, permission_required('gestion.view_client', raise_exception=True)], name='dispatch')
 class ClientListView(ListView):
     model = Client
     template_name = 'clients/list.html'
     context_object_name = 'clientes'
     ordering = ['last_name_1_rep_legal']
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator([login_required, permission_required('gestion.view_client', raise_exception=True)], name='dispatch')
 class ClientDetailView(DetailView):
     model = Client
     template_name = 'clients/detail.html'
     context_object_name = 'c'
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator([login_required, permission_required('gestion.change_client', raise_exception=True)], name='dispatch')
 class ClientUpdateView(UpdateView):
     model = Client
     template_name = 'clients/update.html'
     form_class = ClientForm
     success_url = reverse_lazy('list_clients')
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator([login_required, permission_required('gestion.add_client', raise_exception=True)], name='dispatch')
 class ClientCreateView(CreateView):
     model = Client
     template_name = 'clients/create.html'
@@ -82,7 +84,7 @@ class ClientCreateView(CreateView):
         client_id = form.instance.id
         return super().form_valid(form)
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator([login_required, permission_required('gestion.delete_client', raise_exception=True)], name='dispatch')
 class ClientDeleteView(DeleteView):
     model = Client
     template_name = 'clients/delete.html'
@@ -100,7 +102,49 @@ def check_rut(request):
 
 ### PagosCliente Views ###
 
-@method_decorator(login_required, name='dispatch')
+@permission_required('gestion.export_pagos', raise_exception=True)
+def PagosExportSelect(request):
+    if request.method == 'POST':
+        form = PagosExportSelectForm(request.POST)
+        if form.is_valid():
+            mes = form.cleaned_data['mes']
+
+            if mes == "mes":
+                return PagosExport(request)
+            if mes == "historica":
+                return PagosExportHistorial(request)
+    else:
+        form = PagosExportSelectForm()
+    return render(request, 'pagos/export.html', {'form': form})
+
+@permission_required('gestion.export_pagos', raise_exception=True)
+def PagosExport(request): # pagos de este mes, que no sean 0
+    now = timezone.now()
+    ultimo_pago = PagosCliente.objects.filter(
+        client=OuterRef('client')
+    ).order_by('-created_at')
+    pagos_recientes = PagosCliente.objects.filter(
+        pk=Subquery(ultimo_pago.values('pk')[:1])
+    )
+    con_deuda = pagos_recientes.filter(
+    a_pagar__gt=0,
+    created_at__year=now.year,
+    created_at__month=now.month
+    )   
+
+    msg = exportar_pagos_deuda.add_rows(self=exportar_pagos_deuda, deudas=con_deuda)
+    return render(request, 'pagos/msg_exportacion.html', { 'msg': msg })
+
+@permission_required('gestion.export_pagos', raise_exception=True)
+def PagosExportHistorial(request): # pagos de meses anteriores
+    now = timezone.now()
+    pagos = PagosCliente.objects.all()
+    primer_dia_mes = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    pagos_historial = pagos.filter(created_at__lt=primer_dia_mes)
+    msg = exportar_pagos_historial.add_rows(self=exportar_pagos_historial, pagos=pagos_historial)
+    return render(request, 'pagos/msg_exportacion.html', { 'msg': msg })
+
+@method_decorator([login_required, permission_required('gestion.add_pagoscliente', raise_exception=True)], name='dispatch')
 class PagosCreateView(CreateView):
     model = PagosCliente
     template_name = 'pagos/create.html'
@@ -151,20 +195,20 @@ class PagosCreateView(CreateView):
             form.add_error("a_pagar", "Ocurrió un error validando los montos, por favor intente de nuevo.")
             return self.form_invalid(form)
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator([login_required, permission_required('gestion.view_pagoscliente', raise_exception=True)], name='dispatch')
 class PagosListView(ListView):
     model = PagosCliente
     template_name = "pagos/list.html"
     context_object_name = 'pagos'
     ordering = ['created_at']
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator([login_required, permission_required('gestion.view_pagoscliente', raise_exception=True)], name='dispatch')
 class PagosDetailView(DetailView):
     model = PagosCliente
     template_name = 'pagos/detail.html'
     context_object_name = 'p'
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator([login_required, permission_required('gestion.delete_pagoscliente', raise_exception=True)], name='dispatch')
 class PagosDeleteView(DeleteView):
     model = PagosCliente
     template_name = 'pagos/delete.html'
@@ -182,21 +226,22 @@ class PagosDeleteView(DeleteView):
         self.object.delete()
         return HttpResponseRedirect(self.get_success_url())
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator([login_required, permission_required('gestion.change_pagoscliente', raise_exception=True)], name='dispatch')
 class PagosUpdateView(UpdateView):
     model = PagosCliente
     template_name = "pagos/update.html"
     form_class = PagosClienteUpdateForm
     success_url = reverse_lazy('list_pagos')
 
-    def get_form(self, form_class=None): # needs testing
+    def get_form(self, form_class=None):
         form = super().get_form(form_class)
         
-        obj = PagosCliente.objects.filter(id=form.instance.id).order_by('-created_at').get().created_at
+        q = PagosCliente.objects.filter(id=form.instance.id).order_by('-created_at').first()
+        obj = q.created_at if q else None
         now = timezone.now()
 
         if obj.year != now.year or obj.month != now.month:
-            raise PermissionDenied("Las declaraciones históricas no se pueden eliminar.")
+            raise PermissionDenied("Las declaraciones históricas no se pueden modificar.")
         return form
     
     def form_valid(self, form):
@@ -229,7 +274,8 @@ class PagosUpdateView(UpdateView):
             return self.form_invalid(form)
     
 ### Claves Views ### en progreso
-@method_decorator(login_required, name='dispatch')
+
+@method_decorator([login_required, permission_required('gestion.export_claves')], name='dispatch')
 class ClavesExportarCliente(DetailView): # exportar un conjunto de claves
     model = Claves
     template_name = ""
@@ -248,8 +294,7 @@ class ClavesExportarCliente(DetailView): # exportar un conjunto de claves
         else:
             return "Error"
 
-#@permission_required('gestion.export_claves', raise_exception=True, login_url="/")
-@method_decorator(login_required, name='dispatch')
+@method_decorator([login_required, permission_required('gestion.export_claves')], name='dispatch')
 class ClavesExportar(FormView): 
     claves = Claves.objects.all()
     users = User.objects.all()
@@ -270,7 +315,11 @@ class ClavesExportar(FormView):
         key = bytes(user_password.encode())
         key = key.rjust(16, b'\0')[:16]
         aes = AES(key)
-        msg = exportar_claves_all(self.claves, user_password, aes)
+        msg = exportar_claves_all.export(
+            self=exportar_claves_all,
+            claves=self.claves,
+            aes=aes
+        )
 
         if len(msg) >= 1:
             return render(request, 'claves/msg_exportacion.html', {'msg': msg})
@@ -285,7 +334,7 @@ class ClavesExportar(FormView):
         return super().form_invalid(form)
 
 @login_required
-def get_aes_key(request): # para CreateView y UpdateView
+def get_aes_key(request):
     users = User.objects.all()
     if request.user.is_authenticated:
         current_user = request.user
@@ -294,7 +343,7 @@ def get_aes_key(request): # para CreateView y UpdateView
         key = bytes(user_password.encode())
         return key
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator([login_required, permission_required('gestion.add_claves', raise_exception=True)], name='dispatch')
 class ClavesCreateView(CreateView):
     model = Claves
     template_name = 'claves/create.html'
@@ -340,19 +389,19 @@ class ClavesCreateView(CreateView):
         else:
             return super().form_invalid(form)
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator([login_required, permission_required('gestion.view_claves', raise_exception=True)], name='dispatch')
 class ClaveListView(ListView):
     model = Claves
     template_name = 'claves/list.html'
     context_object_name = 'claves'
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator([login_required, permission_required('gestion.view_claves', raise_exception=True)], name='dispatch')
 class ClaveDetailView(DetailView):
     model = Claves
     template_name = 'claves/detail.html'
     context_object_name = 'c'
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator([login_required, permission_required('gestion.delete_claves', raise_exception=True)], name='dispatch')
 class ClaveDeleteView(DeleteView):
     model = Claves
     template_name = 'claves/delete.html'

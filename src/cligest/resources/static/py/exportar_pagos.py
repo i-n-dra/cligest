@@ -2,11 +2,12 @@ from openpyxl import load_workbook
 from openpyxl import Workbook
 from openpyxl.styles import Font, Border, Alignment, Side, PatternFill
 from django.db.models.query import QuerySet
+from datetime import datetime, time
 from pathlib import Path
 from openpyxl.worksheet.table import Table
 import ctypes.wintypes
-import locale
-locale.setlocale(locale.LC_TIME, 'Spanish_Spain.1252')
+
+### en progreso
 
 titulo_font = Font(
     name='Century Gothic',
@@ -92,34 +93,31 @@ class exportar_pagos_deuda():
                 buf = ctypes.create_unicode_buffer(ctypes.wintypes.MAX_PATH)
                 ctypes.windll.shell32.SHGetFolderPathW(None, CSIDL_DESKTOP, None, SHGFP_TYPE_CURRENT, buf)
                 return Path(buf.value)
+    desktop = get_desktop_path() / "Deudas.xlsx"
+    msg = []
+    try:
+        wb = load_workbook(str(desktop))
+    except FileNotFoundError:
+        msg.append('No se encontró el archivo "Deudas.xlsx" en el directorio, se ha creado uno nuevo')
+        wb = Workbook(write_only=False)
+        create_file(wb)
 
-    def add_rows(self, deudas=QuerySet):
+    ws = wb.active
+    ws.sheet_view.showGridLines = False
 
-        desktop = self.get_desktop_path() / "Deudas.xlsx"
-        msg = []
-        try:
-            wb = load_workbook(str(desktop))
-        except FileNotFoundError:
-            msg.append('No se encontró el archivo "Deudas.xlsx" en el escritorio, se ha creado uno nuevo')
-            wb = Workbook(write_only=False)
-            self.create_file(wb)
+    def add_row(self, deudas=QuerySet):
 
-        ws = wb.active
-        ws.sheet_view.showGridLines = False
         # agregar deudas
-
-        n_row = 1
+        n_row = 2
+        n_deu = (deudas.__len__())+2
         for d in deudas:
-            n_row +=1
             cells_values = [
-                    d.client.run_rep_legal,
-                    d.client.run_empresa,
-                    d.a_pagar,
-                    f"{d.created_at.day}/{d.created_at.month}/{d.created_at.year}"
+                    d.nombre_rep_legal,
+                    d.last_name_1_rep_legal,
                 ]
             n_cols = 1
             for cell_value in cells_values:
-                ws.cell(
+                self.ws.cell(
                     n_row,
                     column=n_cols,
                     value=cell_value
@@ -127,7 +125,7 @@ class exportar_pagos_deuda():
                 n_cols += 1
         
         # h/w cols
-        for column in ws.columns:
+        for column in self.ws.columns:
             max_length = 0
             col = column[1].column_letter # Get the column letter (e.g., 'A', 'B')
             for cell in column:
@@ -137,32 +135,49 @@ class exportar_pagos_deuda():
                     if curr_length > max_length:
                         max_length = curr_length
 
-            ws.column_dimensions[col].width = max_length + 2
+            self.ws.column_dimensions[col].width = max_length + 2
 
-        ws.row_dimensions[1].height = 29.25
+        self.ws.row_dimensions[1].height = 29.25
 
-        # currency
-        for cell in ws["C"]:
-            cell.number_format = "$#,##0"
+        # Save the file
+        try:
+            self.wb.save(str(self.desktop))
+            self.msg.append('Se ha creado "Deudas.xlsx" exitosamente')
+            return self.msg
+        except PermissionError:
+            self.msg.append('No se puede escribir el archivo mientras está abierto, por favor, cierre el archivo e intente de nuevo.')
+            return self.msg
 
-        for cell in ws["D"]:
-            cell.number_format = 'dd/mm/yyyy'
+        print(f"cliente (run/rut): {run}, {rut}\npagos: {pagos}")
+
+    def export(self, deudas=QuerySet):
+        msg = []
+        n_row = 2
+
+        for obj in deudas:
+            run = obj.client.run_rep_legal
+            rut = obj.client.run_empresa
+
+
+            self.add_row(run, rut, n_row)
+            n_row += 1
 
         # tabla
         try:
-            t = Table(displayName="Deudas", ref=f"A1:D{n_row}")
-            ws.add_table(t)
+            t = Table(displayName="Deudas", ref=f"A1:F{n_row}")
+            self.ws.add_table(t)
         except ValueError:
             pass
 
         # Save the file
         try:
-            wb.save(str(desktop))
-            msg.append('Se ha creado "Deudas.xlsx" exitosamente')
-            return msg
+            self.wb.save(str(self.desktop))
+            self.msg.append('Se ha creado "Deudas.xlsx" exitosamente')
+            return self.msg
         except PermissionError:
-            msg.append('No se puede escribir el archivo mientras está abierto, por favor, cierre el archivo e intente de nuevo.')
-            return msg
+            self.msg.append('No se puede escribir el archivo mientras está abierto, por favor, cierre el archivo e intente de nuevo.')
+            return self.msg
+
 
 ############################################
 
@@ -184,11 +199,11 @@ class exportar_pagos_historial():
             'RUN Representante Legal',
             'RUT/RUN Empresa',
             'Monto a Pagar',
-            'Fecha'
+            'Última modificación'
         ]
 
         subt_index = 0
-        subtitle_cells = ws['A1:D1']
+        subtitle_cells = ws['A2:D2']
         for row in subtitle_cells:
             for c in row:
                 c.value = subtitles[subt_index]
@@ -204,72 +219,42 @@ class exportar_pagos_historial():
                 buf = ctypes.create_unicode_buffer(ctypes.wintypes.MAX_PATH)
                 ctypes.windll.shell32.SHGetFolderPathW(None, CSIDL_DESKTOP, None, SHGFP_TYPE_CURRENT, buf)
                 return Path(buf.value)
+    desktop = get_desktop_path() / "DeclaracionesHistorial.xlsx"
+    msg = []
+    try:
+        wb = load_workbook(str(desktop))
+    except FileNotFoundError:
+        msg.append('No se encontró el archivo "DeclaracionesHistorial.xlsx" en el directorio, se ha creado uno nuevo')
+        wb = Workbook(write_only=False)
+        create_file(wb)
 
-    def add_rows(self, pagos=QuerySet):
-        desktop = self.get_desktop_path() / "Historial.xlsx"
+    ws = wb.active
+    ws.sheet_view.showGridLines = False
+
+    def export(self, pagos=QuerySet):
         msg = []
-        try:
-            wb = load_workbook(str(desktop))
-        except FileNotFoundError:
-            msg.append('No se encontró el archivo "Historial.xlsx" en el escritorio, se ha creado uno nuevo')
-            wb = Workbook(write_only=False)
-            self.create_file(wb)
+        n_row = 2
 
-        ws = wb.active
-        ws.sheet_view.showGridLines = False
+        for obj in pagos:
+            run = obj.client.run_rep_legal
+            rut = obj.client.run_empresa
 
-        # agregar pagos
-        n_row = 1
-        for p in pagos:
-            n_row +=1
-            cells_values = [
-                    p.client.run_rep_legal,
-                    p.client.run_empresa,
-                    p.a_pagar,
-                    p.created_at.strftime("%B %Y").capitalize()
-                ]
-            n_cols = 1
-            for cell_value in cells_values:
-                ws.cell(
-                    n_row,
-                    column=n_cols,
-                    value=cell_value
-                ).border = ficha_border
-                n_cols += 1
-        
-        # h/w cols
-        for column in ws.columns:
-            max_length = 0
-            col = column[1].column_letter # Get the column letter (e.g., 'A', 'B')
-            for cell in column:
-                if cell.value is not None:
-                    curr_length = len(str(cell.value))
-                    cell.alignment = Alignment(wrapText=True, vertical='bottom')
-                    if curr_length > max_length:
-                        max_length = curr_length
 
-            ws.column_dimensions[col].width = max_length + 2
-
-        ws.row_dimensions[1].height = 29.25
-
-        for cell in ws["C"]:
-            cell.number_format = "$#,##0"
-
-        for cell in ws["D"]:
-            cell.number_format = 'mmmm yyyy'
+            self.add_row(run, rut, n_row)
+            n_row += 1
 
         # tabla
         try:
-            t = Table(displayName="Historial", ref=f"A1:D{n_row}")
-            ws.add_table(t)
+            t = Table(displayName="Historial", ref=f"A1:F{n_row}")
+            self.ws.add_table(t)
         except ValueError:
             pass
 
         # Save the file
         try:
-            wb.save(str(desktop))
-            msg.append('Se ha creado "Historial.xlsx" exitosamente')
-            return msg
+            self.wb.save(str(self.desktop))
+            self.msg.append('Se ha creado "DeclaracionesHistorial.xlsx" exitosamente')
+            return self.msg
         except PermissionError:
-            msg.append('No se puede escribir el archivo mientras está abierto, por favor, cierre el archivo e intente de nuevo.')
-            return msg
+            self.msg.append('No se puede escribir el archivo mientras está abierto, por favor, cierre el archivo e intente de nuevo.')
+            return self.msg

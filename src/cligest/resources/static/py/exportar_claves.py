@@ -89,7 +89,7 @@ class exportar_claves_all():
     try:
         wb = load_workbook(str(desktop))
     except FileNotFoundError:
-        msg.append('No se encontró el archivo "Claves.xlsx" en el escritorio, se ha creado uno nuevo')
+        msg.append('No se encontró el archivo "Claves.xlsx" en el directorio, se ha creado uno nuevo')
         wb = Workbook(write_only=False)
         create_file(wb)
 
@@ -97,7 +97,7 @@ class exportar_claves_all():
     ws.sheet_view.showGridLines = False
     def add_row(self, run=str, rut=str, claves=list, n_row=int):
 
-        # agregar claves
+        # agregar clientes
         n_cols = 1
         cells_values = [
             run,
@@ -127,12 +127,13 @@ class exportar_claves_all():
             self.ws.column_dimensions[col].width = max_length + 2
 
         self.ws.row_dimensions[1].height = 29.25
+        print(f"ingresando:\ncliente (run/rut): {run}, {rut}\nclaves: {claves}")
 
-    def export(self, claves=QuerySet, aes=AES):
-        n_row = 1
+    def export(self, claves=QuerySet, key=bytes, aes=AES):
+        msg = []
+        n_row = 2
 
         for obj in claves:
-            n_row += 1
             iv = obj.iv
             run = obj.client.run_rep_legal
             rut = obj.client.run_empresa
@@ -147,8 +148,10 @@ class exportar_claves_all():
             for c in enc_claves:
                 decrypted = aes.decrypt_cfb(c, iv)
                 decrypted = decrypted.decode('utf-8')
+                #decrypted = str(decrypted).removeprefix("b'").removesuffix("'")
                 dec_claves.append(decrypted)
-            self.add_row(self=exportar_claves_all, run=run, rut=rut, claves=dec_claves, n_row=n_row)
+            self.add_row(run, rut, dec_claves, n_row)
+            n_row += 1
 
         # tabla
         try:
@@ -166,7 +169,9 @@ class exportar_claves_all():
             self.msg.append('No se puede escribir el archivo mientras está abierto, por favor, cierre el archivo e intente de nuevo.')
             return self.msg
 
-def exportar_clave(client=Model, key=str, iv=str): # en progreso
+    
+
+def exportar_clave(client=Model, key=str, iv=str):
     print(
         "client: ", client,
         "key: ", key,

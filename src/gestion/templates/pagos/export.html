@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Claves - Exportación</title>
+{% endblock title %}
+
+{% block content %}
+    <div class="dialog-overlay">
+    <div class="dialog-box">
+        <form action="{% url 'export_pagos_confirmar' %}" method="post" class="form-pagos-export">
+            <h2>Exportación</h2>
+            {% csrf_token %}
+            <span>{{ form.mes.label_tag }}</span>
+            <br>
+                {% for r in form.mes %}
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <span style="width:2rem !important; margin-left: 3rem;">{{ r.tag }}</span>
+                    <span style="width:8rem; text-align: start;">{{ r.choice_label }}</span>
+                    <br>
+                </div>
+                {% endfor %}
+                <br style="margin-bottom:1rem">
+            <div class="form-btn-side-to-side">
+                <button type="submit">Confirmar</button>
+                <a href="{% url "list_pagos" %}">Cancelar</a>
+            </div>
+        </form>
+    </div>
+    </div>
+{% endblock content %}

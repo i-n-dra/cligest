@@ -44,5 +44,7 @@ urlpatterns = [
     path("update-pago/<int:pk>", PagosUpdateView.as_view(), name="update_pago"),
     path("detail-pago/<int:pk>", PagosDetailView.as_view(), name="detail_pago"),
     path("delete-pago/<int:pk>", PagosDeleteView.as_view(), name="delete_pago"),
-    path("export-pagos/", views.ClientExport, name="export_pagos"),
+    path("export-pagos-confirmar/", views.PagosExportSelect, name="export_pagos_confirmar"),
+    path("export-pagos/", views.PagosExport, name="export_pagos"),
+    path("export-pagos-historial/", views.PagosExportHistorial, name="export_pagos_hist"),
 ]

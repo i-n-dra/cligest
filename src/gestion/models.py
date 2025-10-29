@@ -270,6 +270,11 @@ class Claves(models.Model):
         auto_created=False,
     )
 
+    class Meta:
+        permissions = [
+            ('export_claves', 'Puede exportar claves'),
+        ]
+
     def __str__(self):
         return f'Claves de {self.client.nombre_rep_legal} {self.client.last_name_1_rep_legal} {self.client.last_name_2_rep_legal} - RUN: {self.client.run_rep_legal}'
 
@@ -310,7 +315,13 @@ class PagosCliente(models.Model):
         verbose_name="A Pagar"
     )
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    # created_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+
+    class Meta:
+        permissions = [
+            ('export_pagos', 'Puede exportar pagos'),
+        ]
 
     def __str__(self):
         return f'${self.a_pagar} - {self.created_at.month}/{self.created_at.year}'

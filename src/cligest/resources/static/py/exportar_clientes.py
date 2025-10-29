@@ -66,7 +66,7 @@ def exportar_clientes_main(clientes=QuerySet, pagos=QuerySet):
     try:
         wb = load_workbook(str(desktop))
     except FileNotFoundError:
-        msg.append('No se encontró el archivo "FichasClientes.xlsx" en el escritorio, se ha creado uno nuevo')
+        msg.append('No se encontró el archivo "FichasClientes.xlsx" en el directorio, se ha creado uno nuevo')
         wb = Workbook(write_only=False)
         create_file(wb)
 

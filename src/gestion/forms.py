@@ -99,7 +99,7 @@ class PagosClienteForm(forms.ModelForm):
             'imposiciones',
             'otros',
             'total',
-            'a_pagar'
+            'a_pagar', 'created_at'
         ]
         widgets = {
             'client': forms.Select(attrs={"class": "js-example-basic-single"}),
@@ -113,6 +113,7 @@ class PagosClienteForm(forms.ModelForm):
             'otros': forms.NumberInput(attrs={"onchange": "suma_pagos()"}),
             'total': forms.NumberInput(attrs={"onchange": "suma_pagos()", "readonly": "true", "class":"num-read-only"}),
             'a_pagar': forms.NumberInput(attrs={"onchange": "suma_pagos()", "readonly": "true", "class":"num-read-only"}),
+            'created_at': forms.DateInput(attrs={'type': 'date'})
         }
 
 class PagosClienteUpdateForm(forms.ModelForm):
@@ -142,3 +143,14 @@ class PagosClienteUpdateForm(forms.ModelForm):
             'total': forms.NumberInput(attrs={"onchange": "suma_pagos()", "readonly": "true", "class":"num-read-only"}),
             'a_pagar': forms.NumberInput(attrs={"onchange": "suma_pagos()", "readonly": "true", "class":"num-read-only"}),
         }
+
+class PagosExportSelectForm(forms.Form):
+    choices = [
+        ('mes', 'Deudas del mes'),
+        ('historica', 'Deudas históricas')
+    ]
+    mes = forms.ChoiceField(
+        choices=choices,
+        widget=forms.RadioSelect,
+        label='Seleccione el tipo de exportación:'
+    )
