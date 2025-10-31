@@ -1,4 +1,4 @@
-import base64
+import base64, unicodedata
 from openpyxl import load_workbook
 from openpyxl import Workbook
 from openpyxl.styles import Font, Border, Alignment, Side, PatternFill
@@ -166,27 +166,94 @@ class exportar_claves_all():
             self.msg.append('No se puede escribir el archivo mientras está abierto, por favor, cierre el archivo e intente de nuevo.')
             return self.msg
 
-def exportar_clave(client=Model, key=str, iv=str): # en progreso
-    print(
-        "client: ", client,
-        "key: ", key,
-        "iv: ", iv
-    )
-
-    enc_unica = client.unica
-    enc_sii = client.sii
-    enc_fac = client.factura_electronica
-    enc_dir = client.dir_trabajo
-    claves = [
-        enc_unica,
-        enc_sii,
-        enc_fac,
-        enc_dir
-    ]
-
-    for c in claves:
-        str_clave = AES(key).decrypt_cfb(c, iv).decode('utf-8')
-        print("str_clave: ",str_clave)
+class exportar_clave(): # en progreso
+    def get_desktop_path():
+                CSIDL_DESKTOP = 0  # escritorio
+                SHGFP_TYPE_CURRENT = 0
+                buf = ctypes.create_unicode_buffer(ctypes.wintypes.MAX_PATH)
+                ctypes.windll.shell32.SHGetFolderPathW(None, CSIDL_DESKTOP, None, SHGFP_TYPE_CURRENT, buf)
+                return Path(buf.value)
     
-    msg = "funcionó ????"
-    return msg
+    def export(self, client=Model, aes=AES):
+        cliente_str = f"Claves{client.client.nombre_rep_legal}{client.client.last_name_1_rep_legal}{client.client.last_name_2_rep_legal}"
+        cliente_nor = unicodedata.normalize('NFKD', cliente_str)  
+        archivo_for = ''.join([c for c in cliente_nor if not unicodedata.combining(c)])
+        archivo = archivo_for+".xlsx"
+
+        desktop = self.get_desktop_path() / archivo
+        msg = []
+        try:
+            wb = load_workbook(str(desktop))
+        except FileNotFoundError:
+            msg.append(f'No se encontró el archivo "{archivo}" en el escritorio, se ha creado uno nuevo')
+            wb = Workbook(write_only=False)
+            create_file(wb)
+
+        ws = wb.active
+        ws.sheet_view.showGridLines = False
+        
+        n_row = 2
+
+        iv = client.iv
+        run = client.client.run_rep_legal
+        rut = client.client.run_empresa
+        enc_claves = [
+            base64.b64decode(client.unica),
+            base64.b64decode(client.sii),
+            base64.b64decode(client.factura_electronica),
+            base64.b64decode(client.dir_trabajo)
+        ]
+        dec_claves = []
+
+        for c in enc_claves:
+            decrypted = aes.decrypt_cfb(c, iv)
+            decrypted = decrypted.decode('utf-8')
+            dec_claves.append(decrypted)
+
+        # agregar claves
+        n_cols = 1
+        cells_values = [
+            run,
+            rut,
+        ]
+        for c in dec_claves:
+            cells_values.append(c)
+
+        for cell_value in cells_values:
+            ws.cell(
+                n_row,
+                column=n_cols,
+                value=cell_value
+            ).border = ficha_border
+            n_cols += 1
+        
+        # h/w cols
+        for column in ws.columns:
+            max_length = 0
+            col = column[1].column_letter # Get the column letter (e.g., 'A', 'B')
+            for cell in column:
+                if cell.value is not None:
+                    curr_length = len(str(cell.value))
+                    cell.alignment = Alignment(wrapText=True, vertical='bottom')
+                    if curr_length > max_length:
+                        max_length = curr_length
+
+            ws.column_dimensions[col].width = max_length + 2
+
+        ws.row_dimensions[1].height = 29.25
+
+        # tabla
+        try:
+            t = Table(displayName="Claves", ref=f"A1:F{n_row}")
+            ws.add_table(t)
+        except ValueError:
+            pass
+
+        # Save the file
+        try:
+            wb.save(str(desktop))
+            msg.append(f'Se ha creado "{archivo}" exitosamente')
+            return msg
+        except PermissionError:
+            msg.append('No se puede escribir el archivo mientras está abierto, por favor, cierre el archivo e intente de nuevo.')
+            return msg

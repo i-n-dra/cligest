@@ -6,7 +6,8 @@ from .models import Profile
 from .forms import (
     ProfileForm,
     ProfileCreateForm,
-    UserForm
+    UserForm,
+    UserGroupForm
     )
 from django.contrib.auth.models import Permission, User, Group
 from django.contrib.auth.forms import UserCreationForm
@@ -48,10 +49,29 @@ class UserUpdateView(UpdateView):
     success_url = reverse_lazy('profile')
 
 @method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('auth.change_user', raise_exception=True), name='dispatch')
+class UserGroupUpdateView(UpdateView):
+    model = User
+    form_class = UserGroupForm
+    template_name = 'usuarios_perfiles/update.html'
+    success_url = reverse_lazy('list_u_p')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = f"Cambiar grupos de {self.object.username}"
+        return context
+
+@method_decorator(login_required, name='dispatch')
 class ProfileCreateView(CreateView):
     form_class = ProfileCreateForm
     success_url = reverse_lazy('profile')
     template_name = 'profile/profile_create.html'
+
+@method_decorator(login_required, name='dispatch')
+class ProfileDetailView(DetailView):
+    model = Profile
+    template_name = 'usuarios_perfiles/detail.html'
+    context_object_name = 'p'
 
 @method_decorator(login_required, name='dispatch')
 class ProfileUpdate(UpdateView):
@@ -66,13 +86,13 @@ class ProfileUpdate(UpdateView):
 class RolePermissionListView(ListView):
     @method_decorator(login_required)
     @method_decorator(never_cache)
-    @method_decorator(permission_required(["view_permission", "view_group"]))
+    @method_decorator(permission_required(["auth.view_permission", "auth.view_group"]))
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         roles = Group.objects.all()
-        permisos = Permission.objects.all()
+        permisos = Permission.objects.filter(group__isnull=False).distinct()
         context = {
             'roles': roles,
             'permisos': permisos

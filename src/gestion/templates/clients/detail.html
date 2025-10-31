@@ -91,13 +91,10 @@
             <a href="{% url "update_client" c.id %}" class='detail-button' title='Editar cliente'>
                 <i class="fa fa-pencil-square-o" style="font-size:24px; padding-left:.1rem"></i>
             </a>
-            <a href="" class='detail-button' title='Editar claves'>
-                <i class="fa fa-unlock-alt" style="font-size:24px; padding-left:.1rem"></i>
-            </a>
             <a href="{% url "delete_client" c.id %}" class='detail-button' title='Eliminar cliente'>
                 <i class="fa fa-trash" style="font-size:24px; padding-left:.1rem"></i>
             </a>
-            <a href="" class='detail-button' title='Exportar'>
+            <a href="{% url "export_client" c.id %}" class='detail-button' title='Exportar'>
                 <i class="fa fa-file-excel-o" style="font-size:24px; padding-left:.1rem"></i>
             </a>
             <a href="{% url "list_clients" %}" class='detail-button' title='Volver a la lista de clientes'>

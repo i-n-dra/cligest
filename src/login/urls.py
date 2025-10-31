@@ -5,7 +5,9 @@ from .views import (
     ProfileUpdate,
     ProfileCreateView,
     RolePermissionListView,
-    UsersProfilesListView
+    UsersProfilesListView,
+    UserGroupUpdateView,
+    ProfileDetailView
     )
 
 urlpatterns = [
@@ -14,5 +16,7 @@ urlpatterns = [
     path('profile-creation/', ProfileCreateView.as_view(), name='profile-create'),
     path('profile/', ProfileUpdate.as_view(), name='profile'),
     path('roles-y-permisos/', RolePermissionListView.as_view(), name='list_r_p'),
-    path('usuarios-y-perfiles/', UsersProfilesListView.as_view(), name='list_u_p')
+    path('usuarios-y-perfiles/', UsersProfilesListView.as_view(), name='list_u_p'),
+    path('usuarios-y-perfiles/<int:pk>', ProfileDetailView.as_view(), name='detail_u_p'),
+    path('usuarios-y-perfiles/<int:pk>/grupos', UserGroupUpdateView.as_view(), name='change_u_p')
 ]

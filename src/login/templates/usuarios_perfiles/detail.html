@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Usuarios y Perfiles</title>
+{% endblock title %}
+
+{% block content %}
+<div class='detail-container'>
+    <div>
+        <h1>Visualizando Perfil</h1>
+        {% if p %}
+        <h2>{{ p.user.first_name }} {{ p.user.last_name }}</h2>
+
+        <hr class="solid-divider">
+
+        <h3>Detalles</h3>
+        <table class="detail-table">
+            <tr>
+                <th>RUN:</th>
+                <td>{{ p.run }}</td>
+            </tr>
+            <tr>
+                <th>Teléfono / Celular:</th>
+                <td>{{ p.phone_number }}</td>
+            </tr>
+            <tr>
+                <th>Fecha de nacimiento:</th>
+                <td>{{ p.date_of_birth }}</td>
+            </tr>
+        </table>
+
+        <hr class="solid-divider">
+
+        <h3>Creación</h3>
+        <table class="detail-table">
+            <tr>
+                <th>Fecha:</th>
+                <td>{{ p.user.date_joined.day }} de {{ p.user.date_joined|date:"F" }} del {{ p.user.date_joined.year }}</td>
+            </tr>
+            <tr>
+                <th>Hora:</th>
+                <td>{{ p.user.date_joined.time }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div>
+        <h3>Opciones</h3>
+        <div>
+            <a href="{% url "change_u_p" p.id %}" class='detail-button' title='Editar grupo/rol del usuario'>
+                <i class="fa fa-pencil-square-o" style="font-size:24px; padding-left:.1rem"></i>
+            </a>
+            <a href="{% url "change_u_p" p.id %}" class='detail-button' title='Eliminar usuario'>
+                <i class="fa fa-trash" style="font-size:24px; padding-left:.1rem"></i>
+            </a>
+            <a href="{% url "list_u_p" %}" class='detail-button' title='Volver a usuarios'>
+                <i class="fa fa-users" style="font-size:24px; padding-left:.1rem"></i>
+            </a>
+        </div>
+    </div>
+    {% else %}
+    <h3>La declaración de renta no pudo ser encontrada.</h3>
+    {% endif %}
+</div>
+{% endblock content %}

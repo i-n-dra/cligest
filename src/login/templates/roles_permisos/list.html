@@ -5,46 +5,41 @@
 {% endblock title %}
 
 {% block content %}
-<div class='container'>
-    <div class='container-roles-permisos'>
-        <h1>Roles</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th>Nombre del Rol</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% if roles %}
-                {% for r in roles %}
-                <tr>
-                    <td>{{ r.name }}</td>
-                </tr>
-                {% endfor %}
-                {% else %}
-                <tr>
-                    <td>No existen roles</td>
-                </tr>
-                {% endif %}
-            </tbody>
-        </table>
-    </div>
-    <div class='container-roles-permisos'>
-        <h1>Permisos</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th>Nombre del Permiso</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for p in permisos %}
-                <tr>
-                    <td>{{ p.name }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+<div class='detail-container'>
+    <div class='detail-table-r-y-p'>
+    <table>
+    <thead>
+        <tr>
+            <th>Rol (Grupo)</th>
+            <th>Permisos asociados</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for role in roles %}
+            <tr>
+                <td>
+                    <hr class="solid-divider" style="margin: 0;">
+                </td>
+                <td>
+                    <hr class="solid-divider" style="margin: 0;">
+                </td>
+            </tr>
+            <tr>
+                <td>{{ role.name }}</td>
+                <td>
+                    <ul>
+                        {% for permiso in role.permissions.all %}
+                            <li>{{ permiso.name }}</li>
+                        {% empty %}
+                            <li><em>Sin permisos</em></li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+
     </div>
 </div>
 {% endblock content %}

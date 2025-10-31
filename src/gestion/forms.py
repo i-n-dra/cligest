@@ -4,7 +4,6 @@ from .models import (
     Claves,
     PagosCliente
 )
-from django.contrib.auth.models import User
 
 class ClientForm(forms.ModelForm):
     class Meta:
@@ -21,6 +20,7 @@ class ClientForm(forms.ModelForm):
             'reg_tributario',
             'giro_rubro',
             'codigo_sii',
+            'n_trabajadores',
 
             'tipo_contabilidad',
             'cuenta_corriente',
@@ -99,7 +99,7 @@ class PagosClienteForm(forms.ModelForm):
             'imposiciones',
             'otros',
             'total',
-            'a_pagar', 'created_at'
+            'a_pagar'
         ]
         widgets = {
             'client': forms.Select(attrs={"class": "js-example-basic-single"}),
@@ -113,7 +113,6 @@ class PagosClienteForm(forms.ModelForm):
             'otros': forms.NumberInput(attrs={"onchange": "suma_pagos()"}),
             'total': forms.NumberInput(attrs={"onchange": "suma_pagos()", "readonly": "true", "class":"num-read-only"}),
             'a_pagar': forms.NumberInput(attrs={"onchange": "suma_pagos()", "readonly": "true", "class":"num-read-only"}),
-            'created_at': forms.DateInput(attrs={'type': 'date'})
         }
 
 class PagosClienteUpdateForm(forms.ModelForm):

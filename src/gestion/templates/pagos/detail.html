@@ -15,15 +15,15 @@
         <table class="detail-table">
             <tr>
                 <th>Total</th>
-                <td>{{ p.total }}</td>
+                <td>$ {{ p.total }}</td>
             </tr>
             <tr>
                 <th>IVA Anticipado</th>
-                <td>{{ p.iva_anticipado }}</td>
+                <td>$ {{ p.iva_anticipado }}</td>
             </tr>
             <tr>
                 <th>A Pagar</th>
-                <td>{{ p.a_pagar }}</td>
+                <td>$ {{ p.a_pagar }}</td>
             </tr>
         </table>
 
@@ -32,36 +32,36 @@
         <h3>Detalles</h3>
         <table class="detail-table">
             <tr>
-                <th>Cliente</th>
+                <th>Cliente:</th>
                 <td>{{ p.client.nombre_rep_legal }} {{ p.client.last_name_1_rep_legal }} {{ p.client.last_name_2_rep_legal }}</td>
             </tr>
             <tr>
                 <th>IVA a Pagar:</th>
-                <td>{{ p.iva_a_pagar }}</td>
+                <td>$ {{ p.iva_a_pagar }}</td>
             </tr>
             <tr>
-                <th>PPM Sobre Vehículo</th>
-                <td>{{ p.ppm_vehiculo }}</td>
+                <th>PPM Sobre Vehículo:</th>
+                <td>$ {{ p.ppm_vehiculo }}</td>
             </tr>
             <tr>
-                <th>PPM Sobre las Ventas</th>
-                <td>{{ p.ppm_ventas }}</td>
+                <th>PPM Sobre las Ventas:</th>
+                <td>$ {{ p.ppm_ventas }}</td>
             </tr>
             <tr>
-                <th>Honorarios</th>
-                <td>{{ p.honorarios }}</td>
+                <th>Honorarios:</th>
+                <td>$ {{ p.honorarios }}</td>
             </tr>
             <tr>
-                <th>Certificado F30-1</th>
-                <td>{{ p.f301 }}</td>
+                <th>Certificado F30-1:</th>
+                <td>$ {{ p.f301 }}</td>
             </tr>
             <tr>
-                <th>Imposiciones</th>
-                <td>{{ p.imposiciones }}</td>
+                <th>Imposiciones:</th>
+                <td>$ {{ p.imposiciones }}</td>
             </tr>
             <tr>
-                <th>Otros</th>
-                <td>{{ p.otros }}</td>
+                <th>Otros:</th>
+                <td>$ {{ p.otros }}</td>
             </tr>
         </table>
 
@@ -85,9 +85,6 @@
         <div>
             <a href="{% url "update_pago" p.id %}" class='detail-button' title='Editar declaración'>
                 <i class="fa fa-pencil-square-o" style="font-size:24px; padding-left:.1rem"></i>
-            </a>
-            <a href="" class='detail-button' title='Editar claves'>
-                <i class="fa fa-unlock-alt" style="font-size:24px; padding-left:.1rem"></i>
             </a>
             <a href="{% url "delete_pago" p.id %}" class='detail-button' title='Eliminar declaración'>
                 <i class="fa fa-trash" style="font-size:24px; padding-left:.1rem"></i>

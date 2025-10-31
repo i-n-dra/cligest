@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Claves - Exportación</title>
+{% endblock title %}
+
+{% block content %}
+    <div class="dialog-overlay">
+    <div class="dialog-box dialog-update-container">
+        <form action="{% url 'export_claves_client' c.id %}" method="post" class="form">
+            <h2>Confirmar credenciales</h2>
+            {% if msg %}
+            <p>{{ msg }}</p>
+            {% endif %}
+            {% csrf_token %}
+            <table>
+                <tbody>
+                    <tr>
+                        <th><label for="id_password">Contraseña:</label></th>
+                        <td>{{ form.password }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="form-btn-side-to-side">
+                <button type="submit">Exportar</button>
+                <a href="{% url "detail_clave" c.id %}">Cancelar</a>
+            </div>
+        </form>
+    </div>
+    </div>
+{% endblock content %}

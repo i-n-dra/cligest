@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from .models import Profile, User
+from .models import Profile, User, Group
 
 class UserForm(forms.ModelForm):
     password = ReadOnlyPasswordHashField(
@@ -26,6 +26,14 @@ class UserForm(forms.ModelForm):
             if self.instance and not self.instance.has_usable_password():
                 password.help_text = '''Enable password-based authentication for this user by setting a "
                     "password.'''
+
+class UserGroupForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['groups']
+        widgets = {
+            'groups' : forms.SelectMultiple(attrs={'class': 'my-select2-multiple'})
+        }
 
 class ProfileForm(forms.ModelForm):
     class Meta:

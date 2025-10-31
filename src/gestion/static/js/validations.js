@@ -33,16 +33,16 @@ async function rut_validacion() {
   const data = await response.json();
 
   if (data.exists) {
-    rut_help_text.textContent = "El RUN/RUT ya está registrado";
+    rut_help_text.textContent = "El RUT/RUN ya está registrado";
     rut_help_text.style.color = "red";
   } else {
     regex = /^\d{7,8}-[\dkK]$/;
     match = rut.match(regex);
     if (!match) {
-      rut_help_text.textContent = "El formato del RUN/RUT es incorrecto";
+      rut_help_text.textContent = "El formato del RUT/RUN es incorrecto";
       rut_help_text.style.color = "red";
     } else {
-      rut_help_text.textContent = "RUN/RUT disponible";
+      rut_help_text.textContent = "RUT/RUN disponible";
       rut_help_text.style.color = "green";
     }
   }

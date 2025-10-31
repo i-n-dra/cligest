@@ -134,7 +134,7 @@ class Client(models.Model):
     )
     run_empresa = models.CharField(
         max_length=12,
-        verbose_name='RUT (Empresa)',
+        verbose_name='RUT/RUN (Empresa)',
         help_text='Ejemplo: 12345678-9',
         validators=[
             RegexValidator(

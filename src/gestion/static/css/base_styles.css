@@ -401,6 +401,18 @@ bdi { /* info hash de contraseña usuario */
 }
 
 /* update */
+.create-client-container {
+    margin: 1rem;
+    width: max-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.create-client-container h3 {
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+}
 
 .update-container, .update-container-claves {
     background-color: #d7d7d8;
@@ -547,6 +559,31 @@ bdi { /* info hash de contraseña usuario */
     transition: 0.3s ease;
     background: #5370a1;
     cursor: pointer;
+}
+
+/* detail table roles y permisos */
+.detail-table-r-y-p {
+    text-align: left;
+}
+.detail-table-r-y-p th {
+    text-align: center;
+    margin: 0;
+    font-size: large;
+}
+.detail-table-r-y-p tr {
+    display: flex;
+    justify-content: space-between;
+    padding: .5rem;
+}
+.detail-table-r-y-p td {
+    width: 13rem;
+    text-align: left;
+    align-content: center;
+}
+.detail-table-r-y-p li {
+    width: 13rem;
+    text-align: right;
+    list-style: none;
 }
 
 /* dialog box */

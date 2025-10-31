@@ -6,13 +6,231 @@
 
 {% block content %}
 <div class='update-container'>
-    <h1>Añadir Cliente</h1>
     <form action="" method="post" class="form">
+        {% csrf_token %}
+        <h1>Añadir Cliente</h1>
+    <div style="display:flex; flex-direction: row;">
+        <div class="create-client-container">
+        <h3>Información Personal</h3>
         <table>
-            {% csrf_token %}
-            {{ form.as_table }}
+            <tr>
+                <th>
+                    {{ form.run_rep_legal.label_tag }}
+                </th>
+                <td>
+                    {{ form.run_rep_legal }}
+                    <br>
+                    <span class="helptext" id="id_run_rep_legal_helptext">{{ form.run_rep_legal.help_text }}</span>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    {{ form.run_empresa.label_tag }}
+                </th>
+                <td>
+                    {{ form.run_empresa }}
+                    <br>
+                    <span class="helptext" id="id_run_empresa_helptext">{{ form.run_empresa.help_text }}</span>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    {{ form.nombre_rep_legal.label_tag }}
+                </th>
+                <td>
+                    {{ form.nombre_rep_legal }}
+                    <br>
+                    <span class="helptext">{{ form.nombre_rep_legal.help_text }}</span>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    {{ form.last_name_1_rep_legal.label_tag }}
+                </th>
+                <td>
+                    {{ form.last_name_1_rep_legal }}
+                    <br>
+                    <span class="helptext">{{ form.last_name_1_rep_legal.help_text }}</span>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    {{ form.last_name_2_rep_legal.label_tag }}
+                </th>
+                <td>
+                    {{ form.last_name_2_rep_legal }}
+                    <br>
+                    <span class="helptext">{{ form.last_name_2_rep_legal.help_text }}</span>
+                </td>
+            </tr>
         </table>
+
+            <h3>Datos de Empresa</h3>
+        <table>
+            <tr>
+                <th>
+                    {{ form.razon_social.label_tag }}
+                </th>
+                <td>
+                    {{ form.razon_social }}
+                    <br>
+                    <span class="helptext">{{ form.razon_social.help_text }}</span>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    {{ form.nombre_fantasia.label_tag }}
+                </th>
+                <td>
+                    {{ form.nombre_fantasia }}
+                    <br>
+                    <span class="helptext">{{ form.nombre_fantasia.help_text }}</span>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    {{ form.tipo_empresa.label_tag }}
+                </th>
+                <td>
+                    {{ form.tipo_empresa }}
+                    <br>
+                    <span class="helptext">{{ form.tipo_empresa.help_text }}</span>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    {{ form.reg_tributario.label_tag }}
+                </th>
+                <td>
+                    {{ form.reg_tributario }}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    {{ form.giro_rubro.label_tag }}
+                </th>
+                <td>
+                    {{ form.giro_rubro }}
+                    <br>
+                    <span class="helptext">{{ form.giro_rubro.help_text }}</span>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    {{ form.codigo_sii.label_tag }}
+                </th>
+                <td>
+                    {{ form.codigo_sii }}
+                    <br>
+                    <span class="helptext">{{ form.codigo_sii.help_text }}</span>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    {{ form.n_trabajadores.label_tag }}
+                </th>
+                <td>
+                    {{ form.n_trabajadores }}
+                    <br>
+                    <span class="helptext">{{ form.n_trabajadores.help_text }}</span>
+                </td>
+            </tr>
+        </table>
+        </div>
+
+        <div class="create-client-container">
+            <div>
+                <h3>Datos Financieros</h3>
+            <table>
+                <tr>
+                    <th>
+                        {{ form.tipo_contabilidad.label_tag }}
+                    </th>
+                    <td>
+                        {{ form.tipo_contabilidad }}
+                        <br>
+                        <span class="helptext">{{ form.tipo_contabilidad.help_text }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        {{ form.cuenta_corriente.label_tag }}
+                    </th>
+                    <td>
+                        {{ form.cuenta_corriente }}
+                        <br>
+                        <span class="helptext">{{ form.cuenta_corriente.help_text }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        {{ form.n_cuenta_corriente.label_tag }}
+                    </th>
+                    <td>
+                        {{ form.n_cuenta_corriente }}
+                        <br>
+                        <span class="helptext">{{ form.n_cuenta_corriente.help_text }}</span>
+                    </td>
+                </tr>
+            </table>
+
+                <h3>Datos de Contacto</h3>
+            <table>
+                <tr>
+                    <th>
+                        {{ form.email.label_tag }}
+                    </th>
+                    <td>
+                        {{ form.email }}
+                        <br>
+                        <span class="helptext">{{ form.email.help_text }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        {{ form.phone_number.label_tag }}
+                    </th>
+                    <td>
+                        {{ form.phone_number }}
+                        <br>
+                        <span class="helptext">{{ form.phone_number.help_text }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        {{ form.region.label_tag }}
+                    </th>
+                    <td>
+                        {{ form.region }}
+                        <br>
+                        <span class="helptext">{{ form.region.help_text }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        {{ form.comuna.label_tag }}
+                    </th>
+                    <td>
+                        {{ form.comuna }}
+                        <br>
+                        <span class="helptext">{{ form.comuna.help_text }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        {{ form.address.label_tag }}
+                    </th>
+                    <td>
+                        {{ form.address }}
+                        <br>
+                        <span class="helptext">{{ form.address.help_text }}</span>
+                    </td>
+                </tr>
+            </table>      
+            </div>
         <button type="submit">Añadir</button>
+        </div>
+    </div>
     </form>
 </div>
 {% endblock content %}

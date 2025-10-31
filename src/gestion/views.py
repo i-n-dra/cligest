@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 import time, os, base64
 from django.contrib.auth.models import User
 from .models import (
@@ -18,7 +18,7 @@ from django.views.generic import DetailView, ListView, FormView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from .static.py.aes import AES
-from .static.py.exportar_clientes import exportar_clientes_main
+from .static.py.exportar_clientes import exportar_clientes_main, exportar_cliente
 from .static.py.exportar_pagos import exportar_pagos_deuda, exportar_pagos_historial
 from .static.py.exportar_claves import exportar_claves_all, exportar_clave
 from django.http import JsonResponse, HttpResponseRedirect
@@ -44,11 +44,20 @@ def horario_am():
 
 ### Clientes Views ###
 
+@login_required
 @permission_required('gestion.export_client', raise_exception=True)
-def ClientExport(request):
+def ClientExportAll(request):
     clientes = Client.objects.all()
     pagos = PagosCliente.objects.all()
     msg = exportar_clientes_main(clientes, pagos)
+    return render(request, 'clients/msg_exportacion.html', { 'msg': msg })
+
+@login_required
+@permission_required('gestion.export_client', raise_exception=True)
+def ClientExport(request, pk):
+    cliente = get_object_or_404(Client, pk=pk)
+    pagos = PagosCliente.objects.all()
+    msg = exportar_cliente(cliente, pagos)
     return render(request, 'clients/msg_exportacion.html', { 'msg': msg })
 
 @method_decorator([login_required, permission_required('gestion.view_client', raise_exception=True)], name='dispatch')
@@ -79,6 +88,11 @@ class ClientCreateView(CreateView):
     success_url = reverse_lazy('create_clave')
 
     def form_valid(self, form):
+        form.instance.nombre_rep_legal = str(form.instance.nombre_rep_legal).capitalize()
+        form.instance.last_name_1_rep_legal = str(form.instance.last_name_1_rep_legal).capitalize()
+        form.instance.last_name_2_rep_legal = str(form.instance.last_name_2_rep_legal).capitalize()
+        form.instance.address = str(form.instance.address).title()
+
         form.save()
         global client_id
         client_id = form.instance.id
@@ -219,8 +233,9 @@ class PagosDeleteView(DeleteView):
         
         now = timezone.now()
         created = self.object.created_at
+        curr_user = self.request.user.groups.all()
 
-        if created.year != now.year or created.month != now.month:
+        if (created.year != now.year or created.month != now.month) and curr_user[0].name != "Administrador":
             raise PermissionDenied("Las declaraciones históricas no se pueden eliminar.")
 
         self.object.delete()
@@ -239,8 +254,9 @@ class PagosUpdateView(UpdateView):
         q = PagosCliente.objects.filter(id=form.instance.id).order_by('-created_at').first()
         obj = q.created_at if q else None
         now = timezone.now()
+        curr_user = self.request.user.groups.all()
 
-        if obj.year != now.year or obj.month != now.month:
+        if (obj.year != now.year or obj.month != now.month) and curr_user[0].name != "Administrador":
             raise PermissionDenied("Las declaraciones históricas no se pueden modificar.")
         return form
     
@@ -274,28 +290,44 @@ class PagosUpdateView(UpdateView):
             return self.form_invalid(form)
     
 ### Claves Views ### en progreso
+@login_required
+@permission_required('gestion.export_claves', raise_exception=True)
+def ClavesExportarCliente(request, pk): # exportar un conjunto de claves
+    users = User.objects.all()
+    clave = get_object_or_404(Claves, pk=pk)
+    msg = []
+
+    if request.method == "POST":
+        form = ExportClavesForm(request.POST)
+        user = request.user
+        if form.is_valid():
+            req_pass = form.cleaned_data['password']
+            authenticated_user = authenticate(request, username=user.username, password=req_pass)
+            if authenticated_user is None:
+                print("Authentication failed")
+                return render(request, 'claves/msg_exportacion.html', {'msg': "Contraseña incorrecta."})
+            
+            db_user = users.get(username=user)
+            user_password = db_user.password
+            key = bytes(user_password.encode())
+            key = key.rjust(16, b'\0')[:16]
+            aes = AES(key)
+            msg = exportar_clave.export(
+                self=exportar_clave,
+                client=clave,
+                aes=aes
+            )
+
+        if len(msg) >= 1:
+            return render(request, 'claves/msg_exportacion.html', {'msg': msg})
+    else:
+        form = ExportClavesForm()
+
+    initial_msg = f"Para exportar las claves de {clave.client.nombre_rep_legal} {clave.client.last_name_1_rep_legal} {clave.client.last_name_2_rep_legal}"
+    return render(request, 'claves/export-cliente.html', {'msg': initial_msg, 'c': clave, 'form': form})
 
 @method_decorator([login_required, permission_required('gestion.export_claves')], name='dispatch')
-class ClavesExportarCliente(DetailView): # exportar un conjunto de claves
-    model = Claves
-    template_name = ""
-
-    def export_clave(self, request, clave_id):
-        clave = Claves.objects.get(id=clave_id)
-        key = b'passw0rdpassw0rd'
-        msg = exportar_clave(clave, key, clave.iv)
-
-        print(f'decrypted: {AES(key).decrypt_cfb(clave.unica, clave.iv).decode('utf-8')}')
-        unica_decrypted = AES(key).decrypt_cfb(clave.unica, clave.iv).decode('utf-8')
-
-        if unica_decrypted:
-            print("unica_decrypted: ",unica_decrypted)
-            return render(request, 'clients/msg_exportacion.html', { 'msg': msg })
-        else:
-            return "Error"
-
-@method_decorator([login_required, permission_required('gestion.export_claves')], name='dispatch')
-class ClavesExportar(FormView): 
+class ClavesExportar(FormView): # exportar todas las claves
     claves = Claves.objects.all()
     users = User.objects.all()
     template_name = 'claves/export.html'
@@ -378,11 +410,6 @@ class ClavesCreateView(CreateView):
             form.instance.factura_electronica = encrypt_field(form.cleaned_data['factura_electronica'])
             form.instance.dir_trabajo = encrypt_field(form.cleaned_data['dir_trabajo'])
             form.instance.iv = iv
-
-            ## decryption test
-            #encrypted = base64.b64decode(form.instance.unica)
-            #decrypted = aes.decrypt_cfb(encrypted, form.instance.iv)
-            #print("decryption test: ", decrypted, type(decrypted))
 
             form.save()
             return super().form_valid(form)
