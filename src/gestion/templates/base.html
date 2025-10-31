@@ -50,16 +50,15 @@
           <a href="{% url "profile" %}" title="Ver perfil">Perfil</a>
 
           {% if user.groups.all.0.name == "Invitado" %}
-          <a href="#">Configuración</a>
+          <a href="{% url "lists" %}">Otros</a>
           {% endif %}
 
           {% if user.groups.all.0.name == "Operador" or user.groups.all.0.name == "Administrador" %}
-          <a href="#">Configuración</a>
           <a href="{% url "list_clients" %}" title="Ver clientes">Clientes</a>
           <a href="{% url "list_pagos" %}" title="Ver declaraciones de renta">Declaraciones</a>
           <a href="{% url "list_claves" %}">Claves</a>
+          <a href="{% url "lists" %}">Otros</a>
           {% endif %}
-
 
           {% if user.is_superuser %}
           <a href="{% url "admin:index" %}">Administración</a>
@@ -90,10 +89,9 @@
         <p>No autenticado</p>
       </div>
       <nav class="menu menu-off">
+        <a href="{% url "home" %}">Inicio</a>
         <a href="#">Perfil</a>
-        <a href="#">Clientes</a>
-        <a href="#">Declaraciones</a>
-        <a href="#">Configuración</a>
+        <a href="#">Otros</a>
       </nav>
       </aside>
     {% endif %}

@@ -5,16 +5,17 @@
 {% endblock title %}
 
 {% block content %}
-<div class='container'>
-    <form method="post">
-        <div class='form'>
+<div class='update-container'>
+    <form method="post" class="form">
         <h1>Editar usuario</h1>
-        {% csrf_token %}
-            {{ form.as_p }}
-            <div class='btn-side-to-side'>
-                <button type="submit">Guardar</button>
-                <a href="{% url "home" %}">Volver</a>
-            </div>
+        <table>
+            {% csrf_token %}
+            {{ form.as_table }}
+        </table>
+        <div class='btn-side-to-side'>
+            <button type="submit">Guardar</button>
+            <a href="{% url "home" %}">Volver</a>
+            <a href="{% url "update_password" %}">Cambiar contraseña</a>
         </div>
     </form>
 </div>

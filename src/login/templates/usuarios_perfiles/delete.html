@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Usuarios - Confirmar eliminación</title>
+{% endblock title %}
+
+{% block content %}
+<div class='list-container'>
+    <h1></h1>
+    <div >
+    </div>
+</div>
+
+    <div class="dialog-overlay">
+    <div class="dialog-box">
+        <h2>Confirmar Acción</h2>
+        <form action="" method="post">
+            {% csrf_token %}
+            <p>¿Está seguro que desea eliminar el usuario {{ object.username }}?</p>
+            <p>Si creó conjuntos de claves con este usuario, no las podrá recuperar, se recomienda <a href="{% url "list_claves" %}" title="Ver Claves">revisarlas</a> antes de confirmar esta acción.</p>
+            <div class="dialog-buttons">
+                <button type="submit" class="btn-confirm">Si, eliminar</button>
+                <a href="{% url "detail_client" object.id %}" class="btn-cancel detail-button">No, volver</a>
+            </div>
+            <br>
+            <span>Esta acción no se puede deshacer</span>
+        </form>
+    </div>
+    </div>
+
+{% endblock content %}

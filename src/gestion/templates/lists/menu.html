@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Otros</title>
+{% endblock title %}
+
+{% block content %}
+<div class='list-container'>
+    <h1>Otros</h1>
+    <div class="btn-down">
+        <a href="{% url "list_codigosii" %}" class="list-button">Ver Códigos S.I.I.</a>
+        <a href="{% url "list_girorubro" %}" class="list-button">Ver Giros / Rubros</a>
+        <a href="{% url "list_reg" %}" class="list-button">Ver Regímenes</a>
+        <a href="{% url "list_tiposcont" %}" class="list-button">Ver Tipos de Contabilidad</a>
+    </div>
+</div>
+
+{% endblock content %}

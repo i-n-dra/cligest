@@ -16,6 +16,10 @@ from .views import (
     PagosUpdateView,
     PagosDeleteView,
     PagosDetailView,
+    CodigoSIIListView,
+    GiroRubroListView,
+    RegTributarioListView,
+    TipoContabilidadListView
 )
 
 urlpatterns = [
@@ -47,4 +51,11 @@ urlpatterns = [
     path("export-pagos-confirmar/", views.PagosExportSelect, name="export_pagos_confirmar"),
     path("export-pagos/", views.PagosExport, name="export_pagos"),
     path("export-pagos-historial/", views.PagosExportHistorial, name="export_pagos_hist"),
+
+    # Listar
+    path("lists-menu/", views.ListViews, name="lists"),
+    path("lists-menu/list-codigos-sii/", CodigoSIIListView.as_view(), name="list_codigosii"),
+    path("lists-menu/list-giros-rubros/", GiroRubroListView.as_view(), name="list_girorubro"),
+    path("lists-menu/list-regimenes/", RegTributarioListView.as_view(), name="list_reg"),
+    path("lists-menu/list-tipos-contabilidad/", TipoContabilidadListView.as_view(), name="list_tiposcont"),
 ]

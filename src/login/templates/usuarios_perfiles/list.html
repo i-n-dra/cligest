@@ -21,12 +21,23 @@
             {% for p in perfiles %}
             <tr>
                 <td>{{ p.user.username }} ({{ p.user.first_name }} {{ p.user.last_name }})</td>
-                <td>{{ p.run }}</td> 
-                {% for g in p.user.groups.all %}
-                <td>{{ g }}</td>
-                {% endfor %}
+                {% if p.run %}
+                <td>{{ p.run }}</td>
+                {% else %}
+                <td>Sin RUN</td>
+                {% endif %}
+                {% if p.user.groups.all %}
                 <td>
-                    <a href="{% url "detail_u_p" p.user.id %}" title='Ver detalles'>
+                {% for g in p.user.groups.all %}
+                {{ g }}
+                <br>
+                {% endfor %}
+                </td>
+                {% else %}
+                <td>Sin Rol</td>
+                {% endif %}
+                <td>
+                    <a href="{% url "detail_u_p" p.id %}" title='Ver detalles'>
                     <i class="fa fa-info btn-table" aria-hidden="true" style="font-size:24px;"></i>
                     </a>
                 </td>

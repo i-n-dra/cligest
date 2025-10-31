@@ -346,6 +346,18 @@ input[type="radio"] {
     margin: 1rem !important;
 }
 
+.btn-down {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn-down a {
+    width: 80%;
+    margin: 1rem 2rem;
+}
+
 .form button[type="submit"], .form a {
     width: 60%;
     margin: 2rem 0;
@@ -359,19 +371,14 @@ input[type="radio"] {
     text-decoration: none;
     align-self: center;
 }
-
 .form button[type="submit"]:hover, .form a:hover {
     transition: 0.3s ease;
     background: #5370a1;
     cursor: pointer;
 }
 
-bdi { /* info hash de contraseña usuario */
-    margin-inline-end: 4rem;
-}
-
-.button { /* para btn cambio contraseña*/
-    margin: 2rem auto !important;
+#id_new_password1_helptext li {
+    margin-bottom: .5rem;
 }
 
 /* listar */
@@ -553,6 +560,12 @@ bdi { /* info hash de contraseña usuario */
     background: #0b3378;
     color: #f8fafc;
     text-decoration: none;
+}
+
+.list-button:hover {
+    transition: 0.3s ease;
+    background: #5370a1;
+    cursor: pointer;
 }
 
 .detail-button:hover {

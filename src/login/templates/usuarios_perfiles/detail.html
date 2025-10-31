@@ -39,7 +39,7 @@
             </tr>
             <tr>
                 <th>Hora:</th>
-                <td>{{ p.user.date_joined.time }}</td>
+                <td>{{ p.user.date_joined|date:"H:i" }}</td>
             </tr>
         </table>
     </div>
@@ -47,10 +47,10 @@
     <div>
         <h3>Opciones</h3>
         <div>
-            <a href="{% url "change_u_p" p.id %}" class='detail-button' title='Editar grupo/rol del usuario'>
+            <a href="{% url "change_u_p" p.user.id %}" class='detail-button' title='Editar grupo/rol del usuario'>
                 <i class="fa fa-pencil-square-o" style="font-size:24px; padding-left:.1rem"></i>
             </a>
-            <a href="{% url "change_u_p" p.id %}" class='detail-button' title='Eliminar usuario'>
+            <a href="{% url "delete_u_p" p.id %}" class='detail-button' title='Eliminar usuario'>
                 <i class="fa fa-trash" style="font-size:24px; padding-left:.1rem"></i>
             </a>
             <a href="{% url "list_u_p" %}" class='detail-button' title='Volver a usuarios'>
@@ -59,7 +59,7 @@
         </div>
     </div>
     {% else %}
-    <h3>La declaración de renta no pudo ser encontrada.</h3>
+    <h3>El usuario no pudo ser encontrado.</h3>
     {% endif %}
 </div>
 {% endblock content %}

@@ -1,19 +1,11 @@
 from django import forms
-from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from .models import Profile, User, Group
+from .models import Profile, User
 
 class UserForm(forms.ModelForm):
-    password = ReadOnlyPasswordHashField(
-        label= 'Contraseña',
-        help_text= '''Las contraseñas en texto plano no se almacenan, por lo que no se puede
-        ver la contraseña del usuario.''',
-    ) 
-
     class Meta:
         model = User
         fields = [
             'username',
-            'password',
             'first_name',
             'last_name',
             'email',

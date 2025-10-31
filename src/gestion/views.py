@@ -4,7 +4,13 @@ from django.contrib.auth.models import User
 from .models import (
     Client,
     Claves,
-    PagosCliente
+    PagosCliente,
+    CodigoSII,
+    Comuna,
+    GiroRubro,
+    Region,
+    RegTributario,
+    TipoContabilidad,
 )
 from .forms import (
     ClientForm,
@@ -28,7 +34,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth import authenticate
 from django.utils.decorators import method_decorator
-from django.db.models import OuterRef, Subquery, F
+from django.db.models import OuterRef, Subquery
 
 # Create your views here.
 def home(request):
@@ -155,6 +161,8 @@ def PagosExportHistorial(request): # pagos de meses anteriores
     pagos = PagosCliente.objects.all()
     primer_dia_mes = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
     pagos_historial = pagos.filter(created_at__lt=primer_dia_mes)
+    if pagos_historial.count() == 0:
+        raise PermissionDenied("No existen pagos históricos que extraer")
     msg = exportar_pagos_historial.add_rows(self=exportar_pagos_historial, pagos=pagos_historial)
     return render(request, 'pagos/msg_exportacion.html', { 'msg': msg })
 
@@ -289,7 +297,7 @@ class PagosUpdateView(UpdateView):
             form.add_error("a_pagar", "Ocurrió un error validando los montos, por favor intente de nuevo.")
             return self.form_invalid(form)
     
-### Claves Views ### en progreso
+### Claves Views ###
 @login_required
 @permission_required('gestion.export_claves', raise_exception=True)
 def ClavesExportarCliente(request, pk): # exportar un conjunto de claves
@@ -347,11 +355,14 @@ class ClavesExportar(FormView): # exportar todas las claves
         key = bytes(user_password.encode())
         key = key.rjust(16, b'\0')[:16]
         aes = AES(key)
-        msg = exportar_claves_all.export(
-            self=exportar_claves_all,
-            claves=self.claves,
-            aes=aes
-        )
+        try:
+            msg = exportar_claves_all.export(
+                self=exportar_claves_all,
+                claves=self.claves,
+                aes=aes
+            )
+        except UnicodeDecodeError:
+            raise PermissionDenied("Solo se pueden extraer todos los conjuntos de claves cuando estos son creados por un mismo usuario.")
 
         if len(msg) >= 1:
             return render(request, 'claves/msg_exportacion.html', {'msg': msg})
@@ -433,3 +444,36 @@ class ClaveDeleteView(DeleteView):
     model = Claves
     template_name = 'claves/delete.html'
     success_url = reverse_lazy('list_claves')
+
+### list views ###
+
+def ListViews(request):
+    return render(request, 'lists/menu.html')
+
+@method_decorator([login_required, permission_required('gestion.view_codigosii', raise_exception=True)], name='dispatch')
+class CodigoSIIListView(ListView):
+    model = CodigoSII
+    template_name = 'lists/codigosii.html'
+    context_object_name = 'codigos'
+    ordering = ['code']
+
+@method_decorator([login_required, permission_required('gestion.view_girorubro', raise_exception=True)], name='dispatch')
+class GiroRubroListView(ListView):
+    model = GiroRubro
+    template_name = 'lists/girorubro.html'
+    context_object_name = 'id'
+    ordering = ['name']
+
+@method_decorator([login_required, permission_required('gestion.view_regtributario', raise_exception=True)], name='dispatch')
+class RegTributarioListView(ListView):
+    model = RegTributario
+    template_name = 'lists/regs.html'
+    context_object_name = 'id'
+    ordering = ['name']
+
+@method_decorator([login_required, permission_required('gestion.view_tipocontabilidad', raise_exception=True)], name='dispatch')
+class TipoContabilidadListView(ListView):
+    model = TipoContabilidad
+    template_name = 'lists/tiposcont.html'
+    context_object_name = 'id'
+    ordering = ['name']

@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from django.views.generic.edit import CreateView, UpdateView
+from django.shortcuts import redirect, render
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import DetailView, ListView
 from django.urls import reverse_lazy
 from .models import Profile
@@ -11,7 +11,7 @@ from .forms import (
     )
 from django.contrib.auth.models import Permission, User, Group
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.forms import UserChangeForm
+from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
 from django import forms
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
@@ -48,8 +48,13 @@ class UserUpdateView(UpdateView):
     template_name = 'user/update_user.html'
     success_url = reverse_lazy('profile')
 
-@method_decorator(login_required, name='dispatch')
-@method_decorator(permission_required('auth.change_user', raise_exception=True), name='dispatch')
+@method_decorator([login_required, permission_required('auth.delete_user', raise_exception=True)], name='dispatch')
+class UserDeleteView(DeleteView):
+    model = User
+    template_name = "usuarios_perfiles/delete.html"
+    success_url = reverse_lazy('list_u_p')
+
+@method_decorator([login_required, permission_required('auth.change_user', raise_exception=True)], name='dispatch')
 class UserGroupUpdateView(UpdateView):
     model = User
     form_class = UserGroupForm
@@ -60,6 +65,11 @@ class UserGroupUpdateView(UpdateView):
         context = super().get_context_data(**kwargs)
         context['title'] = f"Cambiar grupos de {self.object.username}"
         return context
+    def form_valid(self, form):
+        user = self.get_object()
+        user.groups.set(form.cleaned_data['groups'])
+        user.save()
+        return redirect(self.success_url)
 
 @method_decorator(login_required, name='dispatch')
 class ProfileCreateView(CreateView):
@@ -67,7 +77,7 @@ class ProfileCreateView(CreateView):
     success_url = reverse_lazy('profile')
     template_name = 'profile/profile_create.html'
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator([login_required, permission_required(["auth.view_user"], raise_exception=True)], name='dispatch')
 class ProfileDetailView(DetailView):
     model = Profile
     template_name = 'usuarios_perfiles/detail.html'
@@ -102,7 +112,7 @@ class RolePermissionListView(ListView):
 class UsersProfilesListView(ListView):
     @method_decorator(login_required)
     @method_decorator(never_cache)
-    @method_decorator(permission_required(["view_profile", "view_user"]))
+    @method_decorator(permission_required(["auth.view_user"]))
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
 

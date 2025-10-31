@@ -75,7 +75,7 @@
             </tr>
             <tr>
                 <th>Hora:</th>
-                <td>{{ p.created_at.time }}</td>
+                <td>{{ p.created_at|date:"H:i" }}</td>
             </tr>
         </table>
     </div>

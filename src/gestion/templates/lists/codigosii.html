@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Códigos SII</title>
+{% endblock title %}
+
+{% block content %}
+<div class='list-container'>
+    <h1>Códigos SII</h1>
+    {% if codigos %}
+    <table id="myTable" class="display">
+        <thead>
+            <tr>
+                <th>Código de Actividad</th>
+                <th>Actividad Económica</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in codigos %}
+            <tr>
+                <td>{{ c.code }}</td>
+                <td>{{ c.activity }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <h3>No existen Códigos SII registrados en el sistema.</h3>
+    {% endif %}
+</div>
+
+{% endblock content %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Giros / Rubros</title>
+{% endblock title %}
+
+{% block content %}
+<div class='list-container'>
+    <h1>Giros / Rubros</h1>
+    {% if id %}
+    <table id="myTable" class="display">
+        <thead>
+            <tr>
+                <th>Código Identificador</th>
+                <th>Nombre</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in id %}
+            <tr>
+                <td>{{ i.id }}</td>
+                <td>{{ i.name }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <h3>No existen rubros registrados en el sistema.</h3>
+    {% endif %}
+</div>
+
+{% endblock content %}
