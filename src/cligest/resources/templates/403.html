@@ -9,6 +9,9 @@
 {% if exception %}
 <p>{{ exception }}</p>
 <br>
+{% else %}
+<p>Usted no tiene los permisos para realizar esta acción</p>
+<br>
 {% endif %}
 <a href="{% url "home" %}" class='anchor'>Volver al inicio</a>
 {% endblock content %}

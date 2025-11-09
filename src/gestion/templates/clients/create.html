@@ -12,6 +12,18 @@
     <div style="display:flex; flex-direction: row;">
         <div class="create-client-container">
         <h3>Información Personal</h3>
+        {% if form.errors %}
+        <div class="error-container">
+            <strong>Se encontraron errores en los siguientes campos, por favor haga las correcciones correspondientes e intente de nuevo:</strong>
+            <ul>
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
         <table>
             <tr>
                 <th>
@@ -64,7 +76,6 @@
                 </td>
             </tr>
         </table>
-
             <h3>Datos de Empresa</h3>
         <table>
             <tr>
@@ -136,100 +147,94 @@
                 </td>
             </tr>
         </table>
-        </div>
+            <h3>Datos Financieros</h3>
+        <table>
+            <tr>
+                <th>
+                    {{ form.tipo_contabilidad.label_tag }}
+                </th>
+                <td>
+                    {{ form.tipo_contabilidad }}
+                    <br>
+                    <span class="helptext">{{ form.tipo_contabilidad.help_text }}</span>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    {{ form.cuenta_corriente.label_tag }}
+                </th>
+                <td>
+                    {{ form.cuenta_corriente }}
+                    <br>
+                    <span class="helptext">{{ form.cuenta_corriente.help_text }}</span>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    {{ form.n_cuenta_corriente.label_tag }}
+                </th>
+                <td>
+                    {{ form.n_cuenta_corriente }}
+                    <br>
+                    <span class="helptext">{{ form.n_cuenta_corriente.help_text }}</span>
+                </td>
+            </tr>
+        </table>
 
-        <div class="create-client-container">
-            <div>
-                <h3>Datos Financieros</h3>
-            <table>
-                <tr>
-                    <th>
-                        {{ form.tipo_contabilidad.label_tag }}
-                    </th>
-                    <td>
-                        {{ form.tipo_contabilidad }}
-                        <br>
-                        <span class="helptext">{{ form.tipo_contabilidad.help_text }}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        {{ form.cuenta_corriente.label_tag }}
-                    </th>
-                    <td>
-                        {{ form.cuenta_corriente }}
-                        <br>
-                        <span class="helptext">{{ form.cuenta_corriente.help_text }}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        {{ form.n_cuenta_corriente.label_tag }}
-                    </th>
-                    <td>
-                        {{ form.n_cuenta_corriente }}
-                        <br>
-                        <span class="helptext">{{ form.n_cuenta_corriente.help_text }}</span>
-                    </td>
-                </tr>
-            </table>
-
-                <h3>Datos de Contacto</h3>
-            <table>
-                <tr>
-                    <th>
-                        {{ form.email.label_tag }}
-                    </th>
-                    <td>
-                        {{ form.email }}
-                        <br>
-                        <span class="helptext">{{ form.email.help_text }}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        {{ form.phone_number.label_tag }}
-                    </th>
-                    <td>
-                        {{ form.phone_number }}
-                        <br>
-                        <span class="helptext">{{ form.phone_number.help_text }}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        {{ form.region.label_tag }}
-                    </th>
-                    <td>
-                        {{ form.region }}
-                        <br>
-                        <span class="helptext">{{ form.region.help_text }}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        {{ form.comuna.label_tag }}
-                    </th>
-                    <td>
-                        {{ form.comuna }}
-                        <br>
-                        <span class="helptext">{{ form.comuna.help_text }}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        {{ form.address.label_tag }}
-                    </th>
-                    <td>
-                        {{ form.address }}
-                        <br>
-                        <span class="helptext">{{ form.address.help_text }}</span>
-                    </td>
-                </tr>
-            </table>      
-            </div>
-        <button type="submit">Añadir</button>
-        </div>
+            <h3>Datos de Contacto</h3>
+        <table>
+            <tr>
+                <th>
+                    {{ form.email.label_tag }}
+                </th>
+                <td>
+                    {{ form.email }}
+                    <br>
+                    <span class="helptext">{{ form.email.help_text }}</span>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    {{ form.phone_number.label_tag }}
+                </th>
+                <td>
+                    {{ form.phone_number }}
+                    <br>
+                    <span class="helptext">{{ form.phone_number.help_text }}</span>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    {{ form.region.label_tag }}
+                </th>
+                <td>
+                    {{ form.region }}
+                    <br>
+                    <span class="helptext">{{ form.region.help_text }}</span>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    {{ form.comuna.label_tag }}
+                </th>
+                <td>
+                    {{ form.comuna }}
+                    <br>
+                    <span class="helptext">{{ form.comuna.help_text }}</span>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    {{ form.address.label_tag }}
+                </th>
+                <td>
+                    {{ form.address }}
+                    <br>
+                    <span class="helptext">{{ form.address.help_text }}</span>
+                </td>
+            </tr>
+        </table>      
+    <button type="submit">Añadir</button>
     </div>
     </form>
 </div>

@@ -99,7 +99,7 @@ class PagosClienteForm(forms.ModelForm):
             'imposiciones',
             'otros',
             'total',
-            'a_pagar'
+            'a_pagar',
         ]
         widgets = {
             'client': forms.Select(attrs={"class": "js-example-basic-single"}),

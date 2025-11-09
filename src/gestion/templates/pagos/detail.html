@@ -14,6 +14,14 @@
         <h3>Resumen</h3>
         <table class="detail-table">
             <tr>
+                <th>Estado</th>
+                {% if p.a_pagar < 1 %}
+                    <td style='color:green;'><strong>Sin deuda</strong></td>
+                {% else %}
+                    <td style='color:red;'><strong>En deuda</strong></td>
+                {% endif %}
+            </tr>
+            <tr>
                 <th>Total</th>
                 <td>$ {{ p.total }}</td>
             </tr>

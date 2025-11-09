@@ -6,9 +6,7 @@ from .models import (
     Claves,
     PagosCliente,
     CodigoSII,
-    Comuna,
     GiroRubro,
-    Region,
     RegTributario,
     TipoContabilidad,
 )
@@ -78,7 +76,13 @@ class ClientDetailView(DetailView):
     model = Client
     template_name = 'clients/detail.html'
     context_object_name = 'c'
-
+    def get_context_data(self, **kwargs):
+            context = super().get_context_data(**kwargs)
+            cliente = self.object
+            context['pagos'] = PagosCliente.objects.filter(client=cliente).last()
+            context['claves'] = Claves.objects.filter(client=cliente).last()
+            return context
+    
 @method_decorator([login_required, permission_required('gestion.change_client', raise_exception=True)], name='dispatch')
 class ClientUpdateView(UpdateView):
     model = Client
@@ -343,31 +347,34 @@ class ClavesExportar(FormView): # exportar todas las claves
     success_url = reverse_lazy('list_claves')
 
     def export(self, request, req_pass):
+        msg = []
         user = request.user
-
         authenticated_user = authenticate(request, username=user.username, password=req_pass)
-        if authenticated_user is None:
-            print("Authentication failed")
-            return render(request, 'claves/msg_exportacion.html', {'msg': "Contraseña incorrecta."})
-        
-        db_user = self.users.get(username=user)
-        user_password = db_user.password
-        key = bytes(user_password.encode())
-        key = key.rjust(16, b'\0')[:16]
-        aes = AES(key)
-        try:
-            msg = exportar_claves_all.export(
-                self=exportar_claves_all,
-                claves=self.claves,
-                aes=aes
-            )
-        except UnicodeDecodeError:
-            raise PermissionDenied("Solo se pueden extraer todos los conjuntos de claves cuando estos son creados por un mismo usuario.")
 
-        if len(msg) >= 1:
-            return render(request, 'claves/msg_exportacion.html', {'msg': msg})
+        if authenticated_user is None:
+            msg.clear() if msg else None
+            print("Authentication failed")
+            return render(request, 'claves/msg_exportacion.html', {'msg': ["Contraseña incorrecta"]})
         else:
-            return render(request, 'claves/msg_exportacion.html', {'msg': ["Ocurrió un error al exportar"]})    
+            msg.clear() if msg else None
+            db_user = self.users.get(username=user)
+            user_password = db_user.password
+            key = bytes(user_password.encode())
+            key = key.rjust(16, b'\0')[:16]
+            aes = AES(key)
+            try:
+                msg = exportar_claves_all.export(
+                    self=exportar_claves_all,
+                    claves=self.claves,
+                    aes=aes
+                )
+            except UnicodeDecodeError:
+                raise PermissionDenied("Solo se pueden extraer todos los conjuntos de claves cuando estos son creados por un mismo usuario.")
+
+            if len(msg) >= 1:
+                return render(request, 'claves/msg_exportacion.html', {'msg': msg})
+            else:
+                return render(request, 'claves/msg_exportacion.html', {'msg': ["Ocurrió un error al exportar"]})
 
     def form_valid(self, form):
         password = form.cleaned_data.get("password")

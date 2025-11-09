@@ -5,7 +5,7 @@ import re, os
 
 def cuenta_corriente_validator(value):
     if not re.match(r'^(\d{9,15}|\d{1,4}(?:-\d{1,4})+|\d{1,4}(?: \d{1,4})+)$', value):
-        raise ValidationError('Formato inválido.')
+        raise ValidationError('Solo se permiten dígitos y espacios o guiones (-)')
     digits = re.sub(r'\D', '', value)
     if len(digits) < 9:
         raise ValidationError('Debe contener al menos 9 dígitos.')
@@ -80,6 +80,8 @@ class Client(models.Model):
         validators=[
             RegexValidator(
                 regex=r'\D[a-zA-Z]{2,}+',
+                message='Solo se aceptan caracteres, y un mínimo de 2',
+                code='invalid'
             )
         ]
     )
@@ -89,6 +91,8 @@ class Client(models.Model):
         validators=[
             RegexValidator(
                 regex=r'\D[a-zA-Z]{2,}+',
+                message='Solo se aceptan caracteres, y un mínimo de 2',
+                code='invalid'
             )
         ]
     )
@@ -98,6 +102,8 @@ class Client(models.Model):
         validators=[
             RegexValidator(
                 regex=r'\D[a-zA-Z]{2,}+',
+                message='Solo se aceptan caracteres, y un mínimo de 2',
+                code='invalid'
             )
         ]
     )
@@ -108,6 +114,8 @@ class Client(models.Model):
         validators=[
             RegexValidator(
                 regex=r'\D[a-zA-Z]{2,}+',
+                message='Solo se aceptan caracteres, y un mínimo de 2',
+                code='invalid'
             )
         ]
     )
@@ -118,6 +126,8 @@ class Client(models.Model):
         validators=[
             RegexValidator(
                 regex=r'\D[a-zA-Z]{2,}+',
+                message='Solo se aceptan caracteres, y un mínimo de 2',
+                code='invalid'
             )
         ]
     )
@@ -128,6 +138,8 @@ class Client(models.Model):
         validators=[
             RegexValidator(
                 regex=r'^\d{7,8}-[\dkK]$',
+                message='Solo se aceptan dígitos y K, siga el formato 12345678-9',
+                code='invalid'
             )
         ],
         unique=True
@@ -139,6 +151,8 @@ class Client(models.Model):
         validators=[
             RegexValidator(
                 regex=r'^\d{7,8}-[\dkK]$',
+                message='Solo se aceptan dígitos y K, siga el formato 12345678-9',
+                code='invalid'
             )
         ],
         unique=True
@@ -171,6 +185,8 @@ class Client(models.Model):
         validators=[
             RegexValidator(
                 regex=r'^\+1?\d{9,15}$',  # Example regex for international phone numbers
+                message='Solo se aceptan dígitos y signo "+", siga el formato +56912345678',
+                code='invalid'
             )
         ]
     )
@@ -191,6 +207,8 @@ class Client(models.Model):
         validators=[
             RegexValidator(
                 regex=r'\D[a-zA-Z]{2,}+',
+                message='Solo se aceptan caracteres, y un mínimo de 2',
+                code='invalid'
             )
         ]
     )
@@ -224,10 +242,7 @@ class Client(models.Model):
     n_cuenta_corriente = models.CharField(
         max_length=20,
         verbose_name='N° Cuenta Corriente',
-        validators=[cuenta_corriente_validator],
-        error_messages={
-            'invalid': 'Solo se permiten dígitos y espacios o guiones (-)'
-        }
+        validators=[cuenta_corriente_validator]
     )
     n_trabajadores = models.IntegerField(
         verbose_name='Trabajadores'
@@ -315,8 +330,10 @@ class PagosCliente(models.Model):
         verbose_name="A Pagar"
     )
 
-    # created_at = models.DateTimeField(auto_now=True)
-    created_at = models.DateTimeField()
+    created_at = models.DateTimeField(
+        verbose_name="Fecha Creación/Actualización",
+        auto_now=True,
+    )
 
     class Meta:
         permissions = [

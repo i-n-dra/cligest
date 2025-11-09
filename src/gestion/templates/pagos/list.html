@@ -20,6 +20,7 @@
         <thead>
             <tr>
                 <th>Cliente</th>
+                <th>Estado de deuda</th>
                 <th>Monto a Pagar</th>
                 <th>Fecha</th>
                 <th>Ver Más</th>
@@ -30,6 +31,11 @@
             <tr>
                 <td>{{ p.client }}</td>
                 <!-- https://docs.djangoproject.com/en/5.2/ref/templates/builtins/#stringformat:~:text=%7B%7B%20value-,%7Cfloatformat%3A%22%2D3g%22,-%7D%7D -->
+                {% if p.a_pagar < 1 %}
+                    <td style='color:green;'>Sin deuda</td>
+                {% else %}
+                    <td style='color:red;'>En deuda</td>
+                {% endif %}
                 <td>$ {{ p.a_pagar|floatformat:"-3g" }}</td> 
                 <td>{{ p.created_at|date:"F, Y" }}</td>
                 <td>

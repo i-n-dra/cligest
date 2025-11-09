@@ -82,6 +82,10 @@
                 </ul>
                 </td>
             </tr>
+            <tr>
+                <th>Número de Trabajadores</th>
+                <td>{{ c.n_trabajadores }}</td>
+            </tr>
         </table>
     </div>
 
@@ -97,6 +101,16 @@
             <a href="{% url "export_client" c.id %}" class='detail-button' title='Exportar'>
                 <i class="fa fa-file-excel-o" style="font-size:24px; padding-left:.1rem"></i>
             </a>
+            {% if claves %}
+            <a href="{% url "detail_clave" claves.id %}" class='detail-button' title='Ver claves'>
+                <i class="fa fa-unlock-alt" style="font-size:24px; padding-left:.1rem"></i>
+            </a>
+            {% endif %}
+            {% if pagos %}
+            <a href="{% url "detail_pago" pagos.id %}" class='detail-button' title='Ver declaración de renta'>
+                <i class="fa fa-money" style="font-size:24px; padding-left:.1rem"></i>
+            </a>
+            {% endif %}
             <a href="{% url "list_clients" %}" class='detail-button' title='Volver a la lista de clientes'>
                 <i class="fa fa-users" style="font-size:24px; padding-left:.1rem"></i>
             </a>

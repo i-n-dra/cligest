@@ -86,9 +86,12 @@ class exportar_claves_all():
                 return Path(buf.value)
     desktop = get_desktop_path() / "Claves.xlsx"
     msg = []
-    try:
+
+    if desktop.exists():
+        msg.clear()
         wb = load_workbook(str(desktop))
-    except FileNotFoundError:
+    else:
+        msg.clear()
         msg.append('No se encontró el archivo "Claves.xlsx" en el escritorio, se ha creado uno nuevo')
         wb = Workbook(write_only=False)
         create_file(wb)
@@ -96,7 +99,6 @@ class exportar_claves_all():
     ws = wb.active
     ws.sheet_view.showGridLines = False
     def add_row(self, run=str, rut=str, claves=list, n_row=int):
-
         # agregar claves
         n_cols = 1
         cells_values = [
@@ -127,6 +129,7 @@ class exportar_claves_all():
             self.ws.column_dimensions[col].width = max_length + 2
 
         self.ws.row_dimensions[1].height = 29.25
+        return
 
     def export(self, claves=QuerySet, aes=AES):
         n_row = 1
@@ -160,13 +163,18 @@ class exportar_claves_all():
         # Save the file
         try:
             self.wb.save(str(self.desktop))
-            self.msg.append('Se ha creado "Claves.xlsx" exitosamente')
+            if len(self.msg) == 2:
+                if self.msg[0] == 'No se encontró el archivo "Claves.xlsx" en el escritorio, se ha creado uno nuevo':
+                    self.msg[1] = 'Se ha creado "Claves.xlsx" exitosamente'
+            elif len(self.msg) < 2 and self.msg[0] == 'No se encontró el archivo "Claves.xlsx" en el escritorio, se ha creado uno nuevo':
+                self.msg.append('Se ha creado "Claves.xlsx" exitosamente')
             return self.msg
         except PermissionError:
+            self.msg.clear()
             self.msg.append('No se puede escribir el archivo mientras está abierto, por favor, cierre el archivo e intente de nuevo.')
             return self.msg
 
-class exportar_clave(): # en progreso
+class exportar_clave():
     def get_desktop_path():
                 CSIDL_DESKTOP = 0  # escritorio
                 SHGFP_TYPE_CURRENT = 0

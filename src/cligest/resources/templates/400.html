@@ -5,6 +5,10 @@
 {% endblock title %}
 
 {% block content %}
-<h1>Permiso denegado (403)</h1>
+<h1>Bad Request (400)</h1>
+{% if exception %}
+<p>{{ exception }}</p>
+<br>
+{% endif %}
 <a href="{% url "home" %}">Volver al inicio</a>
 {% endblock content %}

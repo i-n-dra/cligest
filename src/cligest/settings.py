@@ -19,7 +19,7 @@ BASE_PATH = Path(__file__).parent / "resources"
 # A Positron app is only ever serving to itself, so a lot of the usual advice about
 # Django best practices in production don't apply. The secret key doesn't need to be
 # *that* secret; and running in debug mode (with staticfiles) is fine.
-SECRET_KEY = os.environ.get('DJANGO_SECRET') # crear nueva var en variables de entorno
+SECRET_KEY = os.environ.get('DJANGO_SECRET', 'DJANGO_SECRETkey329847') # crear nueva var en variables de entorno
 DEBUG = True
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
