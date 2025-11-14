@@ -40,7 +40,7 @@
     <br>
     <p>Solo se mostrarán clientes con claves ingresadas en el sistema</p>
     {% else %}
-    <h3>No existen claves registradas en el sistema.</h3>
+    <h3>No existen claves registradas en el sistema, ¿Desea <a class='anchor' href="{% url "create_clave" %}">añadir un conjunto de claves</a>?</h3>
     {% endif %}
 </div>
 

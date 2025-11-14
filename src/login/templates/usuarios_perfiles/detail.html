@@ -17,15 +17,27 @@
         <table class="detail-table">
             <tr>
                 <th>RUN:</th>
+                {% if p.run %}
                 <td>{{ p.run }}</td>
+                {% else %}
+                <td>-</td>
+                {% endif %}
             </tr>
             <tr>
                 <th>Teléfono / Celular:</th>
+                {% if p.phone_number %}
                 <td>{{ p.phone_number }}</td>
+                {% else %}
+                <td>-</td>
+                {% endif %}
             </tr>
             <tr>
                 <th>Fecha de nacimiento:</th>
+                {% if p.date_of_birth %}
                 <td>{{ p.date_of_birth }}</td>
+                {% else %}
+                <td>-</td>
+                {% endif %}
             </tr>
         </table>
 
@@ -50,7 +62,7 @@
             <a href="{% url "change_u_p" p.user.id %}" class='detail-button' title='Editar grupo/rol del usuario'>
                 <i class="fa fa-pencil-square-o" style="font-size:24px; padding-left:.1rem"></i>
             </a>
-            <a href="{% url "delete_u_p" p.id %}" class='detail-button' title='Eliminar usuario'>
+            <a href="{% url "delete_u_p" p.user.id %}" class='detail-button' title='Eliminar usuario'>
                 <i class="fa fa-trash" style="font-size:24px; padding-left:.1rem"></i>
             </a>
             <a href="{% url "list_u_p" %}" class='detail-button' title='Volver a usuarios'>

@@ -20,7 +20,11 @@
         <tbody>
             {% for p in perfiles %}
             <tr>
+                {% if p.user.first_name or p.user.last_name %}
                 <td>{{ p.user.username }} ({{ p.user.first_name }} {{ p.user.last_name }})</td>
+                {% else %}
+                <td>{{ p.user.username }}</td>
+                {% endif %}
                 {% if p.run %}
                 <td>{{ p.run }}</td>
                 {% else %}

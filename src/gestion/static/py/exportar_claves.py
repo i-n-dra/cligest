@@ -87,12 +87,10 @@ class exportar_claves_all():
     desktop = get_desktop_path() / "Claves.xlsx"
     msg = []
 
-    if desktop.exists():
-        msg.clear()
+    try:
         wb = load_workbook(str(desktop))
-    else:
-        msg.clear()
-        msg.append('No se encontró el archivo "Claves.xlsx" en el escritorio, se ha creado uno nuevo')
+    except FileNotFoundError:
+        msg.append(f'No se encontró el archivo "Claves.xlsx" en el escritorio, se ha creado uno nuevo')
         wb = Workbook(write_only=False)
         create_file(wb)
 
@@ -163,12 +161,15 @@ class exportar_claves_all():
         # Save the file
         try:
             self.wb.save(str(self.desktop))
-            if len(self.msg) == 2:
-                if self.msg[0] == 'No se encontró el archivo "Claves.xlsx" en el escritorio, se ha creado uno nuevo':
-                    self.msg[1] = 'Se ha creado "Claves.xlsx" exitosamente'
-            elif len(self.msg) < 2 and self.msg[0] == 'No se encontró el archivo "Claves.xlsx" en el escritorio, se ha creado uno nuevo':
+            if len(self.msg) > 0:
+                if self.msg[-1] == 'Se ha creado "Claves.xlsx" exitosamente':
+                    return self.msg
+                else: 
+                    self.msg.append('Se ha creado "Claves.xlsx" exitosamente')
+                    return self.msg
+            else:
                 self.msg.append('Se ha creado "Claves.xlsx" exitosamente')
-            return self.msg
+                return self.msg
         except PermissionError:
             self.msg.clear()
             self.msg.append('No se puede escribir el archivo mientras está abierto, por favor, cierre el archivo e intente de nuevo.')
@@ -260,8 +261,16 @@ class exportar_clave():
         # Save the file
         try:
             wb.save(str(desktop))
-            msg.append(f'Se ha creado "{archivo}" exitosamente')
-            return msg
+            if len(msg) > 0:
+                if msg[-1] == f'Se ha creado "{archivo}" exitosamente':
+                    return msg
+                else: 
+                    msg.append(f'Se ha creado "{archivo}" exitosamente')
+                    return msg
+            else:
+                msg.append(f'Se ha creado "{archivo}" exitosamente')
+                return msg
         except PermissionError:
+            msg.clear()
             msg.append('No se puede escribir el archivo mientras está abierto, por favor, cierre el archivo e intente de nuevo.')
             return msg

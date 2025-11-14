@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-import time, os, base64
+import os, base64
 from django.contrib.auth.models import User
 from .models import (
     Client,
@@ -32,19 +32,18 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth import authenticate
 from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
 from django.db.models import OuterRef, Subquery
 
 # Create your views here.
 def home(request):
-    return render(request, 'index.html')
+    context = {"horario_am": horario_am(),}
+    return render(request, 'index.html', context)
 
 ### Mensaje dia/tarde ###
 def horario_am():
-    hora = time.localtime().index(3) # index 3 -> tm_hour
-    if hora > 12: 
-        return False
-    elif hora < 12:
-        return True
+    hora = timezone.localtime().hour  # 0–23
+    return hora < 12
 
 ### Clientes Views ###
 
@@ -321,8 +320,7 @@ def ClavesExportarCliente(request, pk): # exportar un conjunto de claves
             
             db_user = users.get(username=user)
             user_password = db_user.password
-            key = bytes(user_password.encode())
-            key = key.rjust(16, b'\0')[:16]
+            key = bytes(user_password.encode())[-16:]
             aes = AES(key)
             msg = exportar_clave.export(
                 self=exportar_clave,
@@ -338,7 +336,7 @@ def ClavesExportarCliente(request, pk): # exportar un conjunto de claves
     initial_msg = f"Para exportar las claves de {clave.client.nombre_rep_legal} {clave.client.last_name_1_rep_legal} {clave.client.last_name_2_rep_legal}"
     return render(request, 'claves/export-cliente.html', {'msg': initial_msg, 'c': clave, 'form': form})
 
-@method_decorator([login_required, permission_required('gestion.export_claves')], name='dispatch')
+@method_decorator([login_required, never_cache, permission_required('gestion.export_claves')], name='dispatch')
 class ClavesExportar(FormView): # exportar todas las claves
     claves = Claves.objects.all()
     users = User.objects.all()
@@ -359,8 +357,8 @@ class ClavesExportar(FormView): # exportar todas las claves
             msg.clear() if msg else None
             db_user = self.users.get(username=user)
             user_password = db_user.password
-            key = bytes(user_password.encode())
-            key = key.rjust(16, b'\0')[:16]
+            key = bytes(user_password.encode())[-16:]
+            # key = key.rjust(16, b'\0')[:16] #??????
             aes = AES(key)
             try:
                 msg = exportar_claves_all.export(
@@ -371,7 +369,7 @@ class ClavesExportar(FormView): # exportar todas las claves
             except UnicodeDecodeError:
                 raise PermissionDenied("Solo se pueden extraer todos los conjuntos de claves cuando estos son creados por un mismo usuario.")
 
-            if len(msg) >= 1:
+            if msg:
                 return render(request, 'claves/msg_exportacion.html', {'msg': msg})
             else:
                 return render(request, 'claves/msg_exportacion.html', {'msg': ["Ocurrió un error al exportar"]})
@@ -407,14 +405,14 @@ class ClavesCreateView(CreateView):
         except NameError:
             form.fields['client'].initial = None
         return form
-        
+    
     def post(self, request):
         form = self.get_form()
         self.object = None
         
         # revisar static/py/aes para ver ejemplos y source code
         if form.is_valid():
-            key = get_aes_key(request).rjust(16, b'\0')[:16]
+            key = get_aes_key(request)[-16:]
             iv = os.urandom(16)
             aes = AES(key)
 
@@ -428,6 +426,7 @@ class ClavesCreateView(CreateView):
             form.instance.factura_electronica = encrypt_field(form.cleaned_data['factura_electronica'])
             form.instance.dir_trabajo = encrypt_field(form.cleaned_data['dir_trabajo'])
             form.instance.iv = iv
+            form.instance.user = self.request.user
 
             form.save()
             return super().form_valid(form)

@@ -91,6 +91,22 @@
             </tr>
         </table>
 
+        <hr class="solid-divider">
+
+        <h3>Creado por:</h3>
+        <table class="detail-table">
+            <tr>
+                <th>Nombre de usuario:</th>
+                <td>
+                    {% if c.user %}
+                    {{ c.user.username }}
+                    {% else %}
+                    No se encontró el usuario
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+
     </div>
     {% else %}
     <h3>La declaración de renta no pudo ser encontrada.</h3>

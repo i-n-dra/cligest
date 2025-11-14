@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import Permission
 from django.core.validators import RegexValidator
+from django.utils.timezone import now
 
 # Create your models here.
 class Role(models.Model):
@@ -13,7 +14,6 @@ class Role(models.Model):
         blank=True,
         max_length=40,
         verbose_name='Rol',
-        help_text='Ingrese un rol, máximo de 40 caracteres.',
         default='Sin rol'
     )
     permissions = models.ManyToManyField(Permission, verbose_name='Permisos')
@@ -36,12 +36,13 @@ class Profile(models.Model):
         error_messages={
             'invalid': 'El formato de RUN es incorrecto'
         },
-        null=True # temporal
+        blank=True
     )
     date_of_birth = models.DateField(
         verbose_name='Fecha de nacimiento',
-        help_text='No se podrá cambiar',
-        null=True # temporal
+        help_text='Ejemplo: 01/01/1990',
+        blank=True,
+        default=now
     )
     phone_number = models.CharField(
         max_length=12,
@@ -52,7 +53,7 @@ class Profile(models.Model):
                 regex=r'^\+569\d{8}$',  # Example regex for international phone numbers
             )
         ],
-        null=True # temporal
+        blank=True
     )
     profile_picture = models.ImageField(
         upload_to='profile_pictures/',

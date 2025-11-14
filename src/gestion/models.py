@@ -1,7 +1,8 @@
 from django.db import models
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
-import re, os
+import re
+from django.contrib.auth.models import User
 
 def cuenta_corriente_validator(value):
     if not re.match(r'^(\d{9,15}|\d{1,4}(?:-\d{1,4})+|\d{1,4}(?: \d{1,4})+)$', value):
@@ -257,6 +258,8 @@ class Client(models.Model):
         return f'{self.nombre_rep_legal} {self.last_name_1_rep_legal} {self.last_name_2_rep_legal} - {self.run_rep_legal}'
 
 class Claves(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, editable=False)
+    
     client = models.OneToOneField(
         Client,
         on_delete=models.CASCADE,
