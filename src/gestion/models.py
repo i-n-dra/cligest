@@ -10,6 +10,9 @@ def cuenta_corriente_validator(value):
     digits = re.sub(r'\D', '', value)
     if len(digits) < 9:
         raise ValidationError('Debe contener al menos 9 dígitos.')
+def validate_max_trabajadores(value):
+        if value > 200000:
+            raise ValidationError('Este número no puede exceder 200.000')
 
 # Create your models here.
 class Region(models.Model):
@@ -75,6 +78,11 @@ class TipoContabilidad(models.Model):
         return self.name
     
 class Client(models.Model):
+    active = models.BooleanField(
+        default=True,
+        verbose_name="Activo"
+    )
+
     nombre_rep_legal = models.CharField(
         max_length=100,
         verbose_name='Nombre',
@@ -246,7 +254,8 @@ class Client(models.Model):
         validators=[cuenta_corriente_validator]
     )
     n_trabajadores = models.IntegerField(
-        verbose_name='Trabajadores'
+        verbose_name='Trabajadores',
+        validators=[validate_max_trabajadores]
     )
         
     class Meta: # https://youtu.be/AR5hjQ8nla0?si=-o-ipQxpwiqOeJJK&t=909

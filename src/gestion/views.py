@@ -69,6 +69,8 @@ class ClientListView(ListView):
     template_name = 'clients/list.html'
     context_object_name = 'clientes'
     ordering = ['last_name_1_rep_legal']
+    def get_queryset(self):
+        return Client.objects.filter(active=True)
 
 @method_decorator([login_required, permission_required('gestion.view_client', raise_exception=True)], name='dispatch')
 class ClientDetailView(DetailView):
@@ -89,6 +91,19 @@ class ClientUpdateView(UpdateView):
     form_class = ClientForm
     success_url = reverse_lazy('list_clients')
 
+@method_decorator([login_required, permission_required('gestion.delete_client', raise_exception=True)], name='dispatch')
+class ClientDeactivateView(UpdateView):
+    model = Client
+    fields = []
+    template_name = 'clients/delete.html'
+    success_url = reverse_lazy('list_clients')
+
+    def form_valid(self, form):
+        cliente = self.object
+        cliente.active = False
+        cliente.save()
+        return super().form_valid(form)
+    
 @method_decorator([login_required, permission_required('gestion.add_client', raise_exception=True)], name='dispatch')
 class ClientCreateView(CreateView):
     model = Client
@@ -107,11 +122,6 @@ class ClientCreateView(CreateView):
         client_id = form.instance.id
         return super().form_valid(form)
 
-@method_decorator([login_required, permission_required('gestion.delete_client', raise_exception=True)], name='dispatch')
-class ClientDeleteView(DeleteView):
-    model = Client
-    template_name = 'clients/delete.html'
-    success_url = reverse_lazy('list_clients')
 
 def check_run(request):
     run = request.GET.get("run")

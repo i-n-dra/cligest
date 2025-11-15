@@ -56,6 +56,9 @@ ficha_border = Border(
 )
 
 def exportar_clientes_main(clientes=QuerySet, pagos=QuerySet):
+    n_row = 3
+    n_cli = (clientes.__len__())+3
+
     def get_desktop_path():
                 CSIDL_DESKTOP = 0  # escritorio
                 SHGFP_TYPE_CURRENT = 0
@@ -73,12 +76,17 @@ def exportar_clientes_main(clientes=QuerySet, pagos=QuerySet):
 
     # grab the active worksheet
     ws = wb.active
-    
+
+    # tabla
+    try:
+        t = Table(displayName="Clientes", ref=f"A2:U{str(n_cli-1)}")
+        ws.add_table(t)
+    except ValueError:
+        ws.delete_rows(3,n_cli-3)
+
     ws.sheet_view.showGridLines = False
 
     # agregar clientes
-    n_row = 3
-    n_cli = (clientes.__len__())+3
     while n_row < n_cli:
         for c in clientes.all():
             now = timezone.now()
@@ -172,13 +180,6 @@ def exportar_clientes_main(clientes=QuerySet, pagos=QuerySet):
 
     ws.column_dimensions["P"].width = 14
     ws.row_dimensions[1].height = 24
-
-    # tabla
-    try:
-        t = Table(displayName="Clientes", ref=f"A2:U{str(n_cli)}")
-        ws.add_table(t)
-    except ValueError:
-        pass # ya existe una tabla
 
     # currency
     for cell in ws["P"]:

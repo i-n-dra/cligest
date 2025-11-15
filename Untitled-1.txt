@@ -1,7 +1,4 @@
 to do:
-    - creado un cliente nuevo, la exportacion de claves no incluye las suyas, pero si se pueden exportar individualmente
-    ! al auntenticarse (con cualquier usuario) se exportan las claves, no debería pasar exactamente así
-    - si se elimina un cliente y se sobrescribe el archivo, queda el ultimo duplicado ya que no se elimina, limpiar tabla antes(?)
+    - (falta testing) creado un cliente nuevo, la exportacion de claves no incluye las suyas, pero si se pueden exportar individualmente
     - foto de perfil "introduzca un valor válido", jpg, png, gif (solo pasa a veces???)
-    - clientes activados/desactivados
-    - mensaje previo a cambio de contraseña, avisar que las claves guardadas ya no podrán ser accedidas y se deberán editar/crear nuevamente
+    - opción para activar cliente

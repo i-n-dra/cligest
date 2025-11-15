@@ -10,8 +10,17 @@
         <h1>{{ title }}</h1>
         <br>
         <table>
+            <tr>
+                <th>
+                    {{ form.groups.label_tag }}
+                </th>
+                <td>
+                    {{ form.groups }}
+                    <br>
+                    <span class="helptext">Por favor, escoja solo un rol</span>
+                </td>
+            </tr>
             {% csrf_token %}
-            {{ form.as_table }}
         </table>
         <button type="submit">Confirmar cambios</button>
     </form>

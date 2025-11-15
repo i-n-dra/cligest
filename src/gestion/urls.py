@@ -10,7 +10,7 @@ from .views import (
     ClaveListView,
     ClaveDeleteView,
     ClavesExportar,
-    ClientDeleteView,
+    ClientDeactivateView,
     PagosCreateView,
     PagosListView,
     PagosUpdateView,
@@ -30,7 +30,7 @@ urlpatterns = [
     path("create-client/", ClientCreateView.as_view(), name="create_client"),
     path("detail-client/<int:pk>", ClientDetailView.as_view(), name="detail_client"),
     path("update-client/<int:pk>", ClientUpdateView.as_view(), name="update_client"),
-    path("delete-client/<int:pk>", ClientDeleteView.as_view(), name="delete_client"),
+    path("delete-client/<int:pk>", ClientDeactivateView.as_view(), name="delete_client"),
     path("create-client/run-validacion/", views.check_run, name="check_run"),
     path("create-client/rut-validacion/", views.check_rut, name="check_rut"),
 
