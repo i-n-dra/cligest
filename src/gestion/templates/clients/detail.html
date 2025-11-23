@@ -91,7 +91,8 @@
 
     <div>
         <h3>Opciones</h3>
-        <div>
+        {% if c.active %}
+        <div style="display:flex;">
             <a href="{% url "update_client" c.id %}" class='detail-button' title='Editar cliente'>
                 <i class="fa fa-pencil-square-o" style="font-size:24px; padding-left:.1rem"></i>
             </a>
@@ -111,10 +112,20 @@
                 <i class="fa fa-money" style="font-size:24px; padding-left:.1rem"></i>
             </a>
             {% endif %}
-            <a href="{% url "list_clients" %}" class='detail-button' title='Volver a la lista de clientes'>
+            <button type="button" class="detail-button" onclick="history.back()">
                 <i class="fa fa-arrow-left" style="font-size:24px; padding-left:0rem"></i>
-            </a>
+            </button>
         </div>
+        {% else %}
+        <div style="display:flex;">
+            <a href="{% url "activate_client" c.id %}" class='detail-button' title='Activar cliente'>
+                <i class="fa fa-check-circle-o" style="font-size:24px; padding-left:.1rem"></i>
+            </a>
+            <button type="button" class="detail-button" onclick="history.back()" title='Volver a la lista de clientes'>
+                <i class="fa fa-arrow-left" style="font-size:24px; padding-left:0rem"></i>
+            </button>
+        </div>
+        {% endif %}
         
         <hr class="solid-divider">
 

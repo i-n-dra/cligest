@@ -24,7 +24,8 @@ from django.urls import reverse_lazy
 from .static.py.aes import AES
 from .static.py.exportar_clientes import exportar_clientes_main, exportar_cliente
 from .static.py.exportar_pagos import exportar_pagos_deuda, exportar_pagos_historial
-from .static.py.exportar_claves import exportar_claves_all, exportar_clave
+from .static.py.exportar_claves import exportar_claves_all, exportar_clave, ver_conjunto_claves
+
 from django.http import JsonResponse, HttpResponseRedirect
 from django.utils import timezone
 from django.core.exceptions import PermissionDenied
@@ -71,25 +72,23 @@ class ClientListView(ListView):
     ordering = ['last_name_1_rep_legal']
     def get_queryset(self):
         return Client.objects.filter(active=True)
-
-@method_decorator([login_required, permission_required('gestion.view_client', raise_exception=True)], name='dispatch')
-class ClientDetailView(DetailView):
-    model = Client
-    template_name = 'clients/detail.html'
-    context_object_name = 'c'
-    def get_context_data(self, **kwargs):
-            context = super().get_context_data(**kwargs)
-            cliente = self.object
-            context['pagos'] = PagosCliente.objects.filter(client=cliente).last()
-            context['claves'] = Claves.objects.filter(client=cliente).last()
-            return context
     
-@method_decorator([login_required, permission_required('gestion.change_client', raise_exception=True)], name='dispatch')
-class ClientUpdateView(UpdateView):
+@method_decorator([login_required, permission_required('gestion.view_deactivated_client', raise_exception=True)], name='dispatch')
+class ClientListDeactivatedView(ListView):
     model = Client
-    template_name = 'clients/update.html'
-    form_class = ClientForm
-    success_url = reverse_lazy('list_clients')
+    template_name = 'clients/list_admin.html'
+    context_object_name = 'clientes'
+    ordering = ['last_name_1_rep_legal']
+    def get_queryset(self):
+        show_active = self.request.GET.get("show_active") == "1"
+        if show_active:
+            return Client.objects.filter(active=True)
+        return Client.objects.filter(active=False)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["show_active"] = self.request.GET.get("show_active") == "1"
+        return context
 
 @method_decorator([login_required, permission_required('gestion.delete_client', raise_exception=True)], name='dispatch')
 class ClientDeactivateView(UpdateView):
@@ -103,6 +102,38 @@ class ClientDeactivateView(UpdateView):
         cliente.active = False
         cliente.save()
         return super().form_valid(form)
+
+@method_decorator([login_required, permission_required('gestion.activate_client', raise_exception=True)], name='dispatch')
+class ClientActivateView(UpdateView):
+    model = Client
+    fields = []
+    template_name = 'clients/activate.html'
+    success_url = reverse_lazy('list_clients_admin')
+
+    def form_valid(self, form):
+        cliente = self.object
+        cliente.active = True
+        cliente.save()
+        return super().form_valid(form)
+    
+@method_decorator([login_required, permission_required('gestion.view_client', raise_exception=True)], name='dispatch')
+class ClientDetailView(DetailView):
+    model = Client
+    template_name = 'clients/detail.html'
+    context_object_name = 'c'
+    def get_context_data(self, **kwargs):
+            context = super().get_context_data(**kwargs)
+            cliente = self.object
+            context['pagos'] = PagosCliente.objects.filter(client=cliente).first()
+            context['claves'] = Claves.objects.filter(client=cliente).first()
+            return context
+    
+@method_decorator([login_required, permission_required('gestion.change_client', raise_exception=True)], name='dispatch')
+class ClientUpdateView(UpdateView):
+    model = Client
+    template_name = 'clients/update.html'
+    form_class = ClientForm
+    success_url = reverse_lazy('list_clients')
     
 @method_decorator([login_required, permission_required('gestion.add_client', raise_exception=True)], name='dispatch')
 class ClientCreateView(CreateView):
@@ -346,6 +377,42 @@ def ClavesExportarCliente(request, pk): # exportar un conjunto de claves
     initial_msg = f"Para exportar las claves de {clave.client.nombre_rep_legal} {clave.client.last_name_1_rep_legal} {clave.client.last_name_2_rep_legal}"
     return render(request, 'claves/export-cliente.html', {'msg': initial_msg, 'c': clave, 'form': form})
 
+@login_required
+@permission_required('gestion.export_claves', raise_exception=True)
+def ClavesVerCliente(request, pk): # ver un conjunto de claves
+    users = User.objects.all()
+    clave = get_object_or_404(Claves, pk=pk)
+
+    if request.method == "POST":
+        form = ExportClavesForm(request.POST)
+        user = request.user
+        claves = {}
+        
+        if form.is_valid():
+            req_pass = form.cleaned_data['password']
+            authenticated_user = authenticate(request, username=user.username, password=req_pass)
+            if authenticated_user is None:
+                print("Authentication failed")
+                return render(request, 'claves/msg_exportacion.html', {'msg': "Contraseña incorrecta."})
+            
+            db_user = users.get(username=user)
+            user_password = db_user.password
+            key = bytes(user_password.encode())[-16:]
+            aes = AES(key)
+            claves = ver_conjunto_claves.ver(
+                self=ver_conjunto_claves,
+                client=clave,
+                aes=aes
+            )
+
+        if len(claves) >= 1:
+            return render(request, 'claves/detail.html', {'ver_claves': claves, 'c': clave})
+    else:
+        form = ExportClavesForm()
+
+    initial_msg = f"Para ver las claves de {clave.client.nombre_rep_legal} {clave.client.last_name_1_rep_legal} {clave.client.last_name_2_rep_legal}"
+    return render(request, 'claves/export-cliente.html', {'msg': initial_msg, 'c': clave, 'form': form})
+
 @method_decorator([login_required, never_cache, permission_required('gestion.export_claves')], name='dispatch')
 class ClavesExportar(FormView): # exportar todas las claves
     claves = Claves.objects.all()
@@ -420,8 +487,15 @@ class ClavesCreateView(CreateView):
         form = self.get_form()
         self.object = None
         
+        claves = [request.POST.get["unica"], request.POST.get["sii"], request.POST.get["factura_electronica"], request.POST.get["dir_trabajo"]]
+        def claves_exist():
+            for c in claves:
+                if c != "":
+                    return True
+                return False
+            
         # revisar static/py/aes para ver ejemplos y source code
-        if form.is_valid():
+        if form.is_valid() and claves_exist():
             key = get_aes_key(request)[-16:]
             iv = os.urandom(16)
             aes = AES(key)
@@ -440,6 +514,9 @@ class ClavesCreateView(CreateView):
 
             form.save()
             return super().form_valid(form)
+        elif not claves_exist():
+            form.add_error('unica', 'No puede ingresar un conjunto de claves vacío.')
+            return super().form_invalid(form)
         else:
             return super().form_invalid(form)
 

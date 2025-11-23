@@ -427,6 +427,10 @@ input[type="radio"] {
     flex-direction: column;
 }
 
+.btn-ver-mas {
+    padding: .35rem 1.9rem .1rem;
+}
+
 .btn-table {
     text-decoration: none;
     color: #0b3378;

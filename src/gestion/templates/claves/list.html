@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 
 {% block title %}
-    <title>Claves</title>
+    <title>Conjuntos de Claves</title>
 {% endblock title %}
 
 {% block content %}
 <div class='list-container'>
-    <h1>Claves</h1>
+    <h1>Conjuntos de Claves</h1>
     {% if claves %}
     <div class="btn-side-to-side">
-        <a href="{% url "export_claves" %}" class='list-button' title='Exportar claves'>
+        <a href="{% url "export_claves" %}" class='list-button' title='Exportar conjuntos de claves'>
             <i class="fa fa-file-excel-o" aria-hidden="true" style="font-size:24px;"></i>
         </a>
         <a href="{% url "create_clave" %}" class='list-button' title='Añadir conjunto de claves'>
@@ -28,17 +28,17 @@
             <tr>
                 <td>{{ c.client.nombre_rep_legal }} {{ c.client.last_name_1_rep_legal }} {{ c.client.last_name_2_rep_legal }}</td>
                 <td>
-                    <a href="{% url "detail_client" c.client_id %}" title='Ver detalles del cliente' class="list-button-fa-icons"><i class="fa fa-user btn-table" aria-hidden="true" style="font-size:24px;"></i></a>
+                    <a href="{% url "detail_client" c.client_id %}" title='Ver detalles del cliente' class="list-button-fa-icons">
+                        <i class="fa fa-user btn-table" aria-hidden="true" style="font-size:24px;"></i>
+                    </a>
                     <a href="{% url "detail_clave" c.id %}" title='Ver detalles del conjunto de claves' class="list-button-fa-icons">
-                    <i class="fa fa-info btn-table" aria-hidden="true" style="font-size:26px;"></i>
+                        <i class="fa fa-info btn-table" aria-hidden="true" style="font-size:26px;"></i>
                     </a>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-    <br>
-    <p>Solo se mostrarán clientes con claves ingresadas en el sistema</p>
     {% else %}
     <h3>No existen claves registradas en el sistema, ¿Desea <a class='anchor' href="{% url "create_clave" %}">añadir un conjunto de claves</a>?</h3>
     {% endif %}

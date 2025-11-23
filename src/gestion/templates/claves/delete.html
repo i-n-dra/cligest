@@ -16,7 +16,7 @@
         <h2>Confirmar Acción</h2>
         <form action="" method="post">
             {% csrf_token %}
-            <p>¿Está seguro que desea eliminar las claves de {{ object.client.nombre_rep_legal }} {{ object.client.last_name_1_rep_legal }}?</p>
+            <p>¿Está seguro que desea eliminar el conjunto de claves de {{ object.client.nombre_rep_legal }} {{ object.client.last_name_1_rep_legal }}?</p>
             <p>Esta acción no se puede deshacer</p>
             <div class="dialog-buttons">
                 <button type="submit" class="btn-confirm">Si, eliminar</button>

@@ -274,3 +274,29 @@ class exportar_clave():
             msg.clear()
             msg.append('No se puede escribir el archivo mientras está abierto, por favor, cierre el archivo e intente de nuevo.')
             return msg
+
+class ver_conjunto_claves():    
+    def ver(self, client=Model, aes=AES):
+        msg = {}
+
+        iv = client.iv
+        enc_claves = [
+            base64.b64decode(client.unica),
+            base64.b64decode(client.sii),
+            base64.b64decode(client.factura_electronica),
+            base64.b64decode(client.dir_trabajo)
+        ]
+        claves = ["unica","sii","factura_electronica","dir_trabajo"]
+        i = 0
+        dec_claves = []
+
+        for c in enc_claves:
+            decrypted = aes.decrypt_cfb(c, iv)
+            decrypted = decrypted.decode('utf-8')
+            dec_claves.append(decrypted)
+        
+        for c in dec_claves:
+            msg[claves[i]] = c
+            i+=1
+        
+        return msg

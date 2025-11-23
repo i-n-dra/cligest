@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-    <title>Clientes - Confirmar eliminación</title>
+    <title>Clientes - Confirmar activación</title>
 {% endblock title %}
 
 {% block content %}
@@ -10,15 +10,12 @@
         <h2>Confirmar Acción</h2>
         <form action="" method="post">
             {% csrf_token %}
-            <p>¿Está seguro que desea desactivar el cliente {{ object.nombre_rep_legal }} {{ object.last_name_1_rep_legal }}?</p>
-            <span style="padding-bottom: 0.5rem;display: inline-block;">
-                Ya no podrá modificarlo y no será incluido en exportaciones
-            </span>
+            <p>¿Está seguro que desea activar el cliente {{ object.nombre_rep_legal }} {{ object.last_name_1_rep_legal }}?</p>
             <span style="padding-bottom: 0.8rem;display: inline-block;">
-                Para activarlo nuevamente, debe ingresar con un usuario Administrador
+                El cliente podrá ser modificado y se incluirá en exportaciones nuevamente
             </span>
             <div class="dialog-buttons">
-                <button type="submit" class="btn-confirm">Si, desactivar</button>
+                <button type="submit" class="btn-confirm">Si, activar</button>
                 <a href="{% url "detail_client" object.id %}" class="btn-cancel detail-button">No, volver</a>
             </div>
         </form>

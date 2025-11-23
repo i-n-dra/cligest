@@ -261,6 +261,8 @@ class Client(models.Model):
     class Meta: # https://youtu.be/AR5hjQ8nla0?si=-o-ipQxpwiqOeJJK&t=909
         permissions = [
             ('export_client', 'Puede exportar clientes'),
+            ('activate_client', 'Puede activar clientes'),
+            ('view_deactivated_client', 'Puede ver clientes desactivados'),
         ]
 
     def __str__(self):

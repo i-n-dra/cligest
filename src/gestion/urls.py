@@ -11,6 +11,8 @@ from .views import (
     ClaveDeleteView,
     ClavesExportar,
     ClientDeactivateView,
+    ClientListDeactivatedView,
+    ClientActivateView,
     PagosCreateView,
     PagosListView,
     PagosUpdateView,
@@ -25,12 +27,14 @@ from .views import (
 urlpatterns = [
     # Clientes
     path("list-clients/", ClientListView.as_view(), name="list_clients"),
+    path("list-clients-admin/", ClientListDeactivatedView.as_view(), name="list_clients_admin"),
     path("export-clients/", views.ClientExportAll, name="export_clients"),
     path("export-clients/<int:pk>", views.ClientExport, name="export_client"),
     path("create-client/", ClientCreateView.as_view(), name="create_client"),
     path("detail-client/<int:pk>", ClientDetailView.as_view(), name="detail_client"),
     path("update-client/<int:pk>", ClientUpdateView.as_view(), name="update_client"),
     path("delete-client/<int:pk>", ClientDeactivateView.as_view(), name="delete_client"),
+    path("activate-client/<int:pk>", ClientActivateView.as_view(), name="activate_client"),
     path("create-client/run-validacion/", views.check_run, name="check_run"),
     path("create-client/rut-validacion/", views.check_rut, name="check_rut"),
 
@@ -40,6 +44,7 @@ urlpatterns = [
     path("detail-clave/<int:pk>", ClaveDetailView.as_view(), name="detail_clave"),
     path("delete-clave/<int:pk>", ClaveDeleteView.as_view(), name="delete_clave"),
     path("export-claves/", ClavesExportar.as_view(), name="export_claves"),
+    path("ver-claves/<int:pk>", views.ClavesVerCliente, name="ver_claves_client"),
     path("export-claves/<int:pk>", views.ClavesExportarCliente, name="export_claves_client"),
 
     # Pagos

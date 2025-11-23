@@ -53,7 +53,7 @@
           <a href="{% url "lists" %}">Otros</a>
           {% endif %}
 
-          {% if user.groups.all.0.name == "Operador" or user.groups.all.0.name == "Administrador" %}
+          {% if user.groups.all.0.name == "Operador" %}
           <a href="{% url "list_clients" %}" title="Ver clientes">Clientes</a>
           <a href="{% url "list_pagos" %}" title="Ver declaraciones de renta">Declaraciones</a>
           <a href="{% url "list_claves" %}">Claves</a>
@@ -65,6 +65,9 @@
           {% endif %}
 
           {% if user.groups.all.0.name == "Administrador" %}
+          <a href="{% url "list_clients_admin" %}" title="Ver clientes">Clientes</a>
+          <a href="{% url "list_pagos" %}" title="Ver declaraciones de renta">Declaraciones</a>
+          <a href="{% url "lists" %}">Otros</a>
           <a href="{% url "list_u_p" %}">Usuarios y Perfiles</a>
           {% endif %}
 

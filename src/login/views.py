@@ -66,8 +66,13 @@ class UserGroupUpdateView(UpdateView):
         context['title'] = f"Cambiar grupos de {self.object.username}"
         return context
     def form_valid(self, form):
+        groups = form.cleaned_data['groups']
+        if len(groups) > 1:
+            form.add_error('groups', 'Solo puede seleccionar un grupo.')
+            return self.form_invalid(form)
+        
         user = self.get_object()
-        user.groups.set(form.cleaned_data['groups'])
+        user.groups.set(groups)
         user.save()
         return redirect(self.success_url)
 

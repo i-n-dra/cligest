@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
 {% block title %}
-    <title>Declaraciones de Renta</title>
+    <title>Conjuntos de Claves</title>
 {% endblock title %}
 
 {% block content %}
 <div class='detail-container'>
     <div>
-        <h1>Visualizando Claves</h1>
+        <h1>Visualizando Conjunto de Claves</h1>
         {% if c %}
         <h2>De {{ c.client.nombre_rep_legal }} {{ c.client.last_name_1_rep_legal }}</h2>
 
@@ -48,6 +48,54 @@
         <hr class="solid-divider">
 
         <h3>Claves Ingresadas</h3>
+        {% if ver_claves %}
+        <table class="detail-table">
+            <tr>
+                <th>Clave Única:</th>
+                <td>
+                    {% if c.unica %}
+                    <p>{{ver_claves.unica}}</p>
+                    {% else %}
+                    <i class="fa fa-times" aria-hidden="true" style="font-size:24px; padding-right:.2rem"></i>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Clave S.I.I.:</th>
+                <td>
+                    {% if c.sii %}
+                    <p>{{ver_claves.sii}}</p>
+                    {% else %}
+                    <i class="fa fa-times" aria-hidden="true" style="font-size:24px; padding-right:.2rem"></i>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Factura electrónica:</th>
+                <td>
+                    {% if c.factura_electronica %}
+                    <p>{{ver_claves.factura_electronica}}</p>
+                    {% else %}
+                    <i class="fa fa-times" aria-hidden="true" style="font-size:24px; padding-right:.2rem"></i>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Dirección de Trabajo:</th>
+                <td>
+                    {% if c.dir_trabajo %}
+                    <p>{{ver_claves.dir_trabajo}}</p>
+                    {% else %}
+                    <i class="fa fa-times" aria-hidden="true" style="font-size:24px; padding-right:.2rem"></i>
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+
+        <a class="btn-back" href="{% url "detail_clave" c.id %}">
+            Ocultar claves
+        </a>
+        {% else %}
         <table class="detail-table">
             <tr>
                 <th>Clave Única:</th>
@@ -90,6 +138,14 @@
                 </td>
             </tr>
         </table>
+
+        <form action="{% url "ver_claves_client" c.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn-back">
+                Revelar claves
+            </button>
+        </form>
+        {% endif %}
 
         <hr class="solid-divider">
 

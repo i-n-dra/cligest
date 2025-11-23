@@ -1,23 +1,32 @@
 {% extends "base.html" %}
 
 {% block title %}
-    <title>Claves - Crear</title>
+    <title>Conjunto de Claves - Crear</title>
 {% endblock title %}
 
 {% block content %}
 <div class='update-container'>
-    <h1>Añadir clave</h1>
+    <h1>Añadir Conjunto de Claves</h1>
     <form action="" method="post" class="form">
         {% csrf_token %}
+{% if form.errors %}
+<div class="error-container">
+    <ul>
+        {% for field in form %}
+            {% for error in field.errors %}
+                <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+            {% endfor %}
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
 <table>
   <tbody>
     <tr>
       <th><label for="id_client">Cliente:</label></th>
       <td>
         {{ form.client }}
-        {% if form.errors.client %}
-          <span class="helptext">Ya existe un conjunto de claves para este cliente</span>
-        {% endif %}
       </td>
     </tr>
     <tr>
