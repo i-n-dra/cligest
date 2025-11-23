@@ -7,6 +7,7 @@
 {% block content %}
 <div class='update-container'>
     <form action="" method="post" class="form">
+        {% csrf_token %}
         <h1>{{ title }}</h1>
         <br>
         <table>
@@ -20,9 +21,9 @@
                     <span class="helptext">Por favor, escoja solo un rol</span>
                 </td>
             </tr>
-            {% csrf_token %}
         </table>
         <button type="submit">Confirmar cambios</button>
+        <button type="button" class="btn-back" onclick="history.back()">Cancelar</button>
     </form>
 </div>
 {% endblock content %}

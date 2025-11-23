@@ -92,22 +92,6 @@ class ProfileUpdate(UpdateView):
     def get_object(self):
         profile, created = Profile.objects.get_or_create(user = self.request.user)
         return profile
-
-class RolePermissionListView(ListView):
-    @method_decorator(login_required)
-    @method_decorator(never_cache)
-    @method_decorator(permission_required(["auth.view_permission", "auth.view_group"]))
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
-
-    def get(self, request, *args, **kwargs):
-        roles = Group.objects.all()
-        permisos = Permission.objects.filter(group__isnull=False).distinct()
-        context = {
-            'roles': roles,
-            'permisos': permisos
-        }
-        return render(request, 'roles_permisos/list.html', context)
     
 class UsersProfilesListView(ListView):
     @method_decorator(login_required)

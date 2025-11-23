@@ -6,13 +6,13 @@ from django.contrib.auth.models import User
 
 def cuenta_corriente_validator(value):
     if not re.match(r'^(\d{9,15}|\d{1,4}(?:-\d{1,4})+|\d{1,4}(?: \d{1,4})+)$', value):
-        raise ValidationError('Solo se permiten dígitos y espacios o guiones (-)')
+        raise ValidationError('Solo se permiten dígitos y espacios o guiones (-), con un mínimo de 8 caracteres.')
     digits = re.sub(r'\D', '', value)
     if len(digits) < 9:
         raise ValidationError('Debe contener al menos 9 dígitos.')
 def validate_max_trabajadores(value):
         if value > 200000:
-            raise ValidationError('Este número no puede exceder 200.000')
+            raise ValidationError('Este número no puede exceder 200 000.')
 
 # Create your models here.
 class Region(models.Model):

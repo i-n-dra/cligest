@@ -15,7 +15,7 @@
             {{ form.as_p }}
             <div class='btn-side-to-side'>
                 <button type="submit">Guardar</button>
-                <a href="{% url "home" %}">Volver</a>
+                <button type="button" class="btn-back" onclick="history.back()">Cancelar</button>
             </div>
         </div>
     </form>

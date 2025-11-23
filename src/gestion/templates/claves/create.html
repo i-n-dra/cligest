@@ -38,7 +38,10 @@
     </tr>
   </tbody>
 </table>
-<button type="submit">Guardar clave(s)</button>
+<div class="form-btn-side-to-side">
+  <button type="submit">Añadir</button>
+  <a href="{% url "list_clients" %}">Cancelar</a>
+</div>
 </form>
 </div>
 {% endblock content %}

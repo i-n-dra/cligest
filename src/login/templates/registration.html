@@ -11,6 +11,7 @@
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Registrarse</button>
+        <button type="button" class="btn-back" onclick="history.back()">Cancelar</button>
     </div>
 </form>
 {% endblock content %}
