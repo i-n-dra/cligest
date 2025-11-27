@@ -12,6 +12,10 @@
 {% if form.errors %}
 <div class="error-container">
     <ul>
+        {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+        
         {% for field in form %}
             {% for error in field.errors %}
                 <li><strong>{{ field.label }}:</strong> {{ error }}</li>

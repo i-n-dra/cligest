@@ -393,7 +393,7 @@ def ClavesVerCliente(request, pk): # ver un conjunto de claves
             authenticated_user = authenticate(request, username=user.username, password=req_pass)
             if authenticated_user is None:
                 print("Authentication failed")
-                return render(request, 'claves/msg_exportacion.html', {'msg': "Contraseña incorrecta."})
+                return render(request, 'claves/msg_exportacion.html', {'msg': ["Contraseña incorrecta"]})
             
             db_user = users.get(username=user)
             user_password = db_user.password
@@ -487,15 +487,17 @@ class ClavesCreateView(CreateView):
         form = self.get_form()
         self.object = None
         
-        claves = [request.POST.get["unica"], request.POST.get["sii"], request.POST.get["factura_electronica"], request.POST.get["dir_trabajo"]]
-        def claves_exist():
-            for c in claves:
-                if c != "":
-                    return True
-                return False
+        claves = [
+        request.POST.get("unica", ""),
+        request.POST.get("sii", ""),
+        request.POST.get("factura_electronica", ""),
+        request.POST.get("dir_trabajo", ""),
+        ]
+
+        claves_exist = any(c.strip() for c in claves)
             
         # revisar static/py/aes para ver ejemplos y source code
-        if form.is_valid() and claves_exist():
+        if form.is_valid() and claves_exist:
             key = get_aes_key(request)[-16:]
             iv = os.urandom(16)
             aes = AES(key)
@@ -514,8 +516,8 @@ class ClavesCreateView(CreateView):
 
             form.save()
             return super().form_valid(form)
-        elif not claves_exist():
-            form.add_error('unica', 'No puede ingresar un conjunto de claves vacío.')
+        elif not claves_exist:
+            form.add_error(None, 'No puede ingresar un conjunto de claves vacío.')
             return super().form_invalid(form)
         else:
             return super().form_invalid(form)
