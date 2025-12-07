@@ -79,8 +79,7 @@ async function suma_pagos() {
     parseInt(input_honorarios.value) +
     parseInt(input_f301.value) + 
     parseInt(input_imposiciones.value) +
-    parseInt(input_otros.value) +
-    parseInt(input_iva2.value);
+    parseInt(input_otros.value);
 
   input_total.value = total;
 

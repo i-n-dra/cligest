@@ -246,7 +246,6 @@ class PagosCreateView(CreateView):
 
         calc_total = (
             iva_a_pagar +
-            iva_anticipado +
             ppm_vehiculo +
             ppm_ventas +
             honorarios +
@@ -326,7 +325,6 @@ class PagosUpdateView(UpdateView):
 
         calc_total = (
             iva_a_pagar +
-            iva_anticipado +
             ppm_vehiculo +
             ppm_ventas +
             honorarios +
@@ -435,7 +433,6 @@ class ClavesExportar(FormView): # exportar todas las claves
             db_user = self.users.get(username=user)
             user_password = db_user.password
             key = bytes(user_password.encode())[-16:]
-            # key = key.rjust(16, b'\0')[:16] #??????
             aes = AES(key)
             try:
                 msg = exportar_claves_all.export(
